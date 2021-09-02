@@ -10,17 +10,17 @@ export default function Page500() {
     <>
       <NextSeo
         title="Erro interno"
-        description="Erro interno da plataforma de gerenciamento da Mtech Solar."
+        description="Erro interno da plataforma de gerenciamento da Lógica Renováveis."
         openGraph={{
-          url: 'https://app.mtechsolar.com',
+          url: 'https://app.Lógica Solarsolar.com',
           title: 'Erro interno',
-          description: 'Erro interno da plataforma de gerenciamento da Mtech Solar.',
+          description: 'Erro interno da plataforma de gerenciamento da Lógica Renováveis.',
           images: [
             {
-              url: 'https://app.mtechsolar.com/assets/images/logo-mtech.jpg',
-              alt: 'Erro interno | Plataforma Mtech Solar',
+              url: 'https://app.Lógica Solarsolar.com/assets/images/logo-logica.jpg',
+              alt: 'Erro interno | Plataforma Lógica Renováveis',
             },
-            { url: 'https://app.mtechsolar.com/assets/images/logo-mtech.jpg' },
+            { url: 'https://app.Lógica Solarsolar.com/assets/images/logo-logica.jpg' },
           ],
         }}
       />

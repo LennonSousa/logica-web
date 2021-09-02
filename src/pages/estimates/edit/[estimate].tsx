@@ -356,17 +356,17 @@ export default function EditEstimate() {
         <>
             <NextSeo
                 title="Editar orçamento"
-                description="Editar orçamento da plataforma de gerenciamento da Mtech Solar."
+                description="Editar orçamento da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Editar orçamento',
-                    description: 'Editar orçamento da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Editar orçamento da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Editar orçamento | Plataforma Mtech Solar',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Editar orçamento | Plataforma Lógica Renováveis',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />

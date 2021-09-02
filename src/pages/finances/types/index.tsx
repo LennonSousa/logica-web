@@ -110,17 +110,17 @@ export default function Types() {
         <>
             <NextSeo
                 title="Tipos de pagamentos"
-                description="Tipos de pagamentos da plataforma de gerenciamento da Mtech Solar."
+                description="Tipos de pagamentos da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Tipos de pagamentos',
-                    description: 'Tipos de pagamentos da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Tipos de pagamentos da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Tipos de pagamentos | Plataforma Mtech Solar',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Tipos de pagamentos | Plataforma Lógica Renováveis',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />

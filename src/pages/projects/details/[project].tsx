@@ -144,17 +144,17 @@ export default function PropertyDetails() {
         <>
             <NextSeo
                 title="Editar projeto"
-                description="Editar projeto da plataforma de gerenciamento da Mtech Solar."
+                description="Editar projeto da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Editar projeto',
-                    description: 'Editar projeto da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Editar projeto da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Editar projeto | Plataforma Mtech',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Editar projeto | Plataforma Lógica Solar',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />

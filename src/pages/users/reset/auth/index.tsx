@@ -46,17 +46,17 @@ export default function NewCustomer({ authenticated, user, token }: InferGetServ
         <>
             <NextSeo
                 title="Criar nova senha"
-                description="Criar nova senha da plataforma de gerenciamento da Mtech Solar."
+                description="Criar nova senha da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Criar nova senha',
-                    description: 'Criar nova senha da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Criar nova senha da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Criar nova senha | Plataforma Mtech Solar',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Criar nova senha | Plataforma Lógica Renováveis',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />
@@ -71,7 +71,7 @@ export default function NewCustomer({ authenticated, user, token }: InferGetServ
                                         <Col md={6} className="mt-1 mb-4">
                                             <Row className="justify-content-center align-items-center">
                                                 <Col sm={8}>
-                                                    <Image fluid src="/assets/images/logo-mtech.svg" alt="Mtech Solar." />
+                                                    <Image fluid src="/assets/images/logo-logica.svg" alt="Lógica Renováveis." />
                                                 </Col>
                                             </Row>
                                         </Col>

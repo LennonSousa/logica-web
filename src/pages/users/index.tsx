@@ -56,17 +56,17 @@ export default function UsersPage() {
         <>
             <NextSeo
                 title="Lista de usuários"
-                description="Lista de usuários da plataforma de gerenciamento da Mtech Solar."
+                description="Lista de usuários da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Lista de usuários',
-                    description: 'Lista de usuários da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Lista de usuários da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Lista de usuários | Plataforma Mtech Solar',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Lista de usuários | Plataforma Lógica Renováveis',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />

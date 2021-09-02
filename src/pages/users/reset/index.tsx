@@ -34,17 +34,17 @@ export default function NewCustomer() {
         <>
             <NextSeo
                 title="Recuperar senha"
-                description="Recuperar senha da plataforma de gerenciamento da Mtech Solar."
+                description="Recuperar senha da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Recuperar senha',
-                    description: 'Recuperar senha da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Recuperar senha da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Recuperar senha | Plataforma Mtech Solar',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Recuperar senha | Plataforma Lógica Renováveis',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />
@@ -58,7 +58,7 @@ export default function NewCustomer() {
                                     <Col md={6} className="mt-1 mb-4">
                                         <Row className="justify-content-center align-items-center">
                                             <Col sm={8}>
-                                                <Image fluid src="/assets/images/logo-mtech.svg" alt="Mtech Solar." />
+                                                <Image fluid src="/assets/images/logo-logica.svg" alt="Lógica Renováveis." />
                                             </Col>
                                         </Row>
                                     </Col>

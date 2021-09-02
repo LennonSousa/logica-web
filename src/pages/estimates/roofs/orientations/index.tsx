@@ -110,17 +110,17 @@ export default function Types() {
         <>
             <NextSeo
                 title="Orientaçõs de telhado"
-                description="Orientaçõs de telhado da plataforma de gerenciamento da Mtech Solar."
+                description="Orientaçõs de telhado da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Orientaçõs de telhado',
-                    description: 'Orientaçõs de telhado da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Orientaçõs de telhado da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Orientaçõs de telhado | Plataforma Mtech Solar',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Orientaçõs de telhado | Plataforma Lógica Renováveis',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />

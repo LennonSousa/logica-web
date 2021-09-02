@@ -15,7 +15,7 @@ import styles from '../styles/app.module.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return <>
-    <NextSeo titleTemplate="%s | Plataforma Mtech" defaultTitle="Plataforma de gerenciamento." />
+    <NextSeo titleTemplate="%s | Plataforma Lógica Solar" defaultTitle="Plataforma de gerenciamento." />
 
     <Head>
       <meta charSet="utf-8" />

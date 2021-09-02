@@ -165,17 +165,17 @@ export default function PropertyDetails() {
         <>
             <NextSeo
                 title="Imprimir orçamento"
-                description="Imprimir orçamento da plataforma de gerenciamento da Mtech Solar."
+                description="Imprimir orçamento da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Imprimir orçamento',
-                    description: 'Imprimir orçamento da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Imprimir orçamento da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Imprimir orçamento | Plataforma Mtech Solar',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Imprimir orçamento | Plataforma Lógica Renováveis',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />
@@ -255,7 +255,7 @@ export default function PropertyDetails() {
                                                                     </Col>
 
                                                                     <Col>
-                                                                        <Image fluid src="/assets/images/logo-mtech.svg" alt="Mtech Solar." />
+                                                                        <Image fluid src="/assets/images/logo-logica.svg" alt="Lógica Renováveis." />
                                                                     </Col>
                                                                 </Row>
 

@@ -43,11 +43,11 @@ export function Header() {
             <Navbar.Brand href="#home">
                 <Image
                     alt=""
-                    src="/assets/images/logo-mtech.svg"
+                    src="/assets/images/logo-logica.svg"
                     width="30"
                     height="30"
                     className="d-inline-block align-top"
-                />{' '}Mtech Solar
+                />{' '}Lógica Renováveis
             </Navbar.Brand>
 
             <div className={styles.sideNavBarContainer}>

@@ -57,17 +57,17 @@ export default function IncomingsPage() {
         <>
             <NextSeo
                 title="Lista de receitas"
-                description="Lista de receitas da plataforma de gerenciamento da Mtech Solar."
+                description="Lista de receitas da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Lista de receitas',
-                    description: 'Lista de receitas da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Lista de receitas da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Lista de receitas | Plataforma Mtech Solar',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Lista de receitas | Plataforma Lógica Renováveis',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />

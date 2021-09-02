@@ -10,17 +10,17 @@ export default function Page404() {
     <>
       <NextSeo
         title="Página não encontrada"
-        description="Página não encontrada da plataforma de gerenciamento da Mtech Solar."
+        description="Página não encontrada da plataforma de gerenciamento da Lógica Renováveis."
         openGraph={{
-          url: 'https://app.mtechsolar.com.br',
+          url: 'https://app.logicarenovaveis.com',
           title: 'Página não encontrada',
-          description: 'Página não encontrada da plataforma de gerenciamento da Mtech Solar.',
+          description: 'Página não encontrada da plataforma de gerenciamento da Lógica Renováveis.',
           images: [
             {
-              url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-              alt: 'Página não encontrada | Plataforma Mtech Solar',
+              url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+              alt: 'Página não encontrada | Plataforma Lógica Renováveis',
             },
-            { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+            { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
           ],
         }}
       />

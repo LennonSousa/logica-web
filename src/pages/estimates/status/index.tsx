@@ -109,17 +109,17 @@ export default function Types() {
         <>
             <NextSeo
                 title="Fases do orçamento"
-                description="Fases do orçamento da plataforma de gerenciamento da Mtech Solar."
+                description="Fases do orçamento da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Fases do orçamento',
-                    description: 'Fases do orçamento da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Fases do orçamento da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Fases do orçamento | Plataforma Mtech Solar',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Fases do orçamento | Plataforma Lógica Renováveis',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />

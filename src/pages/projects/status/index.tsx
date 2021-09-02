@@ -108,17 +108,17 @@ export default function Status() {
         <>
             <NextSeo
                 title="Lista de fases dos projetos"
-                description="Lista de fases dos projetos da plataforma de gerenciamento da Mtech Solar."
+                description="Lista de fases dos projetos da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Lista de fases dos projetos',
-                    description: 'Lista de fases dos projetos da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Lista de fases dos projetos da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Lista de fases dos projetos | Plataforma Mtech Solar',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Lista de fases dos projetos | Plataforma Lógica Renováveis',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />

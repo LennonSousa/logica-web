@@ -124,17 +124,17 @@ export default function PropertyDetails() {
         <>
             <NextSeo
                 title="Detalhes do orçamento"
-                description="Detalhes do orçamento da plataforma de gerenciamento da Mtech Solar."
+                description="Detalhes do orçamento da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Detalhes do orçamento',
-                    description: 'Detalhes do orçamento da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Detalhes do orçamento da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Detalhes do orçamento | Plataforma Mtech Solar',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Detalhes do orçamento | Plataforma Lógica Renováveis',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />

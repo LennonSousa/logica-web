@@ -232,17 +232,17 @@ export default function NewProject() {
         <>
             <NextSeo
                 title="Criar projeto"
-                description="Criar projeto da plataforma de gerenciamento da Mtech Solar."
+                description="Criar projeto da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Criar projeto',
-                    description: 'Criar projeto da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Criar projeto da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Criar projeto | Plataforma Mtech Solar',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Criar projeto | Plataforma Lógica Renováveis',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />

@@ -298,17 +298,17 @@ export default function NewCustomer() {
         <>
             <NextSeo
                 title="Criar orçamento"
-                description="Criar orçamento da plataforma de gerenciamento da Mtech Solar."
+                description="Criar orçamento da plataforma de gerenciamento da Lógica Renováveis."
                 openGraph={{
-                    url: 'https://app.mtechsolar.com.br',
+                    url: 'https://app.logicarenovaveis.com',
                     title: 'Criar orçamento',
-                    description: 'Criar orçamento da plataforma de gerenciamento da Mtech Solar.',
+                    description: 'Criar orçamento da plataforma de gerenciamento da Lógica Renováveis.',
                     images: [
                         {
-                            url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg',
-                            alt: 'Criar orçamento | Plataforma Mtech Solar',
+                            url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg',
+                            alt: 'Criar orçamento | Plataforma Lógica Renováveis',
                         },
-                        { url: 'https://app.mtechsolar.com.br/assets/images/logo-mtech.jpg' },
+                        { url: 'https://app.logicarenovaveis.com/assets/images/logo-logica.jpg' },
                     ],
                 }}
             />
