@@ -43,7 +43,7 @@ export default function Types() {
 
     useEffect(() => {
         handleItemSideBar('estimates');
-        handleSelectedMenu('estimates-roof-orientations');
+        handleSelectedMenu('estimates-roofs-orientations');
 
         if (user) {
             if (can(user, "estimates", "read:any")) {
