@@ -164,7 +164,7 @@ const Sidebar: React.FC = () => {
                                             </a>
                                         </Link>
 
-                                        <Link href="/estimates/roofs/orientations">
+                                        {/* <Link href="/estimates/roofs/orientations">
                                             <a title="Listar orientaçõs de telhado." data-title="Listar orientaçõs de telhado.">
                                                 <Row
                                                     className={
@@ -180,7 +180,7 @@ const Sidebar: React.FC = () => {
                                                     </Col>
                                                 </Row>
                                             </a>
-                                        </Link>
+                                        </Link> */}
 
                                         <Link href="/estimates/roofs/types">
                                             <a title="Listar tipos de telhados." data-title="Listar tipos de telhados.">
