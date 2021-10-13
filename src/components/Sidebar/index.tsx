@@ -57,7 +57,7 @@ const Sidebar: React.FC = () => {
     return (
         showPageHeader && user ? <div className={`${styles.sideBarContainer} d-print-none`}>
             <Accordion activeKey={itemSideBar} className={styles.accordionContainer}>
-                <Card className={styles.menuCard}>
+                {/* <Card className={styles.menuCard}>
                     <AccordionButton
                         as={Card.Header}
                         className={styles.menuCardHeader}
@@ -68,7 +68,7 @@ const Sidebar: React.FC = () => {
                             <FaColumns /> <span>Painel</span>
                         </div>
                     </AccordionButton>
-                </Card>
+                </Card> */}
 
                 {
                     can(user, "estimates", "read:any") && <Card className={styles.menuCard}>
