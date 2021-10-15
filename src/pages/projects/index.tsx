@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -12,16 +13,12 @@ import ProjectListItem from '../../components/ProjectListItem';
 import { PageWaiting, PageType } from '../../components/PageWaiting';
 import { Paginations } from '../../components/Interfaces/Pagination';
 
-import Member from '../../components/ProjectMembers';
-
 import api from '../../api/api';
 import { TokenVerify } from '../../utils/tokenVerify';
 
 const limit = 15;
 
-export default function Projects() {
-    const router = useRouter();
-
+const ProjectsPages: NextPage = () => {
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
 
@@ -148,6 +145,8 @@ export default function Projects() {
         </>
     )
 }
+
+export default ProjectsPages;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;

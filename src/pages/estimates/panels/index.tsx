@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { Button, Col, Container, Image, ListGroup, Row } from 'react-bootstrap';
@@ -14,7 +15,7 @@ import Panels, { Panel } from '../../../components/Panels';
 import { PageWaiting } from '../../../components/PageWaiting';
 import { AlertMessage, statusModal } from '../../../components/Interfaces/AlertMessage';
 
-export default function PanelsPage() {
+const PanelsPage: NextPage = () => {
     const router = useRouter();
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
@@ -144,6 +145,8 @@ export default function PanelsPage() {
         </>
     )
 }
+
+export default PanelsPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;

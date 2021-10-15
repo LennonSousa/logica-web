@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { Col, Container, Button, ButtonGroup, Table, Row } from 'react-bootstrap';
@@ -26,9 +27,15 @@ import Members from '../../../components/EstimateMembers';
 import PageBack from '../../../components/PageBack';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';
 import { prettifyCurrency } from '../../../components/InputMask/masks';
-import { calculate, CalcProps, CalcResultProps } from '../../../utils/calcEstimate';
+import {
+    calculate,
+    calcFinalTotal,
+    ConsumptionCalcProps,
+    CalcResultProps,
+    CalcProps
+} from '../../../utils/calcEstimate';
 
-export default function PropertyDetails() {
+const EstimateDetails: NextPage = () => {
     const router = useRouter();
     const { estimate } = router.query;
 
@@ -38,7 +45,8 @@ export default function PropertyDetails() {
     const [data, setData] = useState<Estimate>();
     const [documentType, setDocumentType] = useState("CPF");
     const [calcResults, setCalcResults] = useState<CalcResultProps>();
-    const [resultPanelsAmount, setResultPanelsAmount] = useState(0);
+
+    const [finalTotal, setFinalTotal] = useState(0);
 
     const [loadingData, setLoadingData] = useState(true);
     const [hasErrors, setHasErrors] = useState(false);
@@ -60,48 +68,36 @@ export default function PropertyDetails() {
 
                         setData(estimateRes);
 
-                        const valuesCalcItem: CalcProps = {
-                            kwh: estimateRes.kwh,
-                            irradiation: estimateRes.irradiation,
+                        const values: ConsumptionCalcProps = {
+                            kwh: Number(estimateRes.kwh),
+                            irradiation: Number(estimateRes.irradiation),
                             panel: estimateRes.panel,
-                            month_01: estimateRes.month_01,
-                            month_02: estimateRes.month_02,
-                            month_03: estimateRes.month_03,
-                            month_04: estimateRes.month_04,
-                            month_05: estimateRes.month_05,
-                            month_06: estimateRes.month_06,
-                            month_07: estimateRes.month_07,
-                            month_08: estimateRes.month_08,
-                            month_09: estimateRes.month_09,
-                            month_10: estimateRes.month_10,
-                            month_11: estimateRes.month_11,
-                            month_12: estimateRes.month_12,
-                            month_13: estimateRes.month_13,
-                            averageIncrease: estimateRes.average_increase,
+                            month_01: Number(estimateRes.month_01),
+                            month_02: Number(estimateRes.month_02),
+                            month_03: Number(estimateRes.month_03),
+                            month_04: Number(estimateRes.month_04),
+                            month_05: Number(estimateRes.month_05),
+                            month_06: Number(estimateRes.month_06),
+                            month_07: Number(estimateRes.month_07),
+                            month_08: Number(estimateRes.month_08),
+                            month_09: Number(estimateRes.month_09),
+                            month_10: Number(estimateRes.month_10),
+                            month_11: Number(estimateRes.month_11),
+                            month_12: Number(estimateRes.month_12),
+                            month_13: Number(estimateRes.month_13),
+                            averageIncrease: Number(estimateRes.average_increase),
                             roofOrientation: estimateRes.roof_orientation,
+                        }
+
+                        const newCalcProps = {
+                            discount_percent: estimateRes.discount_percent,
                             discount: estimateRes.discount,
+                            increase_percent: estimateRes.increase_percent,
                             increase: estimateRes.increase,
-                            percent: estimateRes.percent,
                             estimateItems: estimateRes.items,
                         }
 
-                        const calcResultsItem = calculate(valuesCalcItem, false);
-
-                        if (!calcResultsItem) {
-                            console.log('Error to calculate estimate.');
-
-                            setTypeLoadingMessage("error");
-                            setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
-                            setHasErrors(true);
-
-                            return;
-                        }
-
-                        calcResultsItem.estimateItems.forEach(item => {
-                            if (item.order === 1) setResultPanelsAmount(item.amount);
-                        });
-
-                        setCalcResults(calcResultsItem);
+                        handleCalcEstimate(values, newCalcProps, false);
 
                         setLoadingData(false);
                     }).catch(err => {
@@ -115,6 +111,34 @@ export default function PropertyDetails() {
             }
         }
     }, [user, estimate]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    function handleCalcEstimate(values: ConsumptionCalcProps, newCalcProps: CalcProps, updateInversor: boolean) {
+        const newCalcResults = calculate(values, newCalcProps.estimateItems, updateInversor);
+
+        if (newCalcResults) {
+            setCalcResults(newCalcResults);
+
+            handleFinalTotal(
+                newCalcResults.systemInitialPrice,
+                newCalcProps.discount_percent,
+                newCalcProps.discount,
+                newCalcProps.increase_percent,
+                newCalcProps.increase
+            );
+        }
+    }
+
+    function handleFinalTotal(subTotal: number, newDiscountPercent: boolean, newDiscount: number, newIncreasePercent: boolean, newIncrease: number) {
+        const newFinalTotal = calcFinalTotal(
+            subTotal,
+            newDiscountPercent,
+            newDiscount,
+            newIncreasePercent,
+            newIncrease
+        );
+
+        setFinalTotal(newFinalTotal);
+    }
 
     function handleRoute(route: string) {
         router.push(route);
@@ -151,7 +175,7 @@ export default function PropertyDetails() {
                                     /> :
                                         <>
                                             {
-                                                !data || !calcResults ? <PageWaiting status="waiting" /> :
+                                                !data ? <PageWaiting status="waiting" /> :
                                                     <Container className="content-page">
                                                         <Row>
                                                             <Col>
@@ -199,7 +223,9 @@ export default function PropertyDetails() {
                                                                             </Col>
                                                                         </Row>
                                                                         <Row>
-                                                                            <Members user={data.user} />
+                                                                            {
+                                                                                data.user && <Members user={data.user} />
+                                                                            }
                                                                         </Row>
                                                                     </Col>
                                                                 </Row>
@@ -698,7 +724,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(calcResults.monthsAverageKwh.toFixed(2)))}</h6>
+                                                                                <h6 className="text-secondary">{prettifyCurrency(calcResults ? calcResults.monthsAverageKwh.toFixed(2) : '0.00')}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -726,7 +752,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(calcResults.finalAverageKwh.toFixed(2)))}</h6>
+                                                                                <h6 className="text-secondary">{prettifyCurrency(calcResults ? calcResults.finalAverageKwh.toFixed(2) : '0.00')}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -748,7 +774,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{`R$ ${prettifyCurrency(String(calcResults.monthlyPaid.toFixed(2)))}`} </h6>
+                                                                                <h6 className="text-secondary">{`R$ ${prettifyCurrency(calcResults ? calcResults.monthlyPaid.toFixed(2) : '0.00')}`} </h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -762,7 +788,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{`R$ ${prettifyCurrency(String(calcResults.yearlyPaid.toFixed(2)))}`}</h6>
+                                                                                <h6 className="text-secondary">{`R$ ${prettifyCurrency(calcResults ? calcResults.yearlyPaid.toFixed(2) : '0.00')}`}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -776,7 +802,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{resultPanelsAmount}</h6>
+                                                                                <h6 className="text-secondary">{`${prettifyCurrency(calcResults ? calcResults.panelsAmount.toFixed(2) : '0.00')} Un`}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -792,7 +818,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{`${prettifyCurrency(String(calcResults.systemCapacityKwp.toFixed(2)))} kWp`} </h6>
+                                                                                <h6 className="text-secondary">{`${prettifyCurrency(calcResults ? calcResults.systemCapacityKwp.toFixed(2) : '0.00')} kWp`} </h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -806,7 +832,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{`${prettifyCurrency(String(calcResults.monthlyGeneratedEnergy.toFixed(2)))} Kwh`}</h6>
+                                                                                <h6 className="text-secondary">{`${prettifyCurrency(calcResults ? calcResults.monthlyGeneratedEnergy.toFixed(2) : '0.00')} Kwh`}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -820,7 +846,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{`${prettifyCurrency(String(calcResults.yearlyGeneratedEnergy.toFixed(2)))} Kwh`}</h6>
+                                                                                <h6 className="text-secondary">{`${prettifyCurrency(calcResults ? calcResults.yearlyGeneratedEnergy.toFixed(2) : '0.00')} Kwh`}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -836,7 +862,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{`${prettifyCurrency(String(calcResults.co2Reduction.toFixed(2)))} Kg`} </h6>
+                                                                                <h6 className="text-secondary">{`${prettifyCurrency(calcResults ? calcResults.co2Reduction.toFixed(2) : '0.00')} Kg`} </h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -850,7 +876,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{`${prettifyCurrency(String(calcResults.systemArea.toFixed(2)))} m²`}</h6>
+                                                                                <h6 className="text-secondary">{`${prettifyCurrency(calcResults ? calcResults.systemArea.toFixed(2) : '0.00')} m²`}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -864,7 +890,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{`${prettifyCurrency(String(calcResults.finalSystemCapacityKwp.toFixed(2)))} kWp`}</h6>
+                                                                                <h6 className="text-secondary">{`${prettifyCurrency(calcResults ? calcResults.finalSystemCapacityKwp.toFixed(2) : '0.00')} kWp`}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -911,7 +937,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{data.show_values ? 'Sim' : 'Nâo'}</h6>
+                                                                                <h6 className="text-secondary">{data.show_values ? 'Sim' : 'Não'}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -933,21 +959,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{`R$ ${prettifyCurrency(String(calcResults.systemInitialPrice.toFixed(2)))}`} </h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-
-                                                                    <Col sm={3} >
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Valores em Reais (R$)?</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{data.percent ? 'Não' : 'Sim'}</h6>
+                                                                                <h6 className="text-secondary">{`R$ ${prettifyCurrency(calcResults ? calcResults.systemInitialPrice.toFixed(2) : '0.00')}`} </h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -962,7 +974,7 @@ export default function PropertyDetails() {
                                                                         <Row>
                                                                             <Col>
                                                                                 <h6 className="text-secondary">{
-                                                                                    `${data.percent ? '' : 'R$ '}${prettifyCurrency(String(data.discount))} ${data.percent ? '%' : ''}`
+                                                                                    `${data.discount_percent ? '' : 'R$ '}${prettifyCurrency(String(data.discount))} ${data.discount_percent ? '%' : ''}`
                                                                                 }</h6>
                                                                             </Col>
                                                                         </Row>
@@ -978,7 +990,7 @@ export default function PropertyDetails() {
                                                                         <Row>
                                                                             <Col>
                                                                                 <h6 className="text-secondary">{
-                                                                                    `${data.percent ? '' : 'R$ '}${prettifyCurrency(String(data.increase))} ${data.percent ? '%' : ''}`
+                                                                                    `${data.increase_percent ? '' : 'R$ '}${prettifyCurrency(String(data.increase))} ${data.increase_percent ? '%' : ''}`
                                                                                 }</h6>
                                                                             </Col>
                                                                         </Row>
@@ -995,7 +1007,7 @@ export default function PropertyDetails() {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{data.show_discount ? 'Sim' : 'Nâo'}</h6>
+                                                                                <h6 className="text-secondary">{data.show_discount ? 'Sim' : 'Não'}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -1009,7 +1021,7 @@ export default function PropertyDetails() {
 
                                                                 <Row className="mb-3">
                                                                     <Col>
-                                                                        <h6 className="text-secondary">{`R$ ${prettifyCurrency(String(calcResults.finalSystemPrice.toFixed(2)))}`} </h6>
+                                                                        <h6 className="text-secondary">{`R$ ${prettifyCurrency(finalTotal.toFixed(2))}`} </h6>
                                                                     </Col>
                                                                 </Row>
 
@@ -1120,6 +1132,8 @@ export default function PropertyDetails() {
         </>
     )
 }
+
+export default EstimateDetails;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;

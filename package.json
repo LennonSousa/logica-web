@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "1.2.4",
+  "version": "1.2.4-alpha",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "bootstrap": "5.1.0",
+    "bootstrap": "5.1.1",
     "bootstrap-print-css": "^1.0.1",
     "cep-promise": "^4.1.1",
     "date-fns": "^2.22.1",
@@ -22,19 +22,19 @@
     "html-to-draftjs": "^1.5.0",
     "immer": "^9.0.5",
     "js-cookie": "^2.2.1",
-    "next": "11.0.1",
+    "next": "^11.1.2",
     "next-seo": "^4.26.0",
-    "react": "17.0.2",
+    "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
-    "react-bootstrap": "^2.0.0-beta.5",
+    "react-bootstrap": "^2.0.0-rc.0",
     "react-circular-progressbar": "^2.0.4",
-    "react-dom": "17.0.2",
+    "react-dom": "^17.0.2",
     "react-draft-wysiwyg": "^1.14.7",
     "react-icons": "^4.2.0",
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "@types/bootstrap": "^5.1.2",
+    "@types/bootstrap": "^5.1.6",
     "@types/draft-js": "^0.11.4",
     "@types/draftjs-to-html": "^0.8.1",
     "@types/file-saver": "^2.0.3",

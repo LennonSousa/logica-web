@@ -385,6 +385,45 @@ const Sidebar: React.FC = () => {
                 }
 
                 {
+                    can(user, "store", "read:any") && <Card className={styles.menuCard}>
+                        <AccordionButton
+                            as={Card.Header}
+                            className={styles.menuCardHeader}
+                            eventKey="store"
+                            onClick={() => handleItemSideBar('store')}
+                        >
+                            <div>
+                                <FaStore /> <span>Loja</span>
+                            </div>
+                        </AccordionButton>
+
+                        <Accordion.Collapse eventKey="store">
+                            <Card.Body className={styles.menuCardBody}>
+                                {
+                                    can(user, "store", "update:any") && <Link href="/store">
+                                        <a title="Editar as informações da loja." data-title="Editar as informações da loja.">
+                                            <Row
+                                                className={
+                                                    selectedMenu === 'store-edit' ? styles.selectedMenuCardBodyItem :
+                                                        styles.menuCardBodyItem
+                                                }
+                                            >
+                                                <Col sm={1}>
+                                                    <FaPencilAlt size={14} />
+                                                </Col>
+                                                <Col>
+                                                    <span>Configurar</span>
+                                                </Col>
+                                            </Row>
+                                        </a>
+                                    </Link>
+                                }
+                            </Card.Body>
+                        </Accordion.Collapse>
+                    </Card>
+                }
+
+                {
                     can(user, "users", "read:any") && <Card className={styles.menuCard}>
                         <AccordionButton
                             as={Card.Header}
@@ -430,45 +469,6 @@ const Sidebar: React.FC = () => {
                                                 </Col>
                                                 <Col>
                                                     <span>Novo</span>
-                                                </Col>
-                                            </Row>
-                                        </a>
-                                    </Link>
-                                }
-                            </Card.Body>
-                        </Accordion.Collapse>
-                    </Card>
-                }
-
-                {
-                    can(user, "store", "read:any") && <Card className={styles.menuCard}>
-                        <AccordionButton
-                            as={Card.Header}
-                            className={styles.menuCardHeader}
-                            eventKey="store"
-                            onClick={() => handleItemSideBar('store')}
-                        >
-                            <div>
-                                <FaStore /> <span>Loja</span>
-                            </div>
-                        </AccordionButton>
-
-                        <Accordion.Collapse eventKey="store">
-                            <Card.Body className={styles.menuCardBody}>
-                                {
-                                    can(user, "store", "update:any") && <Link href="/store">
-                                        <a title="Editar as informações da loja." data-title="Editar as informações da loja.">
-                                            <Row
-                                                className={
-                                                    selectedMenu === 'store-edit' ? styles.selectedMenuCardBodyItem :
-                                                        styles.menuCardBodyItem
-                                                }
-                                            >
-                                                <Col sm={1}>
-                                                    <FaPencilAlt size={14} />
-                                                </Col>
-                                                <Col>
-                                                    <span>Configurar</span>
                                                 </Col>
                                             </Row>
                                         </a>

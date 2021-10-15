@@ -1,5 +1,6 @@
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { Button, Col, Container, Form, ListGroup, Row } from 'react-bootstrap';
@@ -37,7 +38,7 @@ const validationSchema = Yup.object().shape({
     ),
 });
 
-export default function NewUser() {
+const NewUser: NextPage = () => {
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
 
@@ -392,6 +393,8 @@ export default function NewUser() {
         </>
     )
 }
+
+export default NewUser;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;

@@ -38,9 +38,10 @@ export interface Estimate {
     month_12: number;
     month_13: number;
     average_increase: number;
+    discount_percent: boolean;
     discount: number;
+    increase_percent: boolean;
     increase: number;
-    percent: boolean;
     show_values: boolean;
     show_discount: boolean;
     notes: string;

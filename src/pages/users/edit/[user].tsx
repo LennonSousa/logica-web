@@ -1,5 +1,6 @@
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { Button, Col, Container, Form, ListGroup, Modal, Row } from 'react-bootstrap';
@@ -22,7 +23,7 @@ const validationSchema = Yup.object().shape({
     phone: Yup.string().notRequired(),
 });
 
-export default function UserEdit() {
+const UserEdit: NextPage = () => {
     const router = useRouter();
     const userId = router.query['user'];
 
@@ -494,6 +495,8 @@ export default function UserEdit() {
         </>
     )
 }
+
+export default UserEdit;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;

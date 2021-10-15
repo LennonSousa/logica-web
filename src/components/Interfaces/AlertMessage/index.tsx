@@ -7,7 +7,7 @@ import styles from './styles.module.css';
 export type statusModal = 'waiting' | 'success' | 'warning' | 'error';
 
 interface WaitingModalProps {
-    status: 'waiting' | 'success' | 'warning' | 'error',
+    status: statusModal,
     message?: string;
 }
 

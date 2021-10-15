@@ -1,5 +1,6 @@
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { Button, Col, Container, Form, InputGroup, ListGroup, Modal, Row, Spinner } from 'react-bootstrap';
@@ -88,7 +89,7 @@ const attachmentValidationSchema = Yup.object().shape({
     project: Yup.string().required('Obrigatório!'),
 });
 
-export default function NewCustomer() {
+const ProjectEdit: NextPage = () => {
     const router = useRouter();
     const { project } = router.query;
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
@@ -1742,6 +1743,8 @@ export default function NewCustomer() {
         </>
     )
 }
+
+export default ProjectEdit;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;

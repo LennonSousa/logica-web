@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Button, ButtonGroup, Row, Col } from 'react-bootstrap';
-import { FaPencilAlt } from 'react-icons/fa'
+import { FaPencilAlt } from 'react-icons/fa';
+import { format } from 'date-fns';
 
 import { Estimate } from '../Estimates';
 
@@ -18,22 +19,17 @@ const EstimateItem: React.FC<EstimateItemProps> = ({ estimate }) => {
         router.push(`/estimates/edit/${estimate.id}`);
     }
 
-    function handleRoute(route: string) {
-        router.push(route);
-    }
-
     return (
         <Col sm={4}>
             <div className={styles.itemContainer}>
                 <Row className="align-items-center">
-                    <Col sm={10}>
+                    <Col>
                         <Link href={`/estimates/details/${estimate.id}`}>
                             <a>
-                                <h5 className={styles.itemText}>{estimate.customer}</h5>
+                                <h5 className={`${styles.itemText} text-wrap`}>{estimate.customer}</h5>
                             </a>
                         </Link>
                     </Col>
-                    {/* <Col className="text-warning" sm={1}>{estimate. && <FaExclamationCircle />}</Col> */}
                 </Row>
 
                 <Row>
@@ -49,9 +45,19 @@ const EstimateItem: React.FC<EstimateItemProps> = ({ estimate }) => {
                 <Row>
                     <Col>
                         <span
-                            className={`form-control-plaintext text-secondary ${styles.itemText}`}
+                            className={`form-control-plaintext text-secondary text-wrap ${styles.itemText}`}
                         >
-                            {!!estimate.city ? estimate.city : <br />}
+                            {!!estimate.city ? `${estimate.city} - ${estimate.state}` : <br />}
+                        </span>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                        <span
+                            className={`form-control-plaintext text-secondary text-wrap ${styles.itemText}`}
+                        >
+                            {`${format(new Date(estimate.updated_at), 'dd/MM/yyyy')} - ${estimate.created_by}`}
                         </span>
                     </Col>
                 </Row>

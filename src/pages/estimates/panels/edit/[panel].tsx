@@ -1,5 +1,6 @@
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { Button, Col, Container, Form, InputGroup, ListGroup, Modal, Row } from 'react-bootstrap';
@@ -35,7 +36,7 @@ const copyPricesValidationSchema = Yup.object().shape({
     panel: Yup.string().required('Obrigatório!'),
 });
 
-export default function UserEdit() {
+const PanelEdit: NextPage = () => {
     const router = useRouter();
     const { panel } = router.query;
 
@@ -642,6 +643,8 @@ export default function UserEdit() {
         </>
     )
 }
+
+export default PanelEdit;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;

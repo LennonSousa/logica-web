@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { Button, Col, Container, Form, ListGroup, Modal, Row } from 'react-bootstrap';
@@ -24,7 +25,7 @@ const validationSchema = Yup.object().shape({
 
 const limit = 15;
 
-export default function Estimates() {
+const Estimates: NextPage = () => {
     const router = useRouter();
     const userId = router.query['user'];
 
@@ -291,6 +292,8 @@ export default function Estimates() {
         </>
     )
 }
+
+export default Estimates;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;

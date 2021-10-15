@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { Col, Container, Button, ButtonGroup, ListGroup, Row } from 'react-bootstrap';
@@ -33,7 +34,7 @@ import { PageWaiting, PageType } from '../../../components/PageWaiting';
 import { AlertMessage } from '../../../components/Interfaces/AlertMessage';
 import { prettifyCurrency } from '../../../components/InputMask/masks';
 
-export default function PropertyDetails() {
+const ProjectDetails: NextPage = () => {
     const router = useRouter();
     const { project } = router.query;
 
@@ -1020,6 +1021,8 @@ export default function PropertyDetails() {
         </>
     )
 }
+
+export default ProjectDetails;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;

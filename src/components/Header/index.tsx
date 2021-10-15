@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { Badge, Button, Col, Container, Form, Navbar, Row, Toast } from 'react-bootstrap';
-import { FaBell, FaSignOutAlt, FaRegBell, FaRegUserCircle, FaUserTie, FaUserCog } from 'react-icons/fa';
+import { Button, Col, Container, Form, Navbar, Row, Toast } from 'react-bootstrap';
+import { FaSignOutAlt, FaRegUserCircle, FaUserTie, FaUserCog } from 'react-icons/fa';
 
 import { AuthContext } from '../../contexts/AuthContext';
 import { SideNavBar } from '../Sidebar';
@@ -40,15 +40,20 @@ export function Header() {
 
     return showPageHeader ? <Navbar className="d-print-none" collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
-            <Navbar.Brand href="#home">
-                <Image
-                    alt=""
-                    src="/assets/images/logo-logica.svg"
-                    width="30"
-                    height="30"
-                    className="d-inline-block align-top"
-                />{' '}Lógica Renováveis
-            </Navbar.Brand>
+            <Row className="align-items-center">
+                <Col>
+                    <Image
+                        alt=""
+                        src="/assets/images/logo-logica.svg"
+                        width="40"
+                        height="40"
+                        className="d-inline-block align-top"
+                    />
+                </Col>
+                <Col>
+                    <span className="text-light">App</span>
+                </Col>
+            </Row>
 
             <div className={styles.sideNavBarContainer}>
                 <Navbar.Toggle aria-controls="side-navbar-nav" />
@@ -78,8 +83,8 @@ export function Header() {
                                 style={{
                                     position: 'absolute',
                                     minWidth: '250px',
-                                    top: 0,
-                                    right: 0,
+                                    top: 30,
+                                    right: 30,
                                     zIndex: 999,
                                     width: 'auto',
                                     maxWidth: 'fit-content',

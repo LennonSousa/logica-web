@@ -1,3 +1,4 @@
+import type { NextPage } from 'next';
 import Link from 'next/link';
 import { NextSeo } from 'next-seo';
 import { Col, Container, Image, Row } from 'react-bootstrap';
@@ -5,7 +6,7 @@ import { FaArrowRight } from 'react-icons/fa';
 
 import { AlertMessage } from '../components/Interfaces/AlertMessage';
 
-export default function Page500() {
+const Page500: NextPage = () => {
   return (
     <>
       <NextSeo
@@ -59,3 +60,5 @@ export default function Page500() {
     </>
   )
 }
+
+export default Page500;

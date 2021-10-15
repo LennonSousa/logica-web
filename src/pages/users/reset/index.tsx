@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { NextPage } from 'next';
 import Link from 'next/link';
 import { NextSeo } from 'next-seo';
 import { Button, Col, Container, Form, Image, Modal, Row } from 'react-bootstrap';
@@ -16,7 +17,7 @@ const validationSchema = Yup.object().shape({
     email: Yup.string().email('E-mail inválido!').required('Obrigatório!'),
 });
 
-export default function NewCustomer() {
+const UserReset: NextPage = () => {
     const [messageShow, setMessageShow] = useState(false);
     const [typeMessage, setTypeMessage] = useState<statusModal>("waiting");
 
@@ -181,3 +182,5 @@ export default function NewCustomer() {
         </>
     )
 }
+
+export default UserReset;

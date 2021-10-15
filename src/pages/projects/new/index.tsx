@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { Button, Col, Container, Form, InputGroup, ListGroup, Row, Spinner } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { FaHistory, FaSolarPanel, FaUserTie, FaUserTag } from 'react-icons/fa';
-import { format } from 'date-fns';
 import cep, { CEP } from 'cep-promise';
 
 import api from '../../../api/api';
@@ -18,7 +18,6 @@ import { ProjectStatus } from '../../../components/ProjectStatus';
 import { EventProject } from '../../../components/EventsProject';
 import ProjectEvents, { ProjectEvent } from '../../../components/ProjectEvents';
 import { Estimate } from '../../../components/Estimates';
-import { EstimateItem } from '../../../components/EstimateItems';
 
 import Members from '../../../components/ProjectMembers';
 import { statesCities } from '../../../components/StatesCities';
@@ -27,7 +26,11 @@ import PageBack from '../../../components/PageBack';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';
 import { AlertMessage, statusModal } from '../../../components/Interfaces/AlertMessage';
 import { prettifyCurrency } from '../../../components/InputMask/masks';
-import { calculate, CalcProps } from '../../../utils/calcEstimate';
+import {
+    calculate,
+    calcFinalTotal,
+    ConsumptionCalcProps
+} from '../../../utils/calcEstimate';
 
 const validationSchema = Yup.object().shape({
     customer: Yup.string().required('Obrigatório!'),
@@ -72,7 +75,7 @@ const validationSchema = Yup.object().shape({
     status: Yup.string().required('Obrigatório!'),
 });
 
-export default function NewProject() {
+const NewProject: NextPage = () => {
     const router = useRouter();
     const { from } = router.query;
 
@@ -85,7 +88,6 @@ export default function NewProject() {
 
     const [monthsAverage, setMonthsAverage] = useState(0);
     const [capacity, setCapacity] = useState(0);
-    const [estimateItemsList, setEstimateItemsList] = useState<EstimateItem[]>([]);
     const [panelsAmount, setPanelsAmount] = useState(0);
     const [inversor, setInversor] = useState('');
     const [price, setPrice] = useState(0);
@@ -173,32 +175,28 @@ export default function NewProject() {
 
     useEffect(() => {
         if (estimateFrom) {
-            const values: CalcProps = {
-                kwh: estimateFrom.kwh,
-                irradiation: estimateFrom.irradiation,
+            const values: ConsumptionCalcProps = {
+                kwh: Number(estimateFrom.kwh),
+                irradiation: Number(estimateFrom.irradiation),
                 panel: estimateFrom.panel,
-                month_01: estimateFrom.month_01,
-                month_02: estimateFrom.month_02,
-                month_03: estimateFrom.month_03,
-                month_04: estimateFrom.month_04,
-                month_05: estimateFrom.month_05,
-                month_06: estimateFrom.month_06,
-                month_07: estimateFrom.month_07,
-                month_08: estimateFrom.month_08,
-                month_09: estimateFrom.month_09,
-                month_10: estimateFrom.month_10,
-                month_11: estimateFrom.month_11,
-                month_12: estimateFrom.month_12,
-                month_13: estimateFrom.month_13,
-                averageIncrease: estimateFrom.average_increase,
+                month_01: Number(estimateFrom.month_01),
+                month_02: Number(estimateFrom.month_02),
+                month_03: Number(estimateFrom.month_03),
+                month_04: Number(estimateFrom.month_04),
+                month_05: Number(estimateFrom.month_05),
+                month_06: Number(estimateFrom.month_06),
+                month_07: Number(estimateFrom.month_07),
+                month_08: Number(estimateFrom.month_08),
+                month_09: Number(estimateFrom.month_09),
+                month_10: Number(estimateFrom.month_10),
+                month_11: Number(estimateFrom.month_11),
+                month_12: Number(estimateFrom.month_12),
+                month_13: Number(estimateFrom.month_13),
+                averageIncrease: Number(estimateFrom.average_increase),
                 roofOrientation: estimateFrom.roof_orientation,
-                discount: estimateFrom.discount,
-                increase: estimateFrom.increase,
-                percent: estimateFrom.percent,
-                estimateItems: estimateFrom.items,
             }
 
-            const calcResults = calculate(values, false);
+            const calcResults = calculate(values, estimateFrom.items, false);
 
             if (calcResults) {
                 setMonthsAverage(calcResults.monthsAverageKwh);
@@ -209,19 +207,21 @@ export default function NewProject() {
                     if (item.order === 1) setPanelsAmount(item.amount);
                 });
 
-                setPrice(calcResults.finalSystemPrice);
+                const newFinalTotal = calcFinalTotal(
+                    calcResults.systemInitialPrice,
+                    estimateFrom.discount_percent,
+                    estimateFrom.discount,
+                    estimateFrom.increase_percent,
+                    estimateFrom.increase
+                );
 
-                setEstimateItemsList(calcResults.estimateItems);
+                setPrice(newFinalTotal);
             }
         }
     }, [estimateFrom]);
 
     async function handleListEvents(listEvents?: ProjectEvent[]) {
         if (!listEvents) {
-            // const res = await api.get(`projects/${project}`);
-
-            // setProjectData(res.data);
-
             return;
         }
 
@@ -1304,6 +1304,8 @@ export default function NewProject() {
         </>
     )
 }
+
+export default NewProject;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;

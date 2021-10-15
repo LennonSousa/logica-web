@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import { NextSeo } from 'next-seo';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { Button, Col, Container, Form, Image, ListGroup, Modal, Row } from 'react-bootstrap';
@@ -22,7 +23,7 @@ const validationSchema = Yup.object().shape({
     order: Yup.number().required(),
 });
 
-export default function Status() {
+const ProjectStatusPage: NextPage = () => {
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
 
@@ -298,6 +299,8 @@ export default function Status() {
         </>
     )
 }
+
+export default ProjectStatusPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { InferGetServerSidePropsType, GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { Button, Col, Container, Form, Image, Modal, Row } from 'react-bootstrap';
@@ -20,7 +21,7 @@ const validationSchema = Yup.object().shape({
     repeat: Yup.string().required('Obrigatório!').min(8, 'Mínimo 8 caracteres.'),
 });
 
-export default function NewCustomer({ authenticated, user, token }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+const UserResetAuth: NextPage = ({ authenticated, user, token }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
     const authenticatedUser: User = user ? user : null;
 
@@ -273,6 +274,8 @@ export default function NewCustomer({ authenticated, user, token }: InferGetServ
         </>
     )
 }
+
+export default UserResetAuth;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { email, token } = context.query;

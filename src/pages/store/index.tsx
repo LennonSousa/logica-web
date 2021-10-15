@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
+import type { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
@@ -47,7 +48,7 @@ const validationSchema = Yup.object().shape({
     document: Yup.string().min(14, 'CPF inválido!').max(18, 'CNPJ inválido!').required('Obrigatório!'),
 });
 
-export default function EditStore() {
+const EditStore: NextPage = () => {
     const router = useRouter();
     const { estimate } = router.query;
 
@@ -498,6 +499,8 @@ export default function EditStore() {
         </>
     )
 }
+
+export default EditStore;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;
