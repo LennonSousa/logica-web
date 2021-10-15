@@ -382,7 +382,7 @@ const NewProject: NextPage = () => {
 
                                                         setTimeout(() => {
                                                             router.push(`/projects/details/${res.data.id}`);
-                                                        }, 2000);
+                                                        }, 1000);
                                                     }
                                                     catch {
                                                         setTypeMessage("error");

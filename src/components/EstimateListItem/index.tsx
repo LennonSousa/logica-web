@@ -35,9 +35,9 @@ const EstimateItem: React.FC<EstimateItemProps> = ({ estimate }) => {
                 <Row>
                     <Col>
                         <span
-                            className={`form-control-plaintext text-secondary ${styles.itemText}`}
+                            className={`form-control-plaintext text-secondary text-wrap ${styles.itemText}`}
                         >
-                            {!!estimate.document ? estimate.document : <br />}
+                            {`${estimate.document} ${estimate.city} - ${estimate.state}`}
                         </span>
                     </Col>
                 </Row>
@@ -47,7 +47,7 @@ const EstimateItem: React.FC<EstimateItemProps> = ({ estimate }) => {
                         <span
                             className={`form-control-plaintext text-secondary text-wrap ${styles.itemText}`}
                         >
-                            {!!estimate.city ? `${estimate.city} - ${estimate.state}` : <br />}
+                            {estimate.status.name}
                         </span>
                     </Col>
                 </Row>

@@ -1366,11 +1366,10 @@ const EditEstimate: NextPage = () => {
                                                                                         </Col>
                                                                                     }
 
-                                                                                    <Col sm={1}>
+                                                                                    <Col className="col-row" sm={1}>
                                                                                         <Button variant="success" type="submit">Salvar</Button>
                                                                                     </Col>
                                                                                 </>
-
                                                                         }
                                                                     </Row>
                                                                 </Form>
@@ -1412,13 +1411,14 @@ const EditEstimate: NextPage = () => {
                                                                                     </Col>
                                                                                 }
 
-                                                                                <Button
-                                                                                    className="col-row"
-                                                                                    variant="outline-secondary"
-                                                                                    onClick={handleCloseItemDelete}
-                                                                                >
-                                                                                    Cancelar
-                                                                                </Button>
+                                                                                <Col className="col-row">
+                                                                                    <Button
+                                                                                        variant="outline-secondary"
+                                                                                        onClick={handleCloseItemDelete}
+                                                                                    >
+                                                                                        Cancelar
+                                                                                    </Button>
+                                                                                </Col>
                                                                             </>
                                                                     }
                                                                 </Row>

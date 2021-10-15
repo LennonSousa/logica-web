@@ -135,6 +135,13 @@ const ProjectEdit: NextPage = () => {
     const handleCloseModalNew = () => setShowModalNew(false);
     const handleShowModalNew = () => setShowModalNew(true);
 
+    const [deletingMessageShow, setDeletingMessageShow] = useState(false);
+
+    const [showItemDelete, setShowItemDelete] = useState(false);
+
+    const handleCloseItemDelete = () => setShowItemDelete(false);
+    const handelShowItemDelete = () => setShowItemDelete(true);
+
     useEffect(() => {
         handleItemSideBar('projects');
         handleSelectedMenu('projects-index');
@@ -357,6 +364,35 @@ const ProjectEdit: NextPage = () => {
             const imagesToPreview = image.name;
 
             setFilePreview(imagesToPreview);
+        }
+    }
+
+    async function handleItemDelete() {
+        if (user && project) {
+            setTypeMessage("waiting");
+            setDeletingMessageShow(true);
+
+            try {
+                if (can(user, "projects", "delete")) {
+                    await api.delete(`projects/${project}`);
+
+                    setTypeMessage("success");
+
+                    setTimeout(() => {
+                        router.push('/projects');
+                    }, 1000);
+                }
+            }
+            catch (err) {
+                console.log('error deleting project');
+                console.log(err);
+
+                setTypeMessage("error");
+
+                setTimeout(() => {
+                    setDeletingMessageShow(false);
+                }, 4000);
+            }
         }
     }
 
@@ -1338,10 +1374,23 @@ const ProjectEdit: NextPage = () => {
                                                                         <Row className="mb-3 justify-content-end">
                                                                             {
                                                                                 messageShow ? <Col sm={3}><AlertMessage status={typeMessage} /></Col> :
-                                                                                    <Col sm={1}>
-                                                                                        <Button variant="success" type="submit">Salvar</Button>
-                                                                                    </Col>
+                                                                                    <>
+                                                                                        {
+                                                                                            can(user, "projects", "delete") && <Col className="col-row">
+                                                                                                <Button
+                                                                                                    variant="danger"
+                                                                                                    title="Excluir projeto."
+                                                                                                    onClick={handelShowItemDelete}
+                                                                                                >
+                                                                                                    Excluir
+                                                                                                </Button>
+                                                                                            </Col>
+                                                                                        }
 
+                                                                                        <Col className="col-row" sm={1}>
+                                                                                            <Button variant="success" type="submit">Salvar</Button>
+                                                                                        </Col>
+                                                                                    </>
                                                                             }
                                                                         </Row>
                                                                     </Form>
@@ -1729,6 +1778,44 @@ const ProjectEdit: NextPage = () => {
                                                                         </Form>
                                                                     )}
                                                                 </Formik>
+                                                            </Modal>
+
+                                                            <Modal show={showItemDelete} onHide={handleCloseItemDelete}>
+                                                                <Modal.Header closeButton>
+                                                                    <Modal.Title>Excluir orçamento</Modal.Title>
+                                                                </Modal.Header>
+                                                                <Modal.Body>
+                                                                    Você tem certeza que deseja excluir este projeto? Essa ação não poderá ser desfeita.
+                                                                </Modal.Body>
+                                                                <Modal.Footer>
+                                                                    <Row>
+                                                                        {
+                                                                            deletingMessageShow ? <Col><AlertMessage status={typeMessage} /></Col> :
+                                                                                <>
+                                                                                    {
+                                                                                        can(user, "projects", "delete") && <Col className="col-row">
+                                                                                            <Button
+                                                                                                variant="danger"
+                                                                                                type="button"
+                                                                                                onClick={handleItemDelete}
+                                                                                            >
+                                                                                                Excluir
+                                                                                            </Button>
+                                                                                        </Col>
+                                                                                    }
+
+                                                                                    <Col className="col-row">
+                                                                                        <Button
+                                                                                            variant="outline-secondary"
+                                                                                            onClick={handleCloseItemDelete}
+                                                                                        >
+                                                                                            Cancelar
+                                                                                        </Button>
+                                                                                    </Col>
+                                                                                </>
+                                                                        }
+                                                                    </Row>
+                                                                </Modal.Footer>
                                                             </Modal>
                                                         </>
                                                     </Container>

@@ -1,0 +1,13 @@
+.relationsContainer {
+    background: var(--white);
+}
+
+.relationsButtonsContent {
+    min-height: 80px;
+    align-items: center;
+}
+
+.relationsContent {
+    min-height: 150px;
+    align-items: center;
+}

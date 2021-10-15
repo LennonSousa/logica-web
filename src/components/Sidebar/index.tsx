@@ -12,7 +12,7 @@ import {
     FaHistory,
     FaPlus,
     FaIdCard,
-    FaCompass,
+    FaBriefcase,
     FaPencilAlt,
     FaProjectDiagram,
     FaWarehouse,
@@ -317,6 +317,63 @@ const Sidebar: React.FC = () => {
                                             </a>
                                         </Link>
                                     </>
+                                }
+                            </Card.Body>
+                        </Accordion.Collapse>
+                    </Card>
+                }
+
+                {
+                    can(user, "services", "read:any") && <Card className={styles.menuCard}>
+                        <AccordionButton
+                            as={Card.Header}
+                            className={styles.menuCardHeader}
+                            eventKey="service-orders"
+                            onClick={() => handleItemSideBar('service-orders')}
+                        >
+                            <div>
+                                <FaBriefcase /> <span>Serviços</span>
+                            </div>
+                        </AccordionButton>
+
+                        <Accordion.Collapse eventKey="service-orders">
+                            <Card.Body className={styles.menuCardBody}>
+                                <Link href="/service-orders">
+                                    <a title="Listar todos as ordens de serviço." data-title="Listar todos as ordens de serviço.">
+                                        <Row
+                                            className={
+                                                selectedMenu === 'service-orders-index' ? styles.selectedMenuCardBodyItem :
+                                                    styles.menuCardBodyItem
+                                            }
+                                        >
+                                            <Col sm={1}>
+                                                <FaList size={14} />
+                                            </Col>
+                                            <Col>
+                                                <span>Ordens</span>
+                                            </Col>
+                                        </Row>
+                                    </a>
+                                </Link>
+
+                                {
+                                    can(user, "services", "create") && <Link href="/service-orders/new">
+                                        <a title="Criar uma nova ordem de serviço" data-title="Criar uma nova ordem de serviço">
+                                            <Row
+                                                className={
+                                                    selectedMenu === 'service-orders-new' ? styles.selectedMenuCardBodyItem :
+                                                        styles.menuCardBodyItem
+                                                }
+                                            >
+                                                <Col sm={1}>
+                                                    <FaPlus size={14} />
+                                                </Col>
+                                                <Col>
+                                                    <span>Novo</span>
+                                                </Col>
+                                            </Row>
+                                        </a>
+                                    </Link>
                                 }
                             </Card.Body>
                         </Accordion.Collapse>
