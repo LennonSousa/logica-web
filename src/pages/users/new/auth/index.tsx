@@ -151,7 +151,7 @@ const NewUserAuth: NextPage = ({ authenticated, user, token }: InferGetServerSid
                                                                         onChange={(e) => {
                                                                             setFieldValue('phone', cellphone(e.target.value));
                                                                         }}
-                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                             setFieldValue('phone', cellphone(e.target.value));
                                                                         }}
                                                                         value={values.phone}
@@ -165,7 +165,7 @@ const NewUserAuth: NextPage = ({ authenticated, user, token }: InferGetServerSid
                                                                     <Form.Label>Senha</Form.Label>
                                                                     <Form.Control type="password"
                                                                         onChange={handleChange}
-                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                             if (values.password !== values.repeat || errors.repeat)
                                                                                 setIsEqualPassword(false);
                                                                             else
@@ -184,7 +184,7 @@ const NewUserAuth: NextPage = ({ authenticated, user, token }: InferGetServerSid
                                                                     <Form.Label>Repita a senha</Form.Label>
                                                                     <Form.Control type="password"
                                                                         onChange={handleChange}
-                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                             if (values.password !== values.repeat || errors.repeat)
                                                                                 setIsEqualPassword(false);
                                                                             else

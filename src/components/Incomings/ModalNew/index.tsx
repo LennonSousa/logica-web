@@ -165,7 +165,7 @@ const IncomeModalNew: React.FC<IncomeModalNewProps> = ({ project, show = false, 
                                                             onChange={(e) => {
                                                                 setFieldValue('value', prettifyCurrency(e.target.value));
                                                             }}
-                                                            onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                            onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                 setFieldValue('value', prettifyCurrency(e.target.value));
                                                             }}
                                                             value={values.value}

@@ -283,7 +283,7 @@ const UserEdit: NextPage = () => {
                                                                                     onChange={(e) => {
                                                                                         setFieldValue('phone', cellphone(e.target.value));
                                                                                     }}
-                                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                                         setFieldValue('phone', cellphone(e.target.value));
                                                                                     }}
                                                                                     value={values.phone}

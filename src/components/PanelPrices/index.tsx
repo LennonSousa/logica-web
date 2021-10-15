@@ -148,7 +148,7 @@ const PanelPrices: React.FC<PanelPricesProps> = ({ panelPrice, canEdit = true, h
                                                 onChange={(e) => {
                                                     setFieldValue('potency', prettifyCurrency(e.target.value));
                                                 }}
-                                                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                     setFieldValue('potency', prettifyCurrency(e.target.value));
                                                 }}
                                                 value={values.potency}
@@ -170,7 +170,7 @@ const PanelPrices: React.FC<PanelPricesProps> = ({ panelPrice, canEdit = true, h
                                                 onChange={(e) => {
                                                     setFieldValue('price', prettifyCurrency(e.target.value));
                                                 }}
-                                                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                     setFieldValue('price', prettifyCurrency(e.target.value));
                                                 }}
                                                 value={values.price}

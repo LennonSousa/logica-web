@@ -432,7 +432,7 @@ const NewProject: NextPage = () => {
                                                                         else
                                                                             setDocumentType("CPF");
                                                                     }}
-                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                         setFieldValue('document', e.target.value.length <= 14 ? cpf(e.target.value) : cnpj(e.target.value));
                                                                         if (e.target.value.length > 14)
                                                                             setDocumentType("CNPJ");
@@ -456,7 +456,7 @@ const NewProject: NextPage = () => {
                                                                     onChange={(e) => {
                                                                         setFieldValue('phone', cellphone(e.target.value));
                                                                     }}
-                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                         setFieldValue('phone', cellphone(e.target.value));
                                                                     }}
                                                                     value={values.phone}
@@ -474,7 +474,7 @@ const NewProject: NextPage = () => {
                                                                     onChange={(e) => {
                                                                         setFieldValue('cellphone', cellphone(e.target.value));
                                                                     }}
-                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                         setFieldValue('cellphone', cellphone(e.target.value));
                                                                     }}
                                                                     value={values.cellphone}
@@ -720,7 +720,7 @@ const NewProject: NextPage = () => {
                                                                         onChange={(e) => {
                                                                             setFieldValue('months_average', prettifyCurrency(e.target.value));
                                                                         }}
-                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                             setFieldValue('months_average', prettifyCurrency(e.target.value));
                                                                         }}
                                                                         value={values.months_average}
@@ -742,7 +742,7 @@ const NewProject: NextPage = () => {
                                                                         onChange={(e) => {
                                                                             setFieldValue('average_increase', prettifyCurrency(e.target.value));
                                                                         }}
-                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                             setFieldValue('average_increase', prettifyCurrency(e.target.value));
                                                                         }}
                                                                         value={values.average_increase}
@@ -779,7 +779,7 @@ const NewProject: NextPage = () => {
                                                                         onChange={(e) => {
                                                                             setFieldValue('capacity', prettifyCurrency(e.target.value));
                                                                         }}
-                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                             setFieldValue('capacity', prettifyCurrency(e.target.value));
                                                                         }}
                                                                         value={values.capacity}
@@ -875,7 +875,7 @@ const NewProject: NextPage = () => {
                                                                         onChange={(e) => {
                                                                             setFieldValue('price', prettifyCurrency(e.target.value));
                                                                         }}
-                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                             setFieldValue('price', prettifyCurrency(e.target.value));
                                                                         }}
                                                                         value={values.price}
@@ -966,7 +966,7 @@ const NewProject: NextPage = () => {
                                                                         else
                                                                             setFinancierDocumentType("CPF");
                                                                     }}
-                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                         setFieldValue('financier_document', e.target.value.length <= 14 ? cpf(e.target.value) : cnpj(e.target.value));
                                                                         if (e.target.value.length > 14)
                                                                             setFinancierDocumentType("CNPJ");
@@ -1003,7 +1003,7 @@ const NewProject: NextPage = () => {
                                                                     onChange={(e) => {
                                                                         setFieldValue('financier_cellphone', cellphone(e.target.value));
                                                                     }}
-                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                         setFieldValue('financier_cellphone', cellphone(e.target.value));
                                                                     }}
                                                                     value={values.cellphone}

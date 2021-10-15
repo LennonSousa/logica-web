@@ -135,7 +135,7 @@ const IncomeItems: React.FC<IncomeItemsProps> = ({ item, isNewItem = false, hand
                                             setFieldsFormTouched(true);
                                             setSavingItemStatus("touched");
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('value', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.value}

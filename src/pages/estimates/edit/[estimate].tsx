@@ -526,7 +526,7 @@ const EditEstimate: NextPage = () => {
                                                                                     else
                                                                                         setDocumentType("CPF");
                                                                                 }}
-                                                                                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                                onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                                     setFieldValue('document', e.target.value.length <= 14 ? cpf(e.target.value) : cnpj(e.target.value));
                                                                                     if (e.target.value.length > 14)
                                                                                         setDocumentType("CNPJ");
@@ -550,7 +550,7 @@ const EditEstimate: NextPage = () => {
                                                                                 onChange={(e) => {
                                                                                     setFieldValue('phone', cellphone(e.target.value));
                                                                                 }}
-                                                                                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                                onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                                     setFieldValue('phone', cellphone(e.target.value));
                                                                                 }}
                                                                                 value={values.phone}
@@ -568,7 +568,7 @@ const EditEstimate: NextPage = () => {
                                                                                 onChange={(e) => {
                                                                                     setFieldValue('cellphone', cellphone(e.target.value));
                                                                                 }}
-                                                                                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                                onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                                     setFieldValue('cellphone', cellphone(e.target.value));
                                                                                 }}
                                                                                 value={values.cellphone}
@@ -1184,7 +1184,7 @@ const EditEstimate: NextPage = () => {
                                                                                     onChange={(e) => {
                                                                                         setFieldValue('discount', prettifyCurrency(e.target.value));
                                                                                     }}
-                                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                                         const newDiscount = Number(
                                                                                             prettifyCurrency(e.target.value).replaceAll(".", "").replaceAll(",", ".")
                                                                                         );
@@ -1253,7 +1253,7 @@ const EditEstimate: NextPage = () => {
                                                                                     onChange={(e) => {
                                                                                         setFieldValue('increase', prettifyCurrency(e.target.value));
                                                                                     }}
-                                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                                         const newIncrease = Number(
                                                                                             prettifyCurrency(e.target.value).replaceAll(".", "").replaceAll(",", ".")
                                                                                         );

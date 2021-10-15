@@ -248,7 +248,7 @@ const EditStore: NextPage = () => {
                                                                                     else
                                                                                         setDocumentType("CPF");
                                                                                 }}
-                                                                                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                                onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                                     setFieldValue('document', e.target.value.length <= 14 ? cpf(e.target.value) : cnpj(e.target.value));
                                                                                     if (e.target.value.length > 14)
                                                                                         setDocumentType("CNPJ");

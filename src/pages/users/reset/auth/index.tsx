@@ -128,7 +128,7 @@ const UserResetAuth: NextPage = ({ authenticated, user, token }: InferGetServerS
                                                                     <Form.Label>Senha</Form.Label>
                                                                     <Form.Control type="password"
                                                                         onChange={handleChange}
-                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                             if (values.password !== values.repeat || errors.repeat)
                                                                                 setIsEqualPassword(false);
                                                                             else
@@ -147,7 +147,7 @@ const UserResetAuth: NextPage = ({ authenticated, user, token }: InferGetServerS
                                                                     <Form.Label>Repita a senha</Form.Label>
                                                                     <Form.Control type="password"
                                                                         onChange={handleChange}
-                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                             if (values.password !== values.repeat || errors.repeat)
                                                                                 setIsEqualPassword(false);
                                                                             else

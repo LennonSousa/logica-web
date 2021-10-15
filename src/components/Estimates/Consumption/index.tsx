@@ -135,7 +135,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('kwh', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('kwh', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.kwh}
@@ -160,7 +160,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('irradiation', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('irradiation', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.irradiation}
@@ -233,7 +233,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('month_01', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('month_01', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.month_01}
@@ -286,7 +286,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('month_02', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('month_02', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.month_02}
@@ -311,7 +311,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('month_03', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('month_03', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.month_03}
@@ -336,7 +336,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('month_04', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('month_04', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.month_04}
@@ -363,7 +363,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('month_05', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('month_05', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.month_05}
@@ -388,7 +388,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('month_06', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('month_06', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.month_06}
@@ -413,7 +413,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('month_07', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('month_07', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.month_07}
@@ -438,7 +438,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('month_08', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('month_08', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.month_08}
@@ -465,7 +465,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('month_09', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('month_09', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.month_09}
@@ -490,7 +490,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('month_10', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('month_10', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.month_10}
@@ -515,7 +515,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('month_11', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('month_11', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.month_11}
@@ -540,7 +540,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('month_12', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('month_12', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.month_12}
@@ -566,7 +566,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('month_13', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('month_13', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.month_13}
@@ -590,7 +590,7 @@ const ConsumptionModal: React.FC<ConsumptionModalProps> = (
                                         onChange={(e) => {
                                             setFieldValue('average_increase', prettifyCurrency(e.target.value));
                                         }}
-                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                             setFieldValue('average_increase', prettifyCurrency(e.target.value));
                                         }}
                                         value={values.average_increase}

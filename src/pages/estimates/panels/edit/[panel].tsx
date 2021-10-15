@@ -247,7 +247,7 @@ const PanelEdit: NextPage = () => {
                                                                                         onChange={(e) => {
                                                                                             setFieldValue('capacity', prettifyCurrency(e.target.value));
                                                                                         }}
-                                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                                             setFieldValue('capacity', prettifyCurrency(e.target.value));
                                                                                         }}
                                                                                         value={values.capacity}
@@ -434,7 +434,7 @@ const PanelEdit: NextPage = () => {
                                                                                                 onChange={(e) => {
                                                                                                     setFieldValue('potency', prettifyCurrency(e.target.value));
                                                                                                 }}
-                                                                                                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                                                onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                                                     setFieldValue('potency', prettifyCurrency(e.target.value));
                                                                                                 }}
                                                                                                 value={values.potency}
@@ -458,7 +458,7 @@ const PanelEdit: NextPage = () => {
                                                                                                 onChange={(e) => {
                                                                                                     setFieldValue('price', prettifyCurrency(e.target.value));
                                                                                                 }}
-                                                                                                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                                                                                onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                                                                                     setFieldValue('price', prettifyCurrency(e.target.value));
                                                                                                 }}
                                                                                                 value={values.price}
