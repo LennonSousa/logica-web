@@ -19,6 +19,8 @@ interface EstimateItemsProps {
     handleListEstimateItems?: (estimateItemsList: EstimateItem[]) => void;
 }
 
+declare type FormControlElement = HTMLInputElement | HTMLTextAreaElement;
+
 const EstimateItems: React.FC<EstimateItemsProps> = ({ estimateItem, estimateItemsList, handleListEstimateItems }) => {
     const [name, setName] = useState('');
     const [amount, setAmount] = useState(0);
@@ -71,7 +73,7 @@ const EstimateItems: React.FC<EstimateItemsProps> = ({ estimateItem, estimateIte
                             setFieldsFormTouched(true);
                         }
                     }}
-                    onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                    onBlur={(e: React.FocusEvent<FormControlElement>) => {
                         try {
                             const newAmount = Number(e.target.value);
 
@@ -98,7 +100,7 @@ const EstimateItems: React.FC<EstimateItemsProps> = ({ estimateItem, estimateIte
 
                         setFieldsFormTouched(true);
                     }}
-                    onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                    onBlur={(e: React.FocusEvent<FormControlElement>) => {
                         setName(e.target.value);
 
                         setFieldsFormTouched(true);
@@ -129,7 +131,7 @@ const EstimateItems: React.FC<EstimateItemsProps> = ({ estimateItem, estimateIte
                                 setFieldsFormTouched(true);
                             }
                         }}
-                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                        onBlur={(e: React.FocusEvent<FormControlElement>) => {
                             try {
                                 const newTotalPrice = amount * Number(prettifyCurrency(e.target.value).replaceAll('.', '').replaceAll(',', '.'));
 
