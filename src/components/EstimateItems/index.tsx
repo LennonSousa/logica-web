@@ -16,11 +16,10 @@ export interface EstimateItem {
 interface EstimateItemsProps {
     estimateItem: EstimateItem;
     estimateItemsList: EstimateItem[];
-    canEdit?: boolean;
     handleListEstimateItems?: (estimateItemsList: EstimateItem[]) => void;
 }
 
-const EstimateItems: React.FC<EstimateItemsProps> = ({ estimateItem, estimateItemsList, canEdit = true, handleListEstimateItems }) => {
+const EstimateItems: React.FC<EstimateItemsProps> = ({ estimateItem, estimateItemsList, handleListEstimateItems }) => {
     const [name, setName] = useState('');
     const [amount, setAmount] = useState(0);
     const [price, setPrice] = useState('0,00');
