@@ -1111,7 +1111,6 @@ const EditEstimate: NextPage = () => {
                                                                                 estimateItem={estimateItem}
                                                                                 estimateItemsList={estimateItemsList}
                                                                                 handleListEstimateItems={handleListEstimateItems}
-                                                                                canEdit={estimateItem.order === 0 ? true : false}
                                                                             />
                                                                         })
                                                                     }
