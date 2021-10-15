@@ -30,7 +30,7 @@ const PanelsPage: NextPage = () => {
         handleItemSideBar('estimates');
         handleSelectedMenu('estimates-panels');
 
-        if (user && can(user, "estimates", "read:any")) {
+        if (user && can(user, "settings", "read:any")) {
             api.get('panels').then(res => {
                 setPanels(res.data);
 
@@ -77,9 +77,9 @@ const PanelsPage: NextPage = () => {
                 !user || loading ? <PageWaiting status="waiting" /> :
                     <>
                         {
-                            can(user, "estimates", "read:any") ? <Container className="content-page">
+                            can(user, "settings", "read:any") ? <Container className="content-page">
                                 {
-                                    can(user, "estimates", "create") && <Row>
+                                    can(user, "settings", "create") && <Row>
                                         <Col>
                                             <Button variant="outline-success" onClick={goNewPanel}>
                                                 <FaPlus /> Criar um painel

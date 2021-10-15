@@ -47,7 +47,7 @@ const PayTypesPage: NextPage = () => {
         handleSelectedMenu('finances-types');
 
         if (user) {
-            if (can(user, "finances", "read:any")) {
+            if (can(user, "settings", "read:any")) {
 
                 api.get('payments/types').then(res => {
                     setPayTypes(res.data);
@@ -130,12 +130,14 @@ const PayTypesPage: NextPage = () => {
                 !user || loading ? <PageWaiting status="waiting" /> :
                     <>
                         {
-                            can(user, "finances", "update:any") ? <Container className="content-page">
+                            can(user, "settings", "read:any") ? <Container className="content-page">
                                 <Row>
                                     <Col>
-                                        <Button variant="outline-success" onClick={handleShowModalNewType}>
-                                            <FaPlus /> Criar um item
-                                        </Button>
+                                        {
+                                            can(user, "settings", "create") && <Button variant="outline-success" onClick={handleShowModalNewType}>
+                                                <FaPlus /> Criar um item
+                                            </Button>
+                                        }
                                     </Col>
                                 </Row>
 

@@ -124,7 +124,7 @@ const Sidebar: React.FC = () => {
                                 }
 
                                 {
-                                    can(user, "estimates", "update:any") && <>
+                                    can(user, "settings", "update:any") && <>
                                         <Dropdown.Divider />
                                         <Link href="/estimates/panels">
                                             <a title="Listar os painéis." data-title="Listar os painéis.">
@@ -260,7 +260,7 @@ const Sidebar: React.FC = () => {
                                 }
 
                                 {
-                                    can(user, "projects", "update:any") && <>
+                                    can(user, "settings", "update:any") && <>
                                         <Dropdown.Divider />
 
                                         <Link href="/projects/status">
@@ -357,7 +357,7 @@ const Sidebar: React.FC = () => {
                                 </Link>
 
                                 {
-                                    can(user, "finances", "update:any") && <>
+                                    can(user, "settings", "update:any") && <>
                                         <Dropdown.Divider />
 
                                         <Link href="/finances/types">

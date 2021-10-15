@@ -47,7 +47,7 @@ const ProjectEvents: NextPage = () => {
         handleSelectedMenu('projects-events');
 
         if (user) {
-            if (can(user, "projects", "update:any")) {
+            if (can(user, "settings", "read:any")) {
                 api.get('events/project').then(res => {
                     setEventsProject(res.data);
 
@@ -128,12 +128,14 @@ const ProjectEvents: NextPage = () => {
             {
                 !user || loading ? <PageWaiting status="waiting" /> : <>
                     {
-                        can(user, "projects", "update:any") ? <Container className="content-page">
+                        can(user, "settings", "read:any") ? <Container className="content-page">
                             <Row>
                                 <Col>
-                                    <Button variant="outline-success" onClick={handleShowModalNewItem}>
-                                        <FaPlus /> Criar um item
-                                    </Button>
+                                    {
+                                        can(user, "settings", "create") && <Button variant="outline-success" onClick={handleShowModalNewItem}>
+                                            <FaPlus /> Criar um item
+                                        </Button>
+                                    }
                                 </Col>
                             </Row>
 

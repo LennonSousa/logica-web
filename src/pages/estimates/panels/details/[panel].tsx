@@ -36,7 +36,7 @@ const PanelDetails: NextPage = () => {
         handleSelectedMenu('estimates-panels');
 
         if (user) {
-            if (can(user, "estimates", "read:any") || panel === user.id) {
+            if (can(user, "settings", "read:any") || panel === user.id) {
                 api.get(`panels/${panel}`).then(res => {
                     setData(res.data);
 
@@ -78,7 +78,7 @@ const PanelDetails: NextPage = () => {
                 !user || loading ? <PageWaiting status="waiting" /> :
                     <>
                         {
-                            can(user, "estimates", "read:any") || panel === user.id ? <>
+                            can(user, "settings", "read:any") || panel === user.id ? <>
                                 {
                                     loadingData ? <PageWaiting
                                         status={typeLoadingMessage}

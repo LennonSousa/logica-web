@@ -47,7 +47,7 @@ const AttachmentsRequired: NextPage = () => {
         handleSelectedMenu('projects-attachments-required');
 
         if (user) {
-            if (can(user, "projects", "update:any")) {
+            if (can(user, "settings", "read:any")) {
                 api.get('attachments-required/project').then(res => {
                     setAttachmentsRequiredProject(res.data);
 
@@ -128,12 +128,14 @@ const AttachmentsRequired: NextPage = () => {
             {
                 !user || loading ? <PageWaiting status="waiting" /> : <>
                     {
-                        can(user, "projects", "update:any") ? <Container className="content-page">
+                        can(user, "settings", "read:any") ? <Container className="content-page">
                             <Row>
                                 <Col>
-                                    <Button variant="outline-success" onClick={handleShowModalNewItem}>
-                                        <FaPlus /> Criar um item
-                                    </Button>
+                                    {
+                                        can(user, "settings", "create") && <Button variant="outline-success" onClick={handleShowModalNewItem}>
+                                            <FaPlus /> Criar um item
+                                        </Button>
+                                    }
                                 </Col>
                             </Row>
 

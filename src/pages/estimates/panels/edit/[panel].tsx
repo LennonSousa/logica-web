@@ -77,7 +77,7 @@ const PanelEdit: NextPage = () => {
         handleSelectedMenu('estimates-panels');
 
         if (user) {
-            if (can(user, "estimates", "update:any") || can(user, "users", "update:own") && panel === user.id) {
+            if (can(user, "settings", "update:any") || can(user, "users", "update:own") && panel === user.id) {
                 api.get(`panels/${panel}`).then(res => {
                     setData(res.data);
 
@@ -106,7 +106,7 @@ const PanelEdit: NextPage = () => {
             setDeletingMessageShow(true);
 
             try {
-                if (can(user, "estimates", "delete")) {
+                if (can(user, "settings", "delete")) {
                     await api.delete(`panels/${panel}`);
 
                     setTypeMessage("success");
@@ -166,7 +166,7 @@ const PanelEdit: NextPage = () => {
                 !user || loading ? <PageWaiting status="waiting" /> :
                     <>
                         {
-                            can(user, "users", "update:any") || can(user, "users", "update:own") && panel === user.id ? <>
+                            can(user, "settings", "update:any") || can(user, "users", "update:own") && panel === user.id ? <>
                                 {
                                     loadingData ? <PageWaiting
                                         status={typeLoadingMessage}
@@ -314,7 +314,7 @@ const PanelEdit: NextPage = () => {
                                                                                 messageShow ? <Col sm={3}><AlertMessage status={typeMessage} /></Col> :
                                                                                     <>
                                                                                         {
-                                                                                            can(user, "estimates", "delete") && <Col className="col-row">
+                                                                                            can(user, "settings", "delete") && <Col className="col-row">
                                                                                                 <Button
                                                                                                     variant="danger"
                                                                                                     onClick={handelShowItemDelete}
