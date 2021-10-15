@@ -230,7 +230,7 @@ const EditEstimate: NextPage = () => {
 
             handleCalcEstimate(values, newCalcProps, false);
         }
-    }, [data]);
+    }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
     function handleCalcEstimate(values: ConsumptionCalcProps, newCalcProps: CalcProps, updateInversor: boolean) {
         const newCalcResults = calculate(values, newCalcProps.estimateItems, updateInversor);

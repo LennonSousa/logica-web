@@ -469,13 +469,15 @@ const UserEdit: NextPage = () => {
                                                                                         </Col>
                                                                                     }
 
-                                                                                    <Button
-                                                                                        className="col-row"
-                                                                                        variant="outline-secondary"
-                                                                                        onClick={handleCloseUsersDelete}
-                                                                                    >
-                                                                                        Cancelar
-                                                                                    </Button>
+                                                                                    <Col className="col-row">
+                                                                                        <Button
+
+                                                                                            variant="outline-secondary"
+                                                                                            onClick={handleCloseUsersDelete}
+                                                                                        >
+                                                                                            Cancelar
+                                                                                        </Button>
+                                                                                    </Col>
                                                                                 </>
                                                                         }
                                                                     </Row>
