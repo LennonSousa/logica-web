@@ -826,7 +826,7 @@ const ServiceOrderEdit: NextPage = () => {
 
                                                             <Modal show={showItemDelete} onHide={handleCloseItemDelete}>
                                                                 <Modal.Header closeButton>
-                                                                    <Modal.Title>Excluir orçamento</Modal.Title>
+                                                                    <Modal.Title>Excluir ordem de serviço</Modal.Title>
                                                                 </Modal.Header>
                                                                 <Modal.Body>
                                                                     Você tem certeza que deseja excluir esta ordem de serviço? Essa ação não poderá ser desfeita.

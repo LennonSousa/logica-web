@@ -43,7 +43,7 @@ import {
 
 import styles from './styles.module.css'
 
-const EstimateDetails: NextPage = () => {
+const EstimatePrint: NextPage = () => {
     const router = useRouter();
     const { estimate } = router.query;
 
@@ -1225,7 +1225,7 @@ const EstimateDetails: NextPage = () => {
     )
 }
 
-export default EstimateDetails;
+export default EstimatePrint;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;

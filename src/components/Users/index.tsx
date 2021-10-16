@@ -5,7 +5,7 @@ import { FaUserEdit, FaPause, FaPlay, FaUserClock, FaUserTag } from 'react-icons
 
 import api from '../../api/api';
 
-type Resource = 'employees' | 'shifts' | 'attendances' | 'estimates' | 'projects' | 'services' | 'store' | 'settings' | 'finances' | 'users';
+type Resource = 'estimates' | 'projects' | 'services' | 'notes' | 'store' | 'settings' | 'finances' | 'users';
 type Action = 'read:any' | 'read:own' | 'create' | 'update:any' | 'update:own' | 'delete';
 
 export interface User {
@@ -68,6 +68,10 @@ export const translatedRoles: TranslateRoles[] = [
     {
         role: 'services',
         translated: 'Ordens de Serviço',
+    },
+    {
+        role: 'notes',
+        translated: 'Anotações',
     },
     {
         role: 'store',

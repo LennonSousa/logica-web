@@ -1,0 +1,14 @@
+.itemContainer {
+    background-color: var(--background);
+    border-radius: 5px;
+    box-shadow: 3px 3px 10px rgb(0 0 0 / 32%);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1rem 1rem;
+    border: 1px solid #dadada;
+}
+
+.itemText {
+    overflow: hidden;
+    white-space: nowrap !important;
+}

@@ -1,0 +1,16 @@
+.buttonPrintContainer {
+    position: fixed;
+    right: 3rem;
+    z-index: 999;
+    bottom: 3rem;
+    box-shadow: 3px 3px 10px rgb(0 0 0 / 32%);
+}
+
+.buttonPrint {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}

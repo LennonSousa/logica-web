@@ -1028,29 +1028,31 @@ const ProjectEdit: NextPage = () => {
                                                                             </Form.Group>
                                                                         </Row>
 
-                                                                        <Row className="mb-2">
-                                                                            <Form.Group as={Col} sm={3} controlId="formGridPrice">
-                                                                                <Form.Label>Valor do sistema</Form.Label>
-                                                                                <InputGroup className="mb-2">
-                                                                                    <InputGroup.Text id="btnGroupPrice">R$</InputGroup.Text>
-                                                                                    <Form.Control
-                                                                                        type="text"
-                                                                                        onChange={(e) => {
-                                                                                            setFieldValue('price', prettifyCurrency(e.target.value));
-                                                                                        }}
-                                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                                                                            setFieldValue('price', prettifyCurrency(e.target.value));
-                                                                                        }}
-                                                                                        value={values.price}
-                                                                                        name="price"
-                                                                                        isInvalid={!!errors.price && touched.price}
-                                                                                        aria-label="Valor do projeto"
-                                                                                        aria-describedby="btnGroupPrice"
-                                                                                    />
-                                                                                </InputGroup>
-                                                                                <Form.Control.Feedback type="invalid">{touched.price && errors.price}</Form.Control.Feedback>
-                                                                            </Form.Group>
-                                                                        </Row>
+                                                                        {
+                                                                            can(user, "finances", "read:any") && <Row className="mb-2">
+                                                                                <Form.Group as={Col} sm={3} controlId="formGridPrice">
+                                                                                    <Form.Label>Valor do sistema</Form.Label>
+                                                                                    <InputGroup className="mb-2">
+                                                                                        <InputGroup.Text id="btnGroupPrice">R$</InputGroup.Text>
+                                                                                        <Form.Control
+                                                                                            type="text"
+                                                                                            onChange={(e) => {
+                                                                                                setFieldValue('price', prettifyCurrency(e.target.value));
+                                                                                            }}
+                                                                                            onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                                                                                setFieldValue('price', prettifyCurrency(e.target.value));
+                                                                                            }}
+                                                                                            value={values.price}
+                                                                                            name="price"
+                                                                                            isInvalid={!!errors.price && touched.price}
+                                                                                            aria-label="Valor do projeto"
+                                                                                            aria-describedby="btnGroupPrice"
+                                                                                        />
+                                                                                    </InputGroup>
+                                                                                    <Form.Control.Feedback type="invalid">{touched.price && errors.price}</Form.Control.Feedback>
+                                                                                </Form.Group>
+                                                                            </Row>
+                                                                        }
 
                                                                         <Row className="mt-5 mb-3">
                                                                             <Col>
@@ -1407,16 +1409,18 @@ const ProjectEdit: NextPage = () => {
                                                                                 <h6 className="text-success">Receitas <FaDonate /></h6>
                                                                             </Col>
 
-                                                                            <Col sm={1}>
-                                                                                <Button
-                                                                                    variant="outline-success"
-                                                                                    size="sm"
-                                                                                    onClick={handleShowModalNew}
-                                                                                    title="Criar uma nova receita para esse projeto."
-                                                                                >
-                                                                                    <FaPlus />
-                                                                                </Button>
-                                                                            </Col>
+                                                                            {
+                                                                                can(user, "finances", "update:any") && <Col sm={1}>
+                                                                                    <Button
+                                                                                        variant="outline-success"
+                                                                                        size="sm"
+                                                                                        onClick={handleShowModalNew}
+                                                                                        title="Criar uma nova receita para esse projeto."
+                                                                                    >
+                                                                                        <FaPlus />
+                                                                                    </Button>
+                                                                                </Col>
+                                                                            }
                                                                         </Row>
 
                                                                         <Row className="mt-2">
@@ -1782,7 +1786,7 @@ const ProjectEdit: NextPage = () => {
 
                                                             <Modal show={showItemDelete} onHide={handleCloseItemDelete}>
                                                                 <Modal.Header closeButton>
-                                                                    <Modal.Title>Excluir orçamento</Modal.Title>
+                                                                    <Modal.Title>Excluir projeto</Modal.Title>
                                                                 </Modal.Header>
                                                                 <Modal.Body>
                                                                     Você tem certeza que deseja excluir este projeto? Essa ação não poderá ser desfeita.

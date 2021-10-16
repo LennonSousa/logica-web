@@ -3,9 +3,7 @@ import { GetServerSideProps } from 'next';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
-import { Button, Col, Container, Form, ListGroup, Modal, Row } from 'react-bootstrap';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
 
 import api from '../../api/api';
@@ -15,19 +13,15 @@ import { SideBarContext } from '../../contexts/SideBarContext';
 import { can } from '../../components/Users';
 import { Estimate } from '../../components/Estimates';
 import EstimateItem from '../../components/EstimateListItem';
+import { CardItemShimmer } from '../../components/Interfaces/CardItemShimmer';
 import { PageWaiting, PageType } from '../../components/PageWaiting';
-import { AlertMessage, statusModal } from '../../components/Interfaces/AlertMessage';
 import { Paginations } from '../../components/Interfaces/Pagination';
-
-const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Obrigatório!'),
-});
+import SearchEstimates from '../../components/Interfaces/SearchEstimates';
 
 const limit = 15;
 
 const Estimates: NextPage = () => {
     const router = useRouter();
-    const userId = router.query['user'];
 
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
@@ -40,15 +34,10 @@ const Estimates: NextPage = () => {
     const [typeLoadingMessage, setTypeLoadingMessage] = useState<PageType>("waiting");
     const [textLoadingMessage, setTextLoadingMessage] = useState('Aguarde, carregando...');
 
-    const [estimateResults, setEstimateResults] = useState<Estimate[]>([]);
-
     const [showSearchModal, setShowSearchModal] = useState(false);
 
     const handleCloseSearchModal = () => setShowSearchModal(false);
     const handleShowSearchModal = () => setShowSearchModal(true);
-
-    const [messageShow, setMessageShow] = useState(false);
-    const [typeMessage, setTypeMessage] = useState<statusModal>("waiting");
 
     useEffect(() => {
         handleItemSideBar('estimates');
@@ -57,8 +46,6 @@ const Estimates: NextPage = () => {
         if (user) {
             if (can(user, "estimates", "read:any")) {
                 let requestUrl = `estimates?limit=${limit}&page=${activePage}`;
-
-                if (userId) requestUrl = `members/estimates/user/${userId}?limit=${limit}&page=${activePage}`;
 
                 api.get(requestUrl).then(res => {
                     setEstimates(res.data);
@@ -86,8 +73,6 @@ const Estimates: NextPage = () => {
         try {
             let requestUrl = `estimates?limit=${limit}&page=${activePage}`;
 
-            if (userId) requestUrl = `members/estimates/user/${userId}?limit=${limit}&page=${activePage}`;
-
             const res = await api.get(requestUrl);
 
             setEstimates(res.data);
@@ -100,6 +85,10 @@ const Estimates: NextPage = () => {
         }
 
         setLoadingData(false);
+    }
+
+    function handleSearchTo(estimate: Estimate) {
+        handleRoute(`/estimates/details/${estimate.id}`);
     }
 
     function handleRoute(route: string) {
@@ -133,10 +122,15 @@ const Estimates: NextPage = () => {
                                 <Container className="page-container">
                                     <Row>
                                         {
-                                            loadingData ? <PageWaiting
-                                                status={typeLoadingMessage}
-                                                message={textLoadingMessage}
-                                            /> :
+                                            loadingData ? <>
+                                                {
+                                                    typeLoadingMessage === "error" ? <PageWaiting
+                                                        status={typeLoadingMessage}
+                                                        message={textLoadingMessage}
+                                                    /> :
+                                                        <CardItemShimmer />
+                                                }
+                                            </> :
                                                 <Col>
                                                     {
                                                         !!estimates.length && <Row className="mt-3">
@@ -179,110 +173,11 @@ const Estimates: NextPage = () => {
                                         </Col>
                                     </Row>
 
-                                    <Modal show={showSearchModal} onHide={handleCloseSearchModal}>
-                                        <Modal.Header closeButton>
-                                            <Modal.Title>Lista de orçamentos</Modal.Title>
-                                        </Modal.Header>
-
-                                        <Formik
-                                            initialValues={{
-                                                name: '',
-                                            }}
-                                            onSubmit={async values => {
-                                                setTypeMessage("waiting");
-                                                setMessageShow(true);
-
-                                                try {
-                                                    const res = await api.get(`estimates?name=${values.name}`);
-
-                                                    setEstimateResults(res.data);
-
-                                                    setMessageShow(false);
-                                                }
-                                                catch {
-                                                    setTypeMessage("error");
-
-                                                    setTimeout(() => {
-                                                        setMessageShow(false);
-                                                    }, 4000);
-                                                }
-                                            }}
-                                            validationSchema={validationSchema}
-                                        >
-                                            {({ handleSubmit, values, setFieldValue, errors, touched }) => (
-                                                <>
-                                                    <Modal.Body>
-                                                        <Form onSubmit={handleSubmit}>
-                                                            <Form.Group controlId="estimateFormGridName">
-                                                                <Form.Label>Nome do orçamento</Form.Label>
-                                                                <Form.Control type="search"
-                                                                    placeholder="Digite para pesquisar"
-                                                                    autoComplete="off"
-                                                                    onChange={(e) => {
-                                                                        setFieldValue('name', e.target.value);
-
-                                                                        if (e.target.value.length > 1)
-                                                                            handleSubmit();
-                                                                    }}
-                                                                    value={values.name}
-                                                                    isInvalid={!!errors.name && touched.name}
-                                                                />
-                                                                <Form.Control.Feedback type="invalid">{touched.name && errors.name}</Form.Control.Feedback>
-                                                            </Form.Group>
-
-                                                            <Row style={{ minHeight: '40px' }}>
-                                                                <Col>
-                                                                    {messageShow && <AlertMessage status={typeMessage} />}
-                                                                </Col>
-                                                            </Row>
-                                                        </Form>
-                                                    </Modal.Body>
-
-                                                    <Modal.Dialog scrollable style={{ marginTop: 0, width: '100%' }}>
-                                                        <Modal.Body style={{ maxHeight: 'calc(100vh - 3.5rem)' }}>
-                                                            <Row style={{ minHeight: '150px' }}>
-                                                                {
-                                                                    values.name.length > 1 && <Col>
-                                                                        {
-                                                                            !!estimateResults.length ? <ListGroup className="mt-3 mb-3">
-                                                                                {
-                                                                                    estimateResults.map((estimate, index) => {
-                                                                                        return <ListGroup.Item
-                                                                                            key={index}
-                                                                                            action
-                                                                                            variant="light"
-                                                                                            onClick={() => handleRoute(`/estimates/details/${estimate.id}`)}
-                                                                                        >
-                                                                                            <Row>
-                                                                                                <Col>
-                                                                                                    <h6>{estimate.customer}</h6>
-                                                                                                </Col>
-                                                                                            </Row>
-                                                                                            <Row>
-                                                                                                <Col>
-                                                                                                    <span className="text-italic">
-                                                                                                        {`${estimate.document} - ${estimate.city}/${estimate.state}`}
-                                                                                                    </span>
-                                                                                                </Col>
-                                                                                            </Row>
-                                                                                        </ListGroup.Item>
-                                                                                    })
-                                                                                }
-                                                                            </ListGroup> :
-                                                                                <AlertMessage status="warning" message="Nenhum orçamento encontrado!" />
-                                                                        }
-                                                                    </Col>
-                                                                }
-                                                            </Row>
-                                                        </Modal.Body>
-                                                        <Modal.Footer>
-                                                            <Button variant="secondary" onClick={handleCloseSearchModal}>Cancelar</Button>
-                                                        </Modal.Footer>
-                                                    </Modal.Dialog>
-                                                </>
-                                            )}
-                                        </Formik>
-                                    </Modal>
+                                    <SearchEstimates
+                                        show={showSearchModal}
+                                        handleSearchTo={handleSearchTo}
+                                        handleCloseSearchModal={handleCloseSearchModal}
+                                    />
                                 </Container>
                             </> :
                                 <PageWaiting status="warning" message="Acesso negado!" />

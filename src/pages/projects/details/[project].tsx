@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import {
     FaDonate,
     FaFileAlt,
+    FaFileExport,
     FaHistory,
     FaPencilAlt,
     FaSolarPanel,
@@ -190,6 +191,16 @@ const ProjectDetails: NextPage = () => {
                                                                             >
                                                                                 <FaPencilAlt />
                                                                             </Button>
+
+                                                                            {
+                                                                                can(user, "services", "create") && <Button
+                                                                                    title="Criar ordem de serviço."
+                                                                                    variant="success"
+                                                                                    onClick={() => handleRoute(`/service-orders/new?from=${data.id}`)}
+                                                                                >
+                                                                                    <FaFileExport />
+                                                                                </Button>
+                                                                            }
                                                                         </ButtonGroup>
                                                                     </Col>
                                                                 </Row>

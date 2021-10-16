@@ -3,15 +3,18 @@ import { GetServerSideProps } from 'next';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import { FaSearch } from 'react-icons/fa';
 
 import { SideBarContext } from '../../contexts/SideBarContext';
 import { AuthContext } from '../../contexts/AuthContext';
 import { can } from '../../components/Users';
 import { Project } from '../../components/Projects';
-import ProjectListItem from '../../components/ProjectListItem';
+import ProjectItem from '../../components/ProjectListItem';
+import { CardItemShimmer } from '../../components/Interfaces/CardItemShimmer';
 import { PageWaiting, PageType } from '../../components/PageWaiting';
 import { Paginations } from '../../components/Interfaces/Pagination';
+import SearchProjects from '../../components/Interfaces/SearchProjects';
 
 import api from '../../api/api';
 import { TokenVerify } from '../../utils/tokenVerify';
@@ -19,6 +22,8 @@ import { TokenVerify } from '../../utils/tokenVerify';
 const limit = 15;
 
 const ProjectsPages: NextPage = () => {
+    const router = useRouter();
+
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
 
@@ -29,6 +34,11 @@ const ProjectsPages: NextPage = () => {
     const [typeLoadingMessage, setTypeLoadingMessage] = useState<PageType>("waiting");
     const [textLoadingMessage, setTextLoadingMessage] = useState('Aguarde, carregando...');
     const [loadingData, setLoadingData] = useState(true);
+
+    const [showSearchModal, setShowSearchModal] = useState(false);
+
+    const handleCloseSearchModal = () => setShowSearchModal(false);
+    const handleShowSearchModal = () => setShowSearchModal(true);
 
     useEffect(() => {
         handleItemSideBar('projects');
@@ -78,6 +88,14 @@ const ProjectsPages: NextPage = () => {
         setLoadingData(false);
     }
 
+    function handleSearchTo(project: Project) {
+        handleRoute(`/projects/details/${project.id}`);
+    }
+
+    function handleRoute(route: string) {
+        router.push(route);
+    }
+
     return (
         <>
             <NextSeo
@@ -105,19 +123,38 @@ const ProjectsPages: NextPage = () => {
                                 <Container className="page-container">
                                     <Row>
                                         {
-                                            loadingData ? <PageWaiting
-                                                status={typeLoadingMessage}
-                                                message={textLoadingMessage}
-                                            /> :
-                                                <>
+                                            loadingData ? <>
+                                                {
+                                                    typeLoadingMessage === "error" ? <PageWaiting
+                                                        status={typeLoadingMessage}
+                                                        message={textLoadingMessage}
+                                                    /> :
+                                                        <CardItemShimmer />
+                                                }
+                                            </> :
+                                                <Col>
                                                     {
-                                                        !!projects.length ? projects.map((project, index) => {
-                                                            return <ProjectListItem key={index} project={project} />
-                                                        }) :
-                                                            <PageWaiting status="empty" message="Nenhum projeto registrado." />
+                                                        !!projects.length && <Row className="mt-3">
+                                                            <Col className="col-row">
+                                                                <Button
+                                                                    variant="success"
+                                                                    title="Procurar um projeto."
+                                                                    onClick={handleShowSearchModal}
+                                                                >
+                                                                    <FaSearch />
+                                                                </Button>
+                                                            </Col>
+                                                        </Row>
                                                     }
-                                                </>
-
+                                                    <Row>
+                                                        {
+                                                            !!projects.length ? projects.map((project, index) => {
+                                                                return <ProjectItem key={index} project={project} />
+                                                            }) :
+                                                                <PageWaiting status="empty" message="Nenhum projeto registrado." />
+                                                        }
+                                                    </Row>
+                                                </Col>
                                         }
                                     </Row>
 
@@ -136,6 +173,12 @@ const ProjectsPages: NextPage = () => {
                                             }
                                         </Col>
                                     </Row>
+
+                                    <SearchProjects
+                                        show={showSearchModal}
+                                        handleSearchTo={handleSearchTo}
+                                        handleCloseSearchModal={handleCloseSearchModal}
+                                    />
                                 </Container>
                             </> :
                                 <PageWaiting status="warning" message="Acesso negado!" />

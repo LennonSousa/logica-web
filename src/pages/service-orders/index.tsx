@@ -3,26 +3,31 @@ import { GetServerSideProps } from 'next';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import { FaSearch } from 'react-icons/fa';
 
 import { SideBarContext } from '../../contexts/SideBarContext';
 import { AuthContext } from '../../contexts/AuthContext';
 import { can } from '../../components/Users';
-import { Project } from '../../components/Projects';
-import ProjectListItem from '../../components/ProjectListItem';
+import { ServiceOrder } from '../../components/ServiceOrders';
+import ServiceOrderItem from '../../components/ServiceOrderListItem';
+import { CardItemShimmer } from '../../components/Interfaces/CardItemShimmer';
 import { PageWaiting, PageType } from '../../components/PageWaiting';
 import { Paginations } from '../../components/Interfaces/Pagination';
+import SearchServiceOrders from '../../components/Interfaces/SearchServiceOrders';
 
 import api from '../../api/api';
 import { TokenVerify } from '../../utils/tokenVerify';
 
 const limit = 15;
 
-const ProjectsPages: NextPage = () => {
+const ServiceOrdersPages: NextPage = () => {
+    const router = useRouter();
+
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
 
-    const [projects, setProjects] = useState<Project[]>([]);
+    const [serviceOrders, setServiceOrders] = useState<ServiceOrder[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [activePage, setActivePage] = useState(1);
 
@@ -30,16 +35,21 @@ const ProjectsPages: NextPage = () => {
     const [textLoadingMessage, setTextLoadingMessage] = useState('Aguarde, carregando...');
     const [loadingData, setLoadingData] = useState(true);
 
+    const [showSearchModal, setShowSearchModal] = useState(false);
+
+    const handleCloseSearchModal = () => setShowSearchModal(false);
+    const handleShowSearchModal = () => setShowSearchModal(true);
+
     useEffect(() => {
-        handleItemSideBar('projects');
-        handleSelectedMenu('projects-index');
+        handleItemSideBar('service-orders');
+        handleSelectedMenu('service-orders-index');
 
         if (user) {
-            if (can(user, "projects", "read:any")) {
-                let requestUrl = `projects?limit=${limit}&page=${activePage}`;
+            if (can(user, "services", "read:any")) {
+                let requestUrl = `services/orders?limit=${limit}&page=${activePage}`;
 
                 api.get(requestUrl).then(res => {
-                    setProjects(res.data);
+                    setServiceOrders(res.data);
 
                     try {
                         setTotalPages(Number(res.headers['x-total-pages']));
@@ -48,7 +58,7 @@ const ProjectsPages: NextPage = () => {
 
                     setLoadingData(false);
                 }).catch(err => {
-                    console.log('Error to get projects, ', err);
+                    console.log('Error to get services orders, ', err);
 
                     setTypeLoadingMessage("error");
                     setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
@@ -62,11 +72,11 @@ const ProjectsPages: NextPage = () => {
         setActivePage(page);
 
         try {
-            let requestUrl = `projects?limit=${limit}&page=${activePage}`;
+            let requestUrl = `services/orders?limit=${limit}&page=${activePage}`;
 
             const res = await api.get(requestUrl)
 
-            setProjects(res.data);
+            setServiceOrders(res.data);
 
             setTotalPages(Number(res.headers['x-total-pages']));
         }
@@ -78,19 +88,27 @@ const ProjectsPages: NextPage = () => {
         setLoadingData(false);
     }
 
+    function handleSearchTo(serviceOrder: ServiceOrder) {
+        handleRoute(`/service-orders/details/${serviceOrder.id}`);
+    }
+
+    function handleRoute(route: string) {
+        router.push(route);
+    }
+
     return (
         <>
             <NextSeo
-                title="Lista de projetos"
-                description="Lista de projetos da plataforma de gerenciamento da Bioma consultoria."
+                title="Lista de ordens de serviço"
+                description="Lista de ordens de serviço da plataforma de gerenciamento da Bioma consultoria."
                 openGraph={{
                     url: 'https://app.biomaconsultoria.com',
-                    title: 'Lista de projetos',
-                    description: 'Lista de projetos da plataforma de gerenciamento da Bioma consultoria.',
+                    title: 'Lista de ordens de serviço',
+                    description: 'Lista de ordens de serviço da plataforma de gerenciamento da Bioma consultoria.',
                     images: [
                         {
                             url: 'https://app.biomaconsultoria.com/assets/images/logo-bioma.jpg',
-                            alt: 'Lista de projetos | Plataforma Bioma',
+                            alt: 'Lista de ordens de serviço | Plataforma Bioma',
                         },
                         { url: 'https://app.biomaconsultoria.com/assets/images/logo-bioma.jpg' },
                     ],
@@ -105,18 +123,38 @@ const ProjectsPages: NextPage = () => {
                                 <Container className="page-container">
                                     <Row>
                                         {
-                                            loadingData ? <PageWaiting
-                                                status={typeLoadingMessage}
-                                                message={textLoadingMessage}
-                                            /> :
-                                                <>
+                                            loadingData ? <>
+                                                {
+                                                    typeLoadingMessage === "error" ? <PageWaiting
+                                                        status={typeLoadingMessage}
+                                                        message={textLoadingMessage}
+                                                    /> :
+                                                        <CardItemShimmer />
+                                                }
+                                            </> :
+                                                <Col>
                                                     {
-                                                        !!projects.length ? projects.map((project, index) => {
-                                                            return <ProjectListItem key={index} project={project} />
-                                                        }) :
-                                                            <PageWaiting status="empty" message="Nenhum projeto registrado." />
+                                                        !!serviceOrders.length && <Row className="mt-3">
+                                                            <Col className="col-row">
+                                                                <Button
+                                                                    variant="success"
+                                                                    title="Procurar uma ordem de serviço."
+                                                                    onClick={handleShowSearchModal}
+                                                                >
+                                                                    <FaSearch />
+                                                                </Button>
+                                                            </Col>
+                                                        </Row>
                                                     }
-                                                </>
+                                                    <Row>
+                                                        {
+                                                            !!serviceOrders.length ? serviceOrders.map((serviceOrder, index) => {
+                                                                return <ServiceOrderItem key={index} serviceOrder={serviceOrder} />
+                                                            }) :
+                                                                <PageWaiting status="empty" message="Nenhuma ordem de serviço registrada." />
+                                                        }
+                                                    </Row>
+                                                </Col>
 
                                         }
                                     </Row>
@@ -124,7 +162,7 @@ const ProjectsPages: NextPage = () => {
                                     <Row className="row-grow align-items-end">
                                         <Col>
                                             {
-                                                !!projects.length && <Row className="justify-content-center align-items-center">
+                                                !!serviceOrders.length && <Row className="justify-content-center align-items-center">
                                                     <Col className="col-row">
                                                         <Paginations
                                                             pages={totalPages}
@@ -136,6 +174,12 @@ const ProjectsPages: NextPage = () => {
                                             }
                                         </Col>
                                     </Row>
+
+                                    <SearchServiceOrders
+                                        show={showSearchModal}
+                                        handleSearchTo={handleSearchTo}
+                                        handleCloseSearchModal={handleCloseSearchModal}
+                                    />
                                 </Container>
                             </> :
                                 <PageWaiting status="warning" message="Acesso negado!" />
@@ -146,7 +190,7 @@ const ProjectsPages: NextPage = () => {
     )
 }
 
-export default ProjectsPages;
+export default ServiceOrdersPages;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = context.req.cookies;
