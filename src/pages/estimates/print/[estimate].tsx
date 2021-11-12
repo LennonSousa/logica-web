@@ -28,7 +28,7 @@ import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { can } from '../../../components/Users';
-import { Store } from '../../../components/Store';
+import { Store } from '../../../components/Stores';
 import { Estimate } from '../../../components/Estimates';
 import PageBack from '../../../components/PageBack';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';

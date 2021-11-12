@@ -1,5 +1,6 @@
 import { EstimateStatus } from '../EstimateStatus';
 import { User } from '../Users';
+import { Store } from '../Stores'
 import { Panel } from '../Panels';
 import { RoofType } from '../RoofTypes';
 import { RoofOrientation } from '../RoofOrientations';
@@ -8,6 +9,7 @@ import { EstimateItem } from '../EstimateItems';
 export interface Estimate {
     id: string;
     customer: string;
+    customer_from: string;
     document: string;
     phone: string;
     cellphone: string;
@@ -50,6 +52,7 @@ export interface Estimate {
     updated_by: string;
     updated_at: Date;
     user: User;
+    store: Store;
     panel: Panel;
     roof_orientation: RoofOrientation;
     roof_type: RoofType;

@@ -3,6 +3,7 @@ import { Row, Col, ListGroup, Button } from 'react-bootstrap';
 import { FaDonate, FaPencilAlt } from 'react-icons/fa';
 
 import { PayType } from '../PayTypes';
+import { Store } from '../Stores';
 import { Project } from '../Projects';
 import { IncomeItem } from '../IncomeItems';
 import { IncomeAttachment } from '../IncomeAttachments';
@@ -14,6 +15,8 @@ export interface Income {
     description: string;
     value: number;
     created_at: Date;
+    created_by: string;
+    store: Store;
     project: Project | null;
     payType: PayType;
     items: IncomeItem[];

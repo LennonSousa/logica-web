@@ -15,11 +15,11 @@ import { TokenVerify } from '../../utils/tokenVerify';
 import { SideBarContext } from '../../contexts/SideBarContext';
 import { AuthContext } from '../../contexts/AuthContext';
 import { can } from '../../components/Users';
-import { Store } from '../../components/Store';
+import { Store } from '../../components/Stores';
 
 const TextEditor = dynamic(
     () => {
-        return import("../../components/Store/TextEditor");
+        return import("../../components/Stores/TextEditor");
     },
     { ssr: false }
 );

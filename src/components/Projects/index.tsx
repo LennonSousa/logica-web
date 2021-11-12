@@ -4,6 +4,7 @@ import { ProjectAttachmentRequired } from '../ProjectAttachmentsRequired';
 import { ProjectAttachment } from '../ProjectAttachments';
 import { Income } from '../Incomings';
 import { User } from '../Users';
+import { Store } from '../Stores';
 
 export interface Project {
     id: string;
@@ -52,6 +53,7 @@ export interface Project {
     updated_at: Date;
     status: ProjectStatus;
     seller: User | null;
+    store: Store;
     events: ProjectEvent[];
     attachmentsRequired: ProjectAttachmentRequired[];
     attachments: ProjectAttachment[];

@@ -1,3 +1,5 @@
+import { User } from '../Users';
+import { Store } from '../Stores';
 import { Project } from '../Projects';
 
 export interface ServiceOrder {
@@ -30,5 +32,9 @@ export interface ServiceOrder {
     explanation: boolean;
     start_at: Date;
     finish_at: Date;
+    technical: string;
+    created_by: string;
+    user: User;
+    store: Store;
     project: Project;
 }

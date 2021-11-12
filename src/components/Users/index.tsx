@@ -4,6 +4,7 @@ import { Row, Col, ListGroup, Button, Spinner } from 'react-bootstrap';
 import { FaUserEdit, FaPause, FaPlay, FaUserClock, FaUserTag } from 'react-icons/fa';
 
 import api from '../../api/api';
+import { Store } from '../Stores';
 
 type Resource = 'estimates' | 'projects' | 'services' | 'notes' | 'store' | 'settings' | 'finances' | 'users';
 type Action = 'read:any' | 'read:own' | 'create' | 'update:any' | 'update:own' | 'delete';
@@ -11,12 +12,15 @@ type Action = 'read:any' | 'read:own' | 'create' | 'update:any' | 'update:own' |
 export interface User {
     id: string,
     name: string;
+    document: string;
     phone: string;
     email: string;
     password: string;
     active: boolean;
     paused: boolean;
     root: boolean;
+    store_only: boolean;
+    store: Store;
     created_at: Date;
     roles: UserRole[];
     grants: Grants[];

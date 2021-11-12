@@ -14,6 +14,8 @@ import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { User, UserRole, can, translatedRoles } from '../../../components/Users';
+import { cpf, cnpj } from '../../../components/InputMask/masks';
+import { Store } from '../../../components/Stores';
 import PageBack from '../../../components/PageBack';
 import { AlertMessage, statusModal } from '../../../components/Interfaces/AlertMessage';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';
@@ -22,6 +24,13 @@ const validationSchema = Yup.object().shape({
     name: Yup.string().required('Obrigatório!'),
     phone: Yup.string().notRequired(),
 });
+
+const rolesToEditSelf = [
+    'estimates',
+    'projects',
+    'services',
+    'users',
+];
 
 const UserEdit: NextPage = () => {
     const router = useRouter();
@@ -33,13 +42,16 @@ const UserEdit: NextPage = () => {
 
     const [userData, setUserData] = useState<User>();
     const [usersRoles, setUsersRoles] = useState<UserRole[]>([]);
+    const [stores, setStores] = useState<Store[]>([]);
 
     const [loadingData, setLoadingData] = useState(true);
+    const [hasErrors, setHasErrors] = useState(false);
     const [typeLoadingMessage, setTypeLoadingMessage] = useState<PageType>("waiting");
     const [textLoadingMessage, setTextLoadingMessage] = useState('Aguarde, carregando...');
     const [messageShow, setMessageShow] = useState(false);
     const [deletingMessageShow, setDeletingMessageShow] = useState(false);
     const [typeMessage, setTypeMessage] = useState<statusModal>("waiting");
+    const [documentType, setDocumentType] = useState("CPF");
 
     const [showUserDelete, setShowUserDelete] = useState(false);
 
@@ -55,16 +67,30 @@ const UserEdit: NextPage = () => {
                 api.get(`users/${userId}`).then(res => {
                     const userRes: User = res.data;
 
+                    if (userRes.document.length > 14)
+                        setDocumentType("CNPJ");
+
                     setUsersRoles(userRes.roles);
 
                     setUserData(userRes);
-
-                    setLoadingData(false);
                 }).catch(err => {
                     console.log('Error get user to edit, ', err);
 
                     setTypeLoadingMessage("error");
                     setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
+                    setHasErrors(true);
+                });
+
+                api.get('stores').then(res => {
+                    setStores(res.data);
+
+                    setLoadingData(false);
+                }).catch(err => {
+                    console.log('Error to get panels, ', err);
+
+                    setTypeLoadingMessage("error");
+                    setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
+                    setHasErrors(true);
                 });
             }
         }
@@ -189,7 +215,7 @@ const UserEdit: NextPage = () => {
                         {
                             can(user, "users", "update:any") || can(user, "users", "update:own") && userId === user.id ? <>
                                 {
-                                    loadingData ? <PageWaiting
+                                    loadingData || hasErrors ? <PageWaiting
                                         status={typeLoadingMessage}
                                         message={textLoadingMessage}
                                     /> :
@@ -201,16 +227,24 @@ const UserEdit: NextPage = () => {
                                                             <Formik
                                                                 initialValues={{
                                                                     name: userData.name,
+                                                                    document: userData.document,
                                                                     phone: userData.phone ? userData.phone : '',
+                                                                    store_only: userData.store_only,
+                                                                    store: userData.store ? userData.store.id : '',
                                                                 }}
                                                                 onSubmit={async values => {
+                                                                    if (values.store_only && !!!values.store) return;
+
                                                                     setTypeMessage("waiting");
                                                                     setMessageShow(true);
 
                                                                     try {
                                                                         await api.put(`users/${userData.id}`, {
                                                                             name: values.name,
+                                                                            document: values.document,
                                                                             phone: values.phone,
+                                                                            store_only: values.store_only,
+                                                                            store: values.store,
                                                                         });
 
                                                                         if (userId !== user.id && !userData.root) {
@@ -262,7 +296,7 @@ const UserEdit: NextPage = () => {
                                                                         }
 
                                                                         <Row className="mb-3">
-                                                                            <Form.Group as={Col} sm={6} controlId="formGridName">
+                                                                            <Form.Group as={Col} sm={5} controlId="formGridName">
                                                                                 <Form.Label>Nome</Form.Label>
                                                                                 <Form.Control
                                                                                     type="name"
@@ -275,7 +309,33 @@ const UserEdit: NextPage = () => {
                                                                                 <Form.Control.Feedback type="invalid">{touched.name && errors.name}</Form.Control.Feedback>
                                                                             </Form.Group>
 
-                                                                            <Form.Group className="mb-4" controlId="formLoginPhone">
+                                                                            <Form.Group as={Col} sm={3} controlId="formGridDocument">
+                                                                                <Form.Label>{documentType}</Form.Label>
+                                                                                <Form.Control
+                                                                                    type="text"
+                                                                                    maxLength={18}
+                                                                                    onChange={(e) => {
+                                                                                        setFieldValue('document', e.target.value.length <= 14 ? cpf(e.target.value) : cnpj(e.target.value), false);
+                                                                                        if (e.target.value.length > 14)
+                                                                                            setDocumentType("CNPJ");
+                                                                                        else
+                                                                                            setDocumentType("CPF");
+                                                                                    }}
+                                                                                    onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                                                                        setFieldValue('document', e.target.value.length <= 14 ? cpf(e.target.value) : cnpj(e.target.value));
+                                                                                        if (e.target.value.length > 14)
+                                                                                            setDocumentType("CNPJ");
+                                                                                        else
+                                                                                            setDocumentType("CPF");
+                                                                                    }}
+                                                                                    value={values.document}
+                                                                                    name="document"
+                                                                                    isInvalid={!!errors.document && touched.document}
+                                                                                />
+                                                                                <Form.Control.Feedback type="invalid">{touched.document && errors.document}</Form.Control.Feedback>
+                                                                            </Form.Group>
+
+                                                                            <Form.Group as={Col} sm={4} controlId="formLoginPhone">
                                                                                 <Form.Label>Telefone</Form.Label>
                                                                                 <Form.Control
                                                                                     type="text"
@@ -292,6 +352,45 @@ const UserEdit: NextPage = () => {
                                                                                 />
                                                                                 <Form.Control.Feedback type="invalid">{touched.phone && errors.phone}</Form.Control.Feedback>
                                                                             </Form.Group>
+                                                                        </Row>
+
+                                                                        <Row className="mb-2 align-items-center">
+                                                                            <Col sm={3}>
+                                                                                <Form.Check
+                                                                                    type="switch"
+                                                                                    id="store_only"
+                                                                                    label="Vincular a uma loja"
+                                                                                    checked={values.store_only}
+                                                                                    onChange={() => { setFieldValue('store_only', !values.store_only) }}
+                                                                                />
+                                                                            </Col>
+
+                                                                            {
+                                                                                values.store_only && <Form.Group as={Col} sm={4} controlId="formGridStore">
+                                                                                    <Form.Label>Loja</Form.Label>
+                                                                                    <Form.Control
+                                                                                        as="select"
+                                                                                        onChange={handleChange}
+                                                                                        onBlur={handleBlur}
+                                                                                        value={values.store}
+                                                                                        name="store"
+                                                                                        isInvalid={!!errors.store && touched.store}
+                                                                                    >
+                                                                                        <option hidden>Escolha uma opção</option>
+                                                                                        {
+                                                                                            stores.map((store, index) => {
+                                                                                                return <option key={index} value={store.id}>{store.name}</option>
+                                                                                            })
+                                                                                        }
+                                                                                    </Form.Control>
+                                                                                    <Form.Control.Feedback type="invalid">{touched.store && errors.store}</Form.Control.Feedback>
+                                                                                    {
+                                                                                        values.store_only && !!!values.store && <label className="invalid-feedback" style={{ display: 'block' }}>
+                                                                                            Obrigatório escolher uma opção
+                                                                                        </label>
+                                                                                    }
+                                                                                </Form.Group>
+                                                                            }
                                                                         </Row>
 
                                                                         {
@@ -358,7 +457,7 @@ const UserEdit: NextPage = () => {
                                                                                                             </Col>
 
                                                                                                             {
-                                                                                                                role.role === 'users' && <Col>
+                                                                                                                rolesToEditSelf.find(item => { return item === role.role }) && <Col>
                                                                                                                     <Form.Check
                                                                                                                         checked={role.update_self}
                                                                                                                         type="checkbox"

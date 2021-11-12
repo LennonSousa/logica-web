@@ -3,8 +3,8 @@ import { GetServerSideProps } from 'next';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
-import { Button, ButtonGroup, Col, Container, Tab, Tabs, ListGroup, Row } from 'react-bootstrap';
-import { FaAngleRight, FaKey, FaUserEdit } from 'react-icons/fa';
+import { Button, ButtonGroup, Col, Container, ListGroup, Row } from 'react-bootstrap';
+import { FaKey, FaUserEdit } from 'react-icons/fa';
 import { format } from 'date-fns';
 
 import api from '../../../api/api';
@@ -15,14 +15,13 @@ import { User, UserRole, can, translatedRoles } from '../../../components/Users'
 
 import PageBack from '../../../components/PageBack';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';
-import { AlertMessage } from '../../../components/Interfaces/AlertMessage';
 
-import styles from './styles.module.css';
-
-interface TranslateRoles {
-    role: string,
-    translated: string;
-}
+const rolesToEditSelf = [
+    'estimates',
+    'projects',
+    'services',
+    'users',
+];
 
 const UserDetails: NextPage = () => {
     const router = useRouter();
@@ -33,6 +32,7 @@ const UserDetails: NextPage = () => {
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
 
     const [loadingData, setLoadingData] = useState(true);
+    const [documentType, setDocumentType] = useState("CPF");
     const [typeLoadingMessage, setTypeLoadingMessage] = useState<PageType>("waiting");
     const [textLoadingMessage, setTextLoadingMessage] = useState('Aguarde, carregando...');
 
@@ -47,6 +47,9 @@ const UserDetails: NextPage = () => {
             if (can(user, "users", "read:any") || userId === user.id) {
                 api.get(`users/${userId}`).then(res => {
                     let userRes: User = res.data;
+
+                    if (userRes.document.length > 14)
+                        setDocumentType("CNPJ");
 
                     setUsersRoles(userRes.roles);
 
@@ -141,6 +144,20 @@ const UserDetails: NextPage = () => {
                                                                     <Col sm={3} >
                                                                         <Row>
                                                                             <Col>
+                                                                                <span className="text-success">{documentType}</span>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <h6 className="text-secondary">{userData.document}</h6>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    </Col>
+
+                                                                    <Col sm={3} >
+                                                                        <Row>
+                                                                            <Col>
                                                                                 <span className="text-success">Celular</span>
                                                                             </Col>
                                                                         </Row>
@@ -183,6 +200,24 @@ const UserDetails: NextPage = () => {
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
+
+                                                                    {
+                                                                        userData.store_only && <Col sm={4} >
+                                                                            <Row>
+                                                                                <Col>
+                                                                                    <span className="text-success">Vinculado a loja</span>
+                                                                                </Col>
+                                                                            </Row>
+
+                                                                            <Row>
+                                                                                <Col>
+                                                                                    <h6 className="text-secondary">
+                                                                                        {userData.store ? userData.store.name : ''}
+                                                                                    </h6>
+                                                                                </Col>
+                                                                            </Row>
+                                                                        </Col>
+                                                                    }
                                                                 </Row>
 
                                                                 <Row className="mb-3">
@@ -228,10 +263,9 @@ const UserDetails: NextPage = () => {
                                                                                                         </Col>
                                                                                                     }
 
-
-
                                                                                                     {
-                                                                                                        role.role === 'users' && role.update_self && <Col className="col-row">
+                                                                                                        rolesToEditSelf.find(item => { return item === role.role }) && role.update_self &&
+                                                                                                        <Col className="col-row">
                                                                                                             <span>Editar próprio</span>
                                                                                                         </Col>
                                                                                                     }

@@ -5,7 +5,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 
 import api from '../../../api/api';
-import { Store } from '../';
+import { Store } from '..';
 import { AlertMessage, statusModal } from '../../Interfaces/AlertMessage';
 
 
