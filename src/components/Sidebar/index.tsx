@@ -446,8 +446,8 @@ const Sidebar: React.FC = () => {
                         <AccordionButton
                             as={Card.Header}
                             className={styles.menuCardHeader}
-                            eventKey="store"
-                            onClick={() => handleItemSideBar('store')}
+                            eventKey="stores"
+                            onClick={() => handleItemSideBar('stores')}
                         >
                             <div>
                                 <FaStore /> <span>Lojas</span>

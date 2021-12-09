@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "1.6.6-release-candidate",
+  "version": "1.6.7-release-candidate",
   "private": true,
   "scripts": {
     "dev": "next dev",
