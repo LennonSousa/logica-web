@@ -35,6 +35,34 @@ import {
     CalcProps
 } from '../../../utils/calcEstimate';
 
+interface tranlatedCustomerFrom {
+    name: string,
+    translate: string,
+}
+
+const tranlatedsCustomerFrom: tranlatedCustomerFrom[] = [
+    {
+        name: 'site',
+        translate: 'Nosso site'
+    },
+    {
+        name: 'social',
+        translate: 'Redes sociais'
+    },
+    {
+        name: 'customer',
+        translate: 'Outros clientes'
+    },
+    {
+        name: 'internet',
+        translate: 'Buscas na internet'
+    },
+    {
+        name: 'street',
+        translate: 'Propaganda nas ruas'
+    },
+]
+
 const EstimateDetails: NextPage = () => {
     const router = useRouter();
     const { estimate } = router.query;
@@ -58,7 +86,7 @@ const EstimateDetails: NextPage = () => {
             handleItemSideBar('estimates');
             handleSelectedMenu('estimates-index');
 
-            if (can(user, "estimates", "read:any")) {
+            if (can(user, "estimates", "read:any") || can(user, "estimates", "read:own")) {
                 if (estimate) {
                     api.get(`estimates/${estimate}`).then(res => {
                         const estimateRes: Estimate = res.data;
@@ -167,7 +195,7 @@ const EstimateDetails: NextPage = () => {
                 !user || loading ? <PageWaiting status="waiting" /> :
                     <>
                         {
-                            can(user, "estimates", "read:any") ? <>
+                            can(user, "estimates", "read:any") || can(user, "estimates", "read:own") ? <>
                                 {
                                     loadingData || hasErrors ? <PageWaiting
                                         status={typeLoadingMessage}
@@ -235,7 +263,7 @@ const EstimateDetails: NextPage = () => {
                                                                         <h3 className="form-control-plaintext text-success">{data.customer}</h3>
                                                                     </Col>
 
-                                                                    <Col sm={4} >
+                                                                    <Col sm={3}>
                                                                         <Row>
                                                                             <Col>
                                                                                 <span className="text-success">{documentType}</span>
@@ -245,6 +273,24 @@ const EstimateDetails: NextPage = () => {
                                                                         <Row>
                                                                             <Col>
                                                                                 <h6 className="text-secondary">{data.document}</h6>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    </Col>
+
+                                                                    <Col sm={3}>
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <span className="text-success">Como nos conheceu?</span>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <h6 className="text-secondary">{
+                                                                                    tranlatedsCustomerFrom.find(item => {
+                                                                                        return item.name === data.customer_from
+                                                                                    })?.translate
+                                                                                }</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -1044,7 +1090,7 @@ const EstimateDetails: NextPage = () => {
                                                                 </Row>
 
                                                                 <Row className="mb-3">
-                                                                    <Col>
+                                                                    <Col sm={6}>
                                                                         <Row>
                                                                             <Col>
                                                                                 <span className="text-success">Fase do orçamento</span>
@@ -1057,6 +1103,22 @@ const EstimateDetails: NextPage = () => {
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
+
+                                                                    {
+                                                                        !user.store_only && <Col sm={6}>
+                                                                            <Row>
+                                                                                <Col>
+                                                                                    <span className="text-success">Loja</span>
+                                                                                </Col>
+                                                                            </Row>
+
+                                                                            <Row>
+                                                                                <Col>
+                                                                                    <h6 className="text-secondary">{data.store.name}</h6>
+                                                                                </Col>
+                                                                            </Row>
+                                                                        </Col>
+                                                                    }
                                                                 </Row>
 
                                                                 <Row className="mb-3">

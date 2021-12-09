@@ -11,18 +11,16 @@ import {
     FaTasks,
     FaCheck,
     FaStickyNote,
+    FaRegSquare,
     FaUserTie,
     FaFileSignature,
 } from 'react-icons/fa';
-import draftToHtml from 'draftjs-to-html';
-import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 
 import api from '../../../api/api';
 import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { can } from '../../../components/Users';
-import { Store } from '../../../components/Stores';
 import { ServiceOrder } from '../../../components/ServiceOrders';
 import PageBack from '../../../components/PageBack';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';
@@ -36,7 +34,6 @@ const ServiceOrderPrint: NextPage = () => {
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
 
-    const [store, setStore] = useState<Store>();
     const [data, setData] = useState<ServiceOrder>();
     const [documentType, setDocumentType] = useState("CPF");
 
@@ -52,7 +49,7 @@ const ServiceOrderPrint: NextPage = () => {
             handleItemSideBar('service-orders');
             handleSelectedMenu('service-orders-index');
 
-            if (can(user, "services", "read:any")) {
+            if (can(user, "services", "read:any") || can(user, "services", "read:own")) {
                 if (order) {
                     api.get(`services/orders/${order}`).then(res => {
                         const serviceOrderRes: ServiceOrder = res.data;
@@ -64,21 +61,10 @@ const ServiceOrderPrint: NextPage = () => {
                         if (serviceOrderRes.electric_type === "tri") setElectricType("Trifásica");
 
                         setData(serviceOrderRes);
-                    }).catch(err => {
-                        console.log('Error to get service order: ', err);
 
-                        setTypeLoadingMessage("error");
-                        setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
-                        setHasErrors(true);
-                    });
-
-                    api.get('store').then(res => {
-                        const storeRes: Store = res.data;
-
-                        setStore(storeRes);
                         setLoadingData(false);
                     }).catch(err => {
-                        console.log('Error to get store: ', err);
+                        console.log('Error to get service order: ', err);
 
                         setTypeLoadingMessage("error");
                         setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
@@ -116,7 +102,7 @@ const ServiceOrderPrint: NextPage = () => {
                 !user || loading ? <PageWaiting status="waiting" /> :
                     <>
                         {
-                            can(user, "services", "read:any") ? <>
+                            can(user, "services", "read:any") || can(user, "services", "read:own") ? <>
                                 {
                                     loadingData || hasErrors ? <PageWaiting
                                         status={typeLoadingMessage}
@@ -124,7 +110,7 @@ const ServiceOrderPrint: NextPage = () => {
                                     /> :
                                         <>
                                             {
-                                                !data || !store ? <PageWaiting status="waiting" /> :
+                                                !data ? <PageWaiting status="waiting" /> :
                                                     <Container className="content-page">
                                                         <Row>
                                                             <Col>
@@ -156,19 +142,19 @@ const ServiceOrderPrint: NextPage = () => {
                                                                     <Col sm={5}>
                                                                         <Row>
                                                                             <Col className="text-wrap">
-                                                                                <h5 className="text-dark">{store.title}</h5>
+                                                                                <h5 className="text-dark">{data.store.title}</h5>
                                                                             </Col>
                                                                         </Row>
 
                                                                         <Row>
                                                                             <Col className="text-wrap">
-                                                                                <h6 className="text-dark">{`${store.street}, ${store.number} - ${store.neighborhood}`}</h6>
+                                                                                <h6 className="text-dark">{`${data.store.street}, ${data.store.number} - ${data.store.neighborhood}`}</h6>
                                                                             </Col>
                                                                         </Row>
 
                                                                         <Row>
                                                                             <Col className="text-wrap">
-                                                                                <h6 className="text-dark">{store.complement}</h6>
+                                                                                <h6 className="text-dark">{data.store.complement}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -176,19 +162,19 @@ const ServiceOrderPrint: NextPage = () => {
                                                                     <Col sm={5}>
                                                                         <Row>
                                                                             <Col className="text-wrap">
-                                                                                <h6 className="text-dark">{`${store.zip_code}, ${store.city} - ${store.state}`}</h6>
+                                                                                <h6 className="text-dark">{`${data.store.zip_code}, ${data.store.city} - ${data.store.state}`}</h6>
                                                                             </Col>
                                                                         </Row>
 
                                                                         <Row>
                                                                             <Col className="text-wrap">
-                                                                                <h6 className="text-dark">{`${store.phone}, ${store.email}`}</h6>
+                                                                                <h6 className="text-dark">{`${data.store.phone}, ${data.store.email}`}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
 
                                                                     <Col>
-                                                                        <Image fluid src="/assets/images/logo-logica.svg" alt="Lógica Renováveis." />
+                                                                        <Image fluid src={data.store.avatar} alt={data.store.title} />
                                                                     </Col>
                                                                 </Row>
 
@@ -402,7 +388,7 @@ const ServiceOrderPrint: NextPage = () => {
                                                                     <Col sm={4}>
                                                                         <Row>
                                                                             <Col>
-                                                                                <span className="text-success">Nome do Wifi</span>
+                                                                                <span className="text-success">Nome da rede sem fio</span>
                                                                             </Col>
                                                                         </Row>
 
@@ -416,7 +402,7 @@ const ServiceOrderPrint: NextPage = () => {
                                                                     <Col sm={4} >
                                                                         <Row>
                                                                             <Col>
-                                                                                <span className="text-success">Senha do Wifi</span>
+                                                                                <span className="text-success">Senha da rede sem fio</span>
                                                                             </Col>
                                                                         </Row>
 
@@ -537,7 +523,10 @@ const ServiceOrderPrint: NextPage = () => {
                                                                         <Row>
                                                                             <Col className="col-11">
                                                                                 <h6 className="text-secondary text-wrap">
-                                                                                    {data.test_leak && <FaCheck className="text-success" />} Teste de goteira realizado
+                                                                                    {
+                                                                                        data.test_leak ? <FaCheck className="text-success" /> :
+                                                                                            <FaRegSquare className="text-secondary" />
+                                                                                    } Teste de goteira realizado
                                                                                 </h6>
                                                                             </Col>
                                                                         </Row>
@@ -547,7 +536,10 @@ const ServiceOrderPrint: NextPage = () => {
                                                                         <Row>
                                                                             <Col className="col-11">
                                                                                 <h6 className="text-secondary text-wrap">
-                                                                                    {data.test_meter && <FaCheck className="text-success" />} Medidor está adequado?
+                                                                                    {
+                                                                                        data.test_meter ? <FaCheck className="text-success" /> :
+                                                                                            <FaRegSquare className="text-secondary" />
+                                                                                    } Medidor está adequado?
                                                                                 </h6>
                                                                             </Col>
                                                                         </Row>
@@ -557,7 +549,10 @@ const ServiceOrderPrint: NextPage = () => {
                                                                         <Row>
                                                                             <Col className="col-11">
                                                                                 <h6 className="text-secondary text-wrap">
-                                                                                    {data.test_monitor && <FaCheck className="text-success" />} Monitoramento realizado
+                                                                                    {
+                                                                                        data.test_monitor ? <FaCheck className="text-success" /> :
+                                                                                            <FaRegSquare className="text-secondary" />
+                                                                                    } Monitoramento realizado
                                                                                 </h6>
                                                                             </Col>
                                                                         </Row>
@@ -567,7 +562,10 @@ const ServiceOrderPrint: NextPage = () => {
                                                                         <Row>
                                                                             <Col className="col-11">
                                                                                 <h6 className="text-secondary text-wrap">
-                                                                                    {data.explanation && <FaCheck className="text-success" />} Explicação de funcionamento do sistema
+                                                                                    {
+                                                                                        data.explanation ? <FaCheck className="text-success" /> :
+                                                                                            <FaRegSquare className="text-secondary" />
+                                                                                    } Explicação de funcionamento do sistema
                                                                                 </h6>
                                                                             </Col>
                                                                         </Row>
@@ -639,9 +637,9 @@ const ServiceOrderPrint: NextPage = () => {
                                                                 </Row>
 
                                                                 <Row className="justify-content-around text-center">
-                                                                    <Col sm={5}>
+                                                                    <Col sm={4}>
                                                                         <Row className="justify-content-center">
-                                                                            <Col className="border-top mt-1 mb-1"></Col>
+                                                                            <Col sm={11} className="border-top mt-1 mb-1"></Col>
                                                                         </Row>
 
                                                                         <Row className="justify-content-center">
@@ -649,11 +647,35 @@ const ServiceOrderPrint: NextPage = () => {
                                                                                 <h6 className="text-dark">Assinatura do cliente</h6>
                                                                             </Col>
                                                                         </Row>
+
+                                                                        <Row className="justify-content-center">
+                                                                            <Col>
+                                                                                <h6 className="text-dark">{data.customer}</h6>
+                                                                            </Col>
+                                                                        </Row>
                                                                     </Col>
 
-                                                                    <Col sm={5}>
+                                                                    <Col sm={4}>
                                                                         <Row className="justify-content-center">
-                                                                            <Col className="border-top mt-1 mb-1"></Col>
+                                                                            <Col sm={11} className="border-top mt-1 mb-1"></Col>
+                                                                        </Row>
+
+                                                                        <Row className="justify-content-center">
+                                                                            <Col>
+                                                                                <h6 className="text-dark">Conferente</h6>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row className="justify-content-center">
+                                                                            <Col>
+                                                                                <h6 className="text-dark">{data.user ? data.user.name : data.created_by}</h6>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    </Col>
+
+                                                                    <Col sm={4}>
+                                                                        <Row className="justify-content-center">
+                                                                            <Col sm={11} className="border-top mt-1 mb-1"></Col>
                                                                         </Row>
 
                                                                         <Row className="justify-content-center">
@@ -661,12 +683,20 @@ const ServiceOrderPrint: NextPage = () => {
                                                                                 <h6 className="text-dark">Técnico responsável</h6>
                                                                             </Col>
                                                                         </Row>
+
+                                                                        <Row className="justify-content-center">
+                                                                            <Col>
+                                                                                <h6 className="text-dark">{data.technical}</h6>
+                                                                            </Col>
+                                                                        </Row>
                                                                     </Col>
                                                                 </Row>
 
                                                                 <Row>
                                                                     <Col>
-                                                                        <span className="text-secondary text-wrap">{`${store.city}, ${format(new Date(), 'dd/MM/yyyy')}`}</span>
+                                                                        <span className="text-secondary text-wrap">
+                                                                            {`${data.store.city}, ${format(new Date(), 'dd/MM/yyyy')}`}
+                                                                        </span>
                                                                     </Col>
                                                                 </Row>
                                                             </Col>

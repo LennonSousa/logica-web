@@ -46,7 +46,7 @@ export default function Types() {
         handleSelectedMenu('estimates-roofs-orientations');
 
         if (user) {
-            if (can(user, "estimates", "read:any")) {
+            if (can(user, "estimates", "read:any") || can(user, "estimates", "read:own")) {
 
                 api.get('roofs/orientations').then(res => {
                     setRoofOrientations(res.data);

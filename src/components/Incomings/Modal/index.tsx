@@ -11,6 +11,7 @@ import api from '../../../api/api';
 import { can } from '../../Users';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { Income } from '../../Incomings';
+import { Store } from '../../Stores';
 import IncomeItems from '../../IncomeItems';
 import IncomeAttachments, { IncomeAttachment } from '../../IncomeAttachments';
 import { PayType } from '../../PayTypes';
@@ -32,6 +33,7 @@ interface IncomeModalProps {
 const validationSchema = Yup.object().shape({
     description: Yup.string().required('Obrigatório!').max(50, 'Deve conter no máximo 50 caracteres!'),
     value: Yup.string().required('Obrigatório!'),
+    store: Yup.string().required('Obrigatório!'),
     project: Yup.string().notRequired().nullable(),
     payType: Yup.string().required('Obrigatório!'),
 });
@@ -46,7 +48,9 @@ const attachmentValidationSchema = Yup.object().shape({
 
 const IncomeModal: React.FC<IncomeModalProps> = ({ incomeId, show = false, handleIncome, handleCloseModal }) => {
     const { user } = useContext(AuthContext);
+
     const [data, setData] = useState<Income>();
+    const [stores, setStores] = useState<Store[]>([]);
     const [payTypes, setPayTypes] = useState<PayType[]>([]);
     const [incomeAttachments, setProjectAttachments] = useState<IncomeAttachment[]>([]);
 
@@ -85,6 +89,16 @@ const IncomeModal: React.FC<IncomeModalProps> = ({ incomeId, show = false, handl
                 setProjectAttachments(incomeRes.attachments);
 
                 setData(incomeRes);
+
+                if (!incomeRes.project) {
+                    api.get('stores').then(res => {
+                        setStores(res.data);
+                    }).catch(err => {
+                        console.log('Error to get stores, ', err);
+
+                        setHasErrors(true);
+                    });
+                }
 
                 api.get('payments/types').then(res => {
                     setPayTypes(res.data);
@@ -221,7 +235,7 @@ const IncomeModal: React.FC<IncomeModalProps> = ({ incomeId, show = false, handl
                                     {
                                         description: data.description,
                                         value: prettifyCurrency(String(data.value)),
-                                        done: false,
+                                        store: data.store.id,
                                         created_at: data.created_at,
                                         project: data.project ? data.project.id : '',
                                         payType: data.payType.id,
@@ -235,6 +249,7 @@ const IncomeModal: React.FC<IncomeModalProps> = ({ incomeId, show = false, handl
                                         await api.put(`incomings/${data.id}`, {
                                             description: values.description,
                                             value: Number(values.value.replaceAll(".", "").replaceAll(",", ".")),
+                                            store: values.store,
                                             project: values.project,
                                             payType: values.payType,
                                         });
@@ -320,6 +335,30 @@ const IncomeModal: React.FC<IncomeModalProps> = ({ incomeId, show = false, handl
                                                     </Form.Control>
                                                     <Form.Control.Feedback type="invalid">{touched.payType && errors.payType}</Form.Control.Feedback>
                                                 </Form.Group>
+                                            </Row>
+
+                                            <Row className="mb-3">
+                                                {
+                                                    !data.project && !user.store_only && <Form.Group as={Col} controlId="formGridStore">
+                                                        <Form.Label>Loja</Form.Label>
+                                                        <Form.Control
+                                                            as="select"
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            value={values.store}
+                                                            name="store"
+                                                            isInvalid={!!errors.store && touched.store}
+                                                        >
+                                                            <option hidden>Escolha uma opção</option>
+                                                            {
+                                                                stores.map((store, index) => {
+                                                                    return <option key={index} value={store.id}>{store.name}</option>
+                                                                })
+                                                            }
+                                                        </Form.Control>
+                                                        <Form.Control.Feedback type="invalid">{touched.store && errors.store}</Form.Control.Feedback>
+                                                    </Form.Group>
+                                                }
                                             </Row>
                                         </Modal.Body>
                                         <Modal.Footer>

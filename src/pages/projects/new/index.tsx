@@ -15,6 +15,7 @@ import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { can } from '../../../components/Users';
 import { ProjectStatus } from '../../../components/ProjectStatus';
+import { Store } from '../../../components/Stores';
 import { EventProject } from '../../../components/EventsProject';
 import ProjectEvents, { ProjectEvent } from '../../../components/ProjectEvents';
 import { Estimate } from '../../../components/Estimates';
@@ -73,6 +74,7 @@ const validationSchema = Yup.object().shape({
     financier_city: Yup.string().required('Obrigatório!'),
     financier_state: Yup.string().required('Obrigatório!'),
     status: Yup.string().required('Obrigatório!'),
+    store: Yup.string().required('Obrigatório!'),
 });
 
 const NewProject: NextPage = () => {
@@ -84,6 +86,7 @@ const NewProject: NextPage = () => {
 
     const [projectEvents, setProjectEvents] = useState<ProjectEvent[]>([]);
     const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
+    const [stores, setStores] = useState<Store[]>([]);
     const [estimateFrom, setEstimateFrom] = useState<Estimate>();
 
     const [monthsAverage, setMonthsAverage] = useState(0);
@@ -115,6 +118,16 @@ const NewProject: NextPage = () => {
                     setProjectStatus(res.data);
                 }).catch(err => {
                     console.log('Error to get project status, ', err);
+
+                    setTypeLoadingMessage("error");
+                    setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
+                    setHasErrors(true);
+                });
+
+                api.get('stores').then(res => {
+                    setStores(res.data);
+                }).catch(err => {
+                    console.log('Error to get stores, ', err);
 
                     setTypeLoadingMessage("error");
                     setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
@@ -319,6 +332,7 @@ const NewProject: NextPage = () => {
                                                     financier_city: '',
                                                     financier_state: '',
                                                     status: '',
+                                                    store: user.store_only ? user.store.id : '',
                                                 }}
                                                 onSubmit={async values => {
                                                     setTypeMessage("waiting");
@@ -375,6 +389,7 @@ const NewProject: NextPage = () => {
                                                             financier_city: values.financier_city,
                                                             financier_state: values.financier_state,
                                                             status: values.status,
+                                                            store: values.store,
                                                             events,
                                                         });
 
@@ -1203,7 +1218,7 @@ const NewProject: NextPage = () => {
                                                         </Row>
 
                                                         <Row className="mb-3">
-                                                            <Form.Group as={Col} sm={4} controlId="formGridStatus">
+                                                            <Form.Group as={Col} sm={6} controlId="formGridStatus">
                                                                 <Form.Label>Fase</Form.Label>
                                                                 <Form.Control
                                                                     as="select"
@@ -1222,6 +1237,28 @@ const NewProject: NextPage = () => {
                                                                 </Form.Control>
                                                                 <Form.Control.Feedback type="invalid">{touched.status && errors.status}</Form.Control.Feedback>
                                                             </Form.Group>
+
+                                                            {
+                                                                !user.store_only && <Form.Group as={Col} sm={6} controlId="formGridStore">
+                                                                    <Form.Label>Loja</Form.Label>
+                                                                    <Form.Control
+                                                                        as="select"
+                                                                        onChange={handleChange}
+                                                                        onBlur={handleBlur}
+                                                                        value={values.store}
+                                                                        name="store"
+                                                                        isInvalid={!!errors.store && touched.store}
+                                                                    >
+                                                                        <option hidden>Escolha uma opção</option>
+                                                                        {
+                                                                            stores.map((store, index) => {
+                                                                                return <option key={index} value={store.id}>{store.name}</option>
+                                                                            })
+                                                                        }
+                                                                    </Form.Control>
+                                                                    <Form.Control.Feedback type="invalid">{touched.store && errors.store}</Form.Control.Feedback>
+                                                                </Form.Group>
+                                                            }
                                                         </Row>
 
                                                         <Row className="mb-3 justify-content-end">

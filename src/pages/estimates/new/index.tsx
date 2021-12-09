@@ -15,6 +15,7 @@ import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { can } from '../../../components/Users';
 import ConsumptionModal from '../../../components/Estimates/Consumption';
+import { Store } from '../../../components/Stores';
 import { Panel } from '../../../components/Panels';
 import { RoofOrientation } from '../../../components/RoofOrientations';
 import { RoofType } from '../../../components/RoofTypes';
@@ -39,6 +40,9 @@ import {
 
 const validationSchema = Yup.object().shape({
     customer: Yup.string().required('Obrigatório!'),
+    customer_from: Yup.mixed().oneOf([
+        'site', 'social', 'customer', 'internet', 'street'
+    ]).required('Obrigatório!'),
     document: Yup.string().min(14, 'CPF inválido!').max(18, 'CNPJ inválido!').required('Obrigatório!'),
     phone: Yup.string().notRequired(),
     cellphone: Yup.string().notRequired().nullable(),
@@ -58,6 +62,7 @@ const validationSchema = Yup.object().shape({
     percent: Yup.boolean().notRequired(),
     show_values: Yup.boolean().notRequired(),
     show_discount: Yup.boolean().notRequired(),
+    store: Yup.string().required('Obrigatório!'),
     notes: Yup.string().notRequired().nullable(),
     user: Yup.string().notRequired().nullable(),
     roof_type: Yup.string().required('Obrigatório!'),
@@ -71,6 +76,7 @@ const NewEstimate: NextPage = () => {
     const { loading, user } = useContext(AuthContext);
 
     const [panels, setPanels] = useState<Panel[]>([]);
+    const [stores, setStores] = useState<Store[]>([]);
     const [roofOrientations, setRoofOrientations] = useState<RoofOrientation[]>([]);
     const [roofTypes, setRoofTypes] = useState<RoofType[]>([]);
     const [estimateStatusList, setEstimateStatusList] = useState<EstimateStatus[]>([]);
@@ -110,6 +116,16 @@ const NewEstimate: NextPage = () => {
 
         if (user) {
             if (can(user, "estimates", "create")) {
+                api.get('stores').then(res => {
+                    setStores(res.data);
+                }).catch(err => {
+                    console.log('Error to get stores, ', err);
+
+                    setTypeLoadingMessage("error");
+                    setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
+                    setHasErrors(true);
+                });
+
                 api.get('panels').then(res => {
                     setPanels(res.data);
                 }).catch(err => {
@@ -309,6 +325,7 @@ const NewEstimate: NextPage = () => {
                                             <Formik
                                                 initialValues={{
                                                     customer: '',
+                                                    customer_from: '',
                                                     document: '',
                                                     phone: '',
                                                     cellphone: '',
@@ -331,6 +348,7 @@ const NewEstimate: NextPage = () => {
                                                     show_values: false,
                                                     show_discount: false,
                                                     notes: '',
+                                                    store: user.store_only ? user.store.id : '',
                                                     user: user.id,
                                                     status: '',
                                                 }}
@@ -356,6 +374,7 @@ const NewEstimate: NextPage = () => {
 
                                                             const res = await api.post('estimates', {
                                                                 customer: values.customer,
+                                                                customer_from: values.customer_from,
                                                                 document: values.document,
                                                                 phone: values.phone,
                                                                 cellphone: values.cellphone,
@@ -393,6 +412,7 @@ const NewEstimate: NextPage = () => {
                                                                 show_values: values.show_values,
                                                                 show_discount: values.show_discount,
                                                                 notes: values.notes,
+                                                                store: values.store,
                                                                 user: values.user,
                                                                 panel: consumptionValuesToCalc.panel.id,
                                                                 roof_orientation: consumptionValuesToCalc.roofOrientation.id,
@@ -431,7 +451,7 @@ const NewEstimate: NextPage = () => {
                                                         </Row>
 
                                                         <Row className="mb-3">
-                                                            <Form.Group as={Col} sm={8} controlId="formGridName">
+                                                            <Form.Group as={Col} sm={6} controlId="formGridName">
                                                                 <Form.Label>Nome do cliente*</Form.Label>
                                                                 <Form.Control
                                                                     type="name"
@@ -444,7 +464,7 @@ const NewEstimate: NextPage = () => {
                                                                 <Form.Control.Feedback type="invalid">{touched.customer && errors.customer}</Form.Control.Feedback>
                                                             </Form.Group>
 
-                                                            <Form.Group as={Col} sm={4} controlId="formGridDocument">
+                                                            <Form.Group as={Col} sm={3} controlId="formGridDocument">
                                                                 <Form.Label>{documentType}</Form.Label>
                                                                 <Form.Control
                                                                     type="text"
@@ -468,6 +488,26 @@ const NewEstimate: NextPage = () => {
                                                                     isInvalid={!!errors.document && touched.document}
                                                                 />
                                                                 <Form.Control.Feedback type="invalid">{touched.document && errors.document}</Form.Control.Feedback>
+                                                            </Form.Group>
+
+                                                            <Form.Group as={Col} sm={3} controlId="formGridCustomerFrom">
+                                                                <Form.Label>Como nos conheceu?</Form.Label>
+                                                                <Form.Control
+                                                                    as="select"
+                                                                    onChange={handleChange}
+                                                                    onBlur={handleBlur}
+                                                                    value={values.customer_from}
+                                                                    name="customer_from"
+                                                                    isInvalid={!!errors.customer_from && touched.customer_from}
+                                                                >
+                                                                    <option hidden>Escolha uma opção</option>
+                                                                    <option value="site">Nosso site</option>
+                                                                    <option value="social">Redes sociais</option>
+                                                                    <option value="customer">Outros clientes</option>
+                                                                    <option value="internet">Buscas na internet</option>
+                                                                    <option value="street">Propaganda nas ruas</option>
+                                                                </Form.Control>
+                                                                <Form.Control.Feedback type="invalid">{touched.customer_from && errors.customer_from}</Form.Control.Feedback>
                                                             </Form.Group>
                                                         </Row>
 
@@ -1261,6 +1301,28 @@ const NewEstimate: NextPage = () => {
                                                                 </Form.Control>
                                                                 <Form.Control.Feedback type="invalid">{touched.status && errors.status}</Form.Control.Feedback>
                                                             </Form.Group>
+
+                                                            {
+                                                                !user.store_only && <Form.Group as={Col} sm={5} controlId="formGridStore">
+                                                                    <Form.Label>Loja</Form.Label>
+                                                                    <Form.Control
+                                                                        as="select"
+                                                                        onChange={handleChange}
+                                                                        onBlur={handleBlur}
+                                                                        value={values.store}
+                                                                        name="store"
+                                                                        isInvalid={!!errors.store && touched.store}
+                                                                    >
+                                                                        <option hidden>Escolha uma opção</option>
+                                                                        {
+                                                                            stores.map((store, index) => {
+                                                                                return <option key={index} value={store.id}>{store.name}</option>
+                                                                            })
+                                                                        }
+                                                                    </Form.Control>
+                                                                    <Form.Control.Feedback type="invalid">{touched.store && errors.store}</Form.Control.Feedback>
+                                                                </Form.Group>
+                                                            }
                                                         </Row>
 
                                                         <Row className="mb-3">

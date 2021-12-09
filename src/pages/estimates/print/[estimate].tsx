@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { Col, Container, Button, ButtonGroup, Image, Table, Row } from 'react-bootstrap';
 import { format } from 'date-fns';
-import br from 'date-fns/locale/pt-BR'
+import br from 'date-fns/locale/pt-BR';
 import {
     FaPencilAlt,
     FaPlug,
@@ -20,15 +20,12 @@ import {
     FaShieldAlt,
     FaSun,
 } from 'react-icons/fa';
-import draftToHtml from 'draftjs-to-html';
-import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 
 import api from '../../../api/api';
 import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { can } from '../../../components/Users';
-import { Store } from '../../../components/Stores';
 import { Estimate } from '../../../components/Estimates';
 import PageBack from '../../../components/PageBack';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';
@@ -40,6 +37,7 @@ import {
     CalcResultProps,
     CalcProps
 } from '../../../utils/calcEstimate';
+import { getHtml } from '../../../utils/textEditor';
 
 import styles from './styles.module.css'
 
@@ -50,9 +48,9 @@ const EstimatePrint: NextPage = () => {
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
 
-    const [store, setStore] = useState<Store>();
     const [data, setData] = useState<Estimate>();
     const [documentType, setDocumentType] = useState("CPF");
+    const [userDocumentType, setUserDocumentType] = useState("CPF");
     const [calcResults, setCalcResults] = useState<CalcResultProps>();
 
     const [finalTotal, setFinalTotal] = useState(0);
@@ -67,13 +65,16 @@ const EstimatePrint: NextPage = () => {
             handleItemSideBar('estimates');
             handleSelectedMenu('estimates-index');
 
-            if (can(user, "estimates", "read:any")) {
+            if (can(user, "estimates", "read:any") || can(user, "estimates", "read:own")) {
                 if (estimate) {
                     api.get(`estimates/${estimate}`).then(res => {
                         const estimateRes: Estimate = res.data;
 
                         if (estimateRes.document.length > 14)
                             setDocumentType("CNPJ");
+
+                        if (estimateRes.store.document.length > 14)
+                            setUserDocumentType("CNPJ");
 
                         setData(estimateRes);
 
@@ -107,21 +108,9 @@ const EstimatePrint: NextPage = () => {
                         }
 
                         handleCalcEstimate(values, newCalcProps, false);
-                    }).catch(err => {
-                        console.log('Error to get estimate: ', err);
-
-                        setTypeLoadingMessage("error");
-                        setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
-                        setHasErrors(true);
-                    });
-
-                    api.get('store').then(res => {
-                        const storeRes: Store = res.data;
-
-                        setStore(storeRes);
                         setLoadingData(false);
                     }).catch(err => {
-                        console.log('Error to get store: ', err);
+                        console.log('Error to get estimate: ', err);
 
                         setTypeLoadingMessage("error");
                         setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
@@ -164,19 +153,6 @@ const EstimatePrint: NextPage = () => {
         router.push(route);
     }
 
-    const getHtml = (rawText: string) => {
-        try {
-            const rawContent = convertFromRaw(JSON.parse(rawText));
-
-            const content: EditorState = EditorState.createWithContent(rawContent);
-
-            return draftToHtml(convertToRaw(content.getCurrentContent()));
-        }
-        catch {
-            return rawText;
-        }
-    }
-
     return (
         <>
             <NextSeo
@@ -200,7 +176,7 @@ const EstimatePrint: NextPage = () => {
                 !user || loading ? <PageWaiting status="waiting" /> :
                     <>
                         {
-                            can(user, "estimates", "read:any") ? <>
+                            can(user, "estimates", "read:any") || can(user, "estimates", "read:own") ? <>
                                 {
                                     loadingData || hasErrors ? <PageWaiting
                                         status={typeLoadingMessage}
@@ -208,7 +184,7 @@ const EstimatePrint: NextPage = () => {
                                     /> :
                                         <>
                                             {
-                                                !data || !store ? <PageWaiting status="waiting" /> :
+                                                !data ? <PageWaiting status="waiting" /> :
                                                     <Container className="content-page">
                                                         <Row>
                                                             <Col>
@@ -230,48 +206,116 @@ const EstimatePrint: NextPage = () => {
                                                                     </Col>
                                                                 </Row>
 
-                                                                <Row className="mb-3 text-center">
+                                                                <Row className="mb-5 text-center">
                                                                     <Col>
                                                                         <h4 className="text-dark text-wrap">PROPOSTA TÉCNICA E COMERCIAL<br></br>
                                                                             PARA FORNECIMENTO DE SISTEMA SOLAR FOTOVOLTAICO</h4>
                                                                     </Col>
                                                                 </Row>
 
+                                                                <Row className="mt-5 mb-5 text-center">
+                                                                    <Col className="mt-5 mb-5">
+                                                                        <h3 className="form-control-plaintext text-success">{data.customer}</h3>
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <Row className="justify-content-center align-items-center text-center mt-5 mb-5">
+                                                                    <Col className="mt-5 mb-5">
+                                                                        <Image fluid src="/assets/images/estimate-img-01.jpeg" alt="Painéis solares" />
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <Row className="mb-1">
+                                                                    <Col>
+                                                                        <h3 className="form-control-plaintext text-center text-success">
+                                                                            POR QUE ESCOLHER A LOGICA SOLUÇÕES RENOVÁVEIS?
+                                                                        </h3>
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <Row className="mb-5">
+                                                                    <Col>
+                                                                        <span className="text-secondary text-wrap" >
+                                                                            <p>
+                                                                                A Lógica está no mercado há dez anos, oferecendo serviços e atendimento de qualidade,
+                                                                                nossos profissionais são qualificados e passam por constantes reciclagens para atender melhor nossos
+                                                                                clientes.
+                                                                            </p>
+
+                                                                            <p>
+                                                                                Nossa empresa está devidamente registrada nos órgãos competentes do setor, nosso corpo
+                                                                                técnico consta com engenheiro eletricista, técnicos e instaladores registrados e certificados para
+                                                                                dar mais segurança técnica, física e jurídica aos nossos clientes.
+                                                                            </p>
+
+                                                                            <p>
+                                                                                Somos registrados no CREA-MA (CONSELHO REGIONAL DE ENEGENHARIA E AGRONOMIA DO MARANHÃO),
+                                                                                ABGD (ASSOCIAÇÃO BRASILEIRA DE GERAÇÃO DISTRIBUIDA) e PORTAL SOLAR. Consideramos ser de suma importância
+                                                                                para nossos clientes estar devidamente credenciados no maior número de órgãos possíveis do setor, para
+                                                                                que sempre, possamos estar atualizados, bem informados e respaldados para assessorar da melhor maneira
+                                                                                nossos clientes.
+                                                                            </p>
+                                                                        </span>
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <Row className="justify-content-center align-items-center text-center mt-5 mb-5">
+                                                                    <Col sm={3}>
+                                                                        <Image fluid src="/assets/images/estimate-img-02.png" alt="CREA" />
+                                                                    </Col>
+
+                                                                    <Col sm={3}>
+                                                                        <Image fluid src="/assets/images/estimate-img-03.jpeg" alt="Portal solar" />
+                                                                    </Col>
+
+                                                                    <Col sm={3}>
+                                                                        <Image fluid src="/assets/images/estimate-img-04.png" alt="ABGD" />
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <Row className="mt-5 mb-3">
+                                                                    <Col>
+                                                                        <span className="text-secondary text-wrap">{format(new Date(), 'PPPP', { locale: br })}</span>
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <Col style={{ pageBreakBefore: 'always' }} className="border-top mt-1 mb-3"></Col>
+
                                                                 <Row className="align-items-center mb-3">
                                                                     <Col sm={9}>
                                                                         <Row>
                                                                             <Col>
-                                                                                <h5 className="text-dark">{store.title}</h5>
+                                                                                <h5 className="text-dark">{data.store.title}</h5>
                                                                             </Col>
                                                                         </Row>
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-dark">{`${store.street}, ${store.number} - ${store.neighborhood}`}</h6>
+                                                                                <h6 className="text-dark">{`${data.store.street}, ${data.store.number} - ${data.store.neighborhood}`}</h6>
                                                                             </Col>
                                                                         </Row>
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-dark">{store.complement}</h6>
+                                                                                <h6 className="text-dark">{data.store.complement}</h6>
                                                                             </Col>
                                                                         </Row>
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-dark">{`${store.zip_code}, ${store.city} - ${store.state}`}</h6>
+                                                                                <h6 className="text-dark">{`${data.store.zip_code}, ${data.store.city} - ${data.store.state}`}</h6>
                                                                             </Col>
                                                                         </Row>
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-dark">{`${store.phone}, ${store.email}`}</h6>
+                                                                                <h6 className="text-dark">{`${data.store.phone}, ${data.store.email}`}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
 
                                                                     <Col>
-                                                                        <Image fluid src="/assets/images/logo-logica.svg" alt="Lógica Renováveis." />
+                                                                        <Image fluid src={data.store.avatar} alt={data.store.title} />
                                                                     </Col>
                                                                 </Row>
 
@@ -1080,7 +1124,7 @@ const EstimatePrint: NextPage = () => {
                                                                     <Col>
                                                                         <span
                                                                             className="text-secondary text-wrap"
-                                                                            dangerouslySetInnerHTML={{ __html: getHtml(store.services_in) }}
+                                                                            dangerouslySetInnerHTML={{ __html: getHtml(data.store.services_in) }}
                                                                         ></span>
                                                                     </Col>
                                                                 </Row>
@@ -1097,7 +1141,7 @@ const EstimatePrint: NextPage = () => {
                                                                     <Col>
                                                                         <span
                                                                             className="text-secondary text-wrap"
-                                                                            dangerouslySetInnerHTML={{ __html: getHtml(store.warranty) }}
+                                                                            dangerouslySetInnerHTML={{ __html: getHtml(data.store.warranty) }}
                                                                         ></span>
                                                                     </Col>
                                                                 </Row>
@@ -1133,7 +1177,7 @@ const EstimatePrint: NextPage = () => {
                                                                     <Col sm={8}>
                                                                         <h6
                                                                             className="text-secondary text-wrap"
-                                                                            dangerouslySetInnerHTML={{ __html: getHtml(store.engineer) }}
+                                                                            dangerouslySetInnerHTML={{ __html: getHtml(data.store.engineer) }}
                                                                         ></h6>
                                                                     </Col>
                                                                 </Row>
@@ -1177,18 +1221,24 @@ const EstimatePrint: NextPage = () => {
                                                                 </Row>
 
                                                                 <Row className="justify-content-center">
+                                                                    <Col sm={8}>
+                                                                        <h6 className="text-dark">{`${userDocumentType}: ${data.user.document}`}</h6>
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <Row className="justify-content-center">
                                                                     <Col sm={8} className="border-top mt-5 mb-1"></Col>
                                                                 </Row>
 
                                                                 <Row className="justify-content-center">
                                                                     <Col sm={8}>
-                                                                        <h6 className="text-dark">{store.name}</h6>
+                                                                        <h6 className="text-dark">{data.store.name}</h6>
                                                                     </Col>
                                                                 </Row>
 
                                                                 <Row className="justify-content-center">
                                                                     <Col sm={8}>
-                                                                        <h6 className="text-dark">{`CNPJ: ${store.document}`}</h6>
+                                                                        <h6 className="text-dark">{`CNPJ: ${data.store.document}`}</h6>
                                                                     </Col>
                                                                 </Row>
 

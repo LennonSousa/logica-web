@@ -16,10 +16,13 @@ import { User, UserRole, can, translatedRoles } from '../../../components/Users'
 import PageBack from '../../../components/PageBack';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';
 
-const rolesToEditSelf = [
+const rolesToViewSelf = [
     'estimates',
     'projects',
     'services',
+];
+
+const rolesToEditSelf = [
     'users',
 ];
 
@@ -248,6 +251,13 @@ const UserDetails: NextPage = () => {
                                                                                                     {
                                                                                                         role.view && <Col className="col-row">
                                                                                                             <span>Visualizar</span>
+                                                                                                        </Col>
+                                                                                                    }
+
+                                                                                                    {
+                                                                                                        rolesToViewSelf.find(item => { return item === role.role }) && role.view_self &&
+                                                                                                        <Col className="col-row">
+                                                                                                            <span>Visualizar próprio</span>
                                                                                                         </Col>
                                                                                                     }
 

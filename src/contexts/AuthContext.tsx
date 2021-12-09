@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
-import { createContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import Cookies from 'js-cookie';
 
 import api from '../api/api';
+import { StoresContext } from './StoresContext';
 import { User, Grants } from '../components/Users';
 
 interface AuthContextData {
@@ -18,8 +19,9 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
     const router = useRouter();
+    const { handleStores } = useContext(StoresContext);
 
-    const [user, setUser] = useState<User | undefined>(undefined);
+    const [user, setUser] = useState<User>();
     const [signed, setSigned] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -41,6 +43,15 @@ const AuthProvider: React.FC = ({ children }) => {
 
             setSigned(true);
             setUser({ ...userRes, grants: setUserGrants(userRes) });
+
+            try {
+                const storesRes = await api.get('stores');
+
+                handleStores(storesRes.data);
+            }
+            catch (err) {
+                console.log('Error to get stores, ', err);
+            }
 
             setLoading(false);
         }
@@ -73,6 +84,15 @@ const AuthProvider: React.FC = ({ children }) => {
 
                 Cookies.set('user', user.id, { expires: 1, secure: true });
                 Cookies.set('token', token, { expires: 1, secure: true });
+
+                try {
+                    const storesRes = await api.get('stores');
+
+                    handleStores(storesRes.data);
+                }
+                catch (err) {
+                    console.log('Error to get stores, ', err);
+                }
 
                 setSigned(true);
                 setLoading(false);

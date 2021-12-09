@@ -46,7 +46,7 @@ const ProjectStatusPage: NextPage = () => {
         handleSelectedMenu('projects-status');
 
         if (user) {
-            if (can(user, "settings", "read:any")) {
+            if (can(user, "projects", "read:any")) {
                 api.get('projects/status').then(res => {
                     setProjectStatus(res.data);
 
@@ -127,11 +127,11 @@ const ProjectStatusPage: NextPage = () => {
             {
                 !user || loading ? <PageWaiting status="waiting" /> : <>
                     {
-                        can(user, "settings", "read:any") ? <Container className="content-page">
+                        can(user, "projects", "read:any") ? <Container className="content-page">
                             <Row>
                                 <Col>
                                     {
-                                        can(user, "settings", "create") && <Button variant="outline-success" onClick={handleShowModalNewLine}>
+                                        can(user, "projects", "create") && <Button variant="outline-success" onClick={handleShowModalNewLine}>
                                             <FaPlus /> Criar um item
                                         </Button>
                                     }

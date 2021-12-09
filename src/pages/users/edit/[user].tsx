@@ -25,10 +25,13 @@ const validationSchema = Yup.object().shape({
     phone: Yup.string().notRequired(),
 });
 
-const rolesToEditSelf = [
+const rolesToViewSelf = [
     'estimates',
     'projects',
     'services',
+];
+
+const rolesToEditSelf = [
     'users',
 ];
 
@@ -86,7 +89,7 @@ const UserEdit: NextPage = () => {
 
                     setLoadingData(false);
                 }).catch(err => {
-                    console.log('Error to get panels, ', err);
+                    console.log('Error to get stores, ', err);
 
                     setTypeLoadingMessage("error");
                     setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
@@ -106,7 +109,7 @@ const UserEdit: NextPage = () => {
                     return {
                         ...role,
                         view: true,
-                        view_self: true,
+                        view_self: false,
                         create: true,
                         update: true,
                         update_self: true,
@@ -118,12 +121,12 @@ const UserEdit: NextPage = () => {
                     if (role.view) {
                         const updatedRole = handleRole(role, ['create', 'update', 'remove'], false);
 
-                        return { ...updatedRole, view: !updatedRole.view };
+                        return { ...updatedRole, view: !updatedRole.view, view_self: false };
                     }
 
                     return { ...role, view: !role.view };
                 }
-                if (grant === 'view_self') return { ...role, view_self: !role.view_self };
+                if (grant === 'view_self') return { ...role, view_self: !role.view_self, view: false };
                 if (grant === 'create') return { ...role, create: !role.create };
                 if (grant === 'update') {
                     if (role.update) {
@@ -355,41 +358,45 @@ const UserEdit: NextPage = () => {
                                                                         </Row>
 
                                                                         <Row className="mb-2 align-items-center">
-                                                                            <Col sm={3}>
-                                                                                <Form.Check
-                                                                                    type="switch"
-                                                                                    id="store_only"
-                                                                                    label="Vincular a uma loja"
-                                                                                    checked={values.store_only}
-                                                                                    onChange={() => { setFieldValue('store_only', !values.store_only) }}
-                                                                                />
-                                                                            </Col>
-
                                                                             {
-                                                                                values.store_only && <Form.Group as={Col} sm={4} controlId="formGridStore">
-                                                                                    <Form.Label>Loja</Form.Label>
-                                                                                    <Form.Control
-                                                                                        as="select"
-                                                                                        onChange={handleChange}
-                                                                                        onBlur={handleBlur}
-                                                                                        value={values.store}
-                                                                                        name="store"
-                                                                                        isInvalid={!!errors.store && touched.store}
-                                                                                    >
-                                                                                        <option hidden>Escolha uma opção</option>
-                                                                                        {
-                                                                                            stores.map((store, index) => {
-                                                                                                return <option key={index} value={store.id}>{store.name}</option>
-                                                                                            })
-                                                                                        }
-                                                                                    </Form.Control>
-                                                                                    <Form.Control.Feedback type="invalid">{touched.store && errors.store}</Form.Control.Feedback>
+                                                                                !userData.root && userId !== user.id && <>
+                                                                                    <Col sm={3}>
+                                                                                        <Form.Check
+                                                                                            type="switch"
+                                                                                            id="store_only"
+                                                                                            label="Vincular a uma loja"
+                                                                                            checked={values.store_only}
+                                                                                            onChange={() => { setFieldValue('store_only', !values.store_only) }}
+                                                                                        />
+                                                                                    </Col>
+
                                                                                     {
-                                                                                        values.store_only && !!!values.store && <label className="invalid-feedback" style={{ display: 'block' }}>
-                                                                                            Obrigatório escolher uma opção
-                                                                                        </label>
+                                                                                        values.store_only && <Form.Group as={Col} sm={4} controlId="formGridStore">
+                                                                                            <Form.Label>Loja</Form.Label>
+                                                                                            <Form.Control
+                                                                                                as="select"
+                                                                                                onChange={handleChange}
+                                                                                                onBlur={handleBlur}
+                                                                                                value={values.store}
+                                                                                                name="store"
+                                                                                                isInvalid={!!errors.store && touched.store}
+                                                                                            >
+                                                                                                <option hidden>Escolha uma opção</option>
+                                                                                                {
+                                                                                                    stores.map((store, index) => {
+                                                                                                        return <option key={index} value={store.id}>{store.name}</option>
+                                                                                                    })
+                                                                                                }
+                                                                                            </Form.Control>
+                                                                                            <Form.Control.Feedback type="invalid">{touched.store && errors.store}</Form.Control.Feedback>
+                                                                                            {
+                                                                                                values.store_only && !!!values.store && <label className="invalid-feedback" style={{ display: 'block' }}>
+                                                                                                    Obrigatório escolher uma opção
+                                                                                                </label>
+                                                                                            }
+                                                                                        </Form.Group>
                                                                                     }
-                                                                                </Form.Group>
+                                                                                </>
                                                                             }
                                                                         </Row>
 
@@ -430,6 +437,20 @@ const UserEdit: NextPage = () => {
                                                                                                                 />
                                                                                                             </Col>
 
+                                                                                                            {
+                                                                                                                rolesToViewSelf.find(item => { return item === role.role }) && <Col>
+                                                                                                                    <Form.Check
+                                                                                                                        checked={role.view_self}
+                                                                                                                        type="checkbox"
+                                                                                                                        label="Visualizar próprio"
+                                                                                                                        name="type"
+                                                                                                                        id={`formUserRoles${role.id}ViewSelf`}
+                                                                                                                        value={`${role.id}@view_self`}
+                                                                                                                        onChange={handleChecks}
+                                                                                                                    />
+                                                                                                                </Col>
+                                                                                                            }
+
                                                                                                             <Col>
                                                                                                                 <Form.Check
                                                                                                                     checked={role.create}
@@ -439,7 +460,7 @@ const UserEdit: NextPage = () => {
                                                                                                                     id={`formUserRoles${role.id}Create`}
                                                                                                                     value={`${role.id}@create`}
                                                                                                                     onChange={handleChecks}
-                                                                                                                    disabled={!role.view}
+                                                                                                                    disabled={!role.view && !role.view_self}
                                                                                                                 />
                                                                                                             </Col>
 
@@ -452,7 +473,7 @@ const UserEdit: NextPage = () => {
                                                                                                                     id={`formUserRoles${role.id}Update`}
                                                                                                                     value={`${role.id}@update`}
                                                                                                                     onChange={handleChecks}
-                                                                                                                    disabled={!role.view}
+                                                                                                                    disabled={!role.view && !role.view_self}
                                                                                                                 />
                                                                                                             </Col>
 
@@ -487,7 +508,6 @@ const UserEdit: NextPage = () => {
                                                                                                                 <Form.Check
                                                                                                                     checked={
                                                                                                                         role.view &&
-                                                                                                                            role.view_self &&
                                                                                                                             role.create &&
                                                                                                                             role.update &&
                                                                                                                             role.update_self &&

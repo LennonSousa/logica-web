@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button, Col, Form, ListGroup, Modal, Row } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { format } from 'date-fns';
 
 import api from '../../../api/api';
-
+import { StoresContext } from '../../../contexts/StoresContext';
 import { Estimate } from '../../Estimates';
 import { AlertMessage, statusModal } from '../AlertMessage';
 
 interface SearchProps {
     show: boolean,
+    storeOnly?: boolean,
     handleSearchTo: (estimate: Estimate) => void;
     handleCloseSearchModal: () => void;
 }
@@ -19,7 +20,9 @@ const validationSchema = Yup.object().shape({
     customer: Yup.string().required('Obrigatório!'),
 });
 
-const SearchEstimates: React.FC<SearchProps> = ({ show, handleSearchTo, handleCloseSearchModal }) => {
+const SearchEstimates: React.FC<SearchProps> = ({ show, handleSearchTo, handleCloseSearchModal, storeOnly = false }) => {
+    const { stores } = useContext(StoresContext);
+
     const [estimateResults, setEstimateResults] = useState<Estimate[]>([]);
 
     const [messageShow, setMessageShow] = useState(false);
@@ -34,13 +37,16 @@ const SearchEstimates: React.FC<SearchProps> = ({ show, handleSearchTo, handleCl
             <Formik
                 initialValues={{
                     customer: '',
+                    store: 'all',
                 }}
                 onSubmit={async values => {
                     setTypeMessage("waiting");
                     setMessageShow(true);
 
                     try {
-                        const res = await api.get(`estimates?customer=${values.customer}`);
+                        const res = await api.get(
+                            `estimates?customer=${values.customer}${!storeOnly && values.store !== "all" ? `&store=${values.store}` : ''}`
+                        );
 
                         setEstimateResults(res.data);
 
@@ -56,10 +62,32 @@ const SearchEstimates: React.FC<SearchProps> = ({ show, handleSearchTo, handleCl
                 }}
                 validationSchema={validationSchema}
             >
-                {({ handleSubmit, values, errors, touched }) => (
+                {({ handleBlur, handleChange, handleSubmit, values, errors, touched }) => (
                     <>
                         <Modal.Body>
                             <Form onSubmit={handleSubmit}>
+                                {
+                                    !storeOnly && <Form.Group className="mb-3" controlId="formGridStore">
+                                        <Form.Label>Loja</Form.Label>
+                                        <Form.Control
+                                            as="select"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.store}
+                                            name="store"
+                                            isInvalid={!!errors.store && touched.store}
+                                        >
+                                            <option value="all">Todas as lojas</option>
+                                            {
+                                                stores.map((store, index) => {
+                                                    return <option key={index} value={store.id}>{store.name}</option>
+                                                })
+                                            }
+                                        </Form.Control>
+                                        <Form.Control.Feedback type="invalid">{touched.store && errors.store}</Form.Control.Feedback>
+                                    </Form.Group>
+                                }
+
                                 <Form.Group controlId="estimateFormGridName">
                                     <Form.Label>Nome do cliente</Form.Label>
                                     <Form.Control type="search"

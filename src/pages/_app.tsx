@@ -2,8 +2,9 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { NextSeo } from 'next-seo';
 
-import { SideBarProvider } from '../contexts/SideBarContext';
 import { AuthProvider } from '../contexts/AuthContext';
+import { StoresProvider } from '../contexts/StoresContext';
+import { SideBarProvider } from '../contexts/SideBarContext';
 import { Header } from '../components/PageHeader';
 import Sidebar from '../components/Sidebar';
 
@@ -22,20 +23,22 @@ function LogicaApp({ Component, pageProps }: AppProps) {
       <meta name="viewport" content="width=device-width, initial-scale=1" />
     </Head>
 
-    <AuthProvider>
-      <SideBarProvider>
-        <div className={styles.wrapper}>
-          <Header />
-          <div className={styles.main}>
-            <Sidebar />
+    <StoresProvider>
+      <AuthProvider>
+        <SideBarProvider>
+          <div className={styles.wrapper}>
+            <Header />
+            <div className={styles.main}>
+              <Sidebar />
 
-            <section className={styles.content}>
-              <Component {...pageProps} />
-            </section>
+              <section className={styles.content}>
+                <Component {...pageProps} />
+              </section>
+            </div>
           </div>
-        </div>
-      </SideBarProvider>
-    </AuthProvider>
+        </SideBarProvider>
+      </AuthProvider>
+    </StoresProvider>
   </>
 }
 

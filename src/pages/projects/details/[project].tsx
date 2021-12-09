@@ -55,7 +55,7 @@ const ProjectDetails: NextPage = () => {
             handleItemSideBar('projects');
             handleSelectedMenu('projects-index');
 
-            if (can(user, "projects", "read:any")) {
+            if (can(user, "projects", "read:any") || can(user, "projects", "read:own")) {
                 if (project) {
                     api.get(`projects/${project}`).then(res => {
                         let projectRes: Project = res.data;
@@ -165,7 +165,7 @@ const ProjectDetails: NextPage = () => {
                 !user || loading ? <PageWaiting status="waiting" /> :
                     <>
                         {
-                            can(user, "projects", "read:any") ? <>
+                            can(user, "projects", "read:any") || can(user, "projects", "read:own") ? <>
                                 {
                                     loadingData || hasErrors ? <PageWaiting
                                         status={typeLoadingMessage}
@@ -787,7 +787,7 @@ const ProjectDetails: NextPage = () => {
                                                                 </Row>
 
                                                                 <Row className="mb-3">
-                                                                    <Col sm={4} >
+                                                                    <Col sm={6} >
                                                                         <Row>
                                                                             <Col>
                                                                                 <span className="text-success">Situação do projeto</span>
@@ -800,6 +800,22 @@ const ProjectDetails: NextPage = () => {
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
+
+                                                                    {
+                                                                        !user.store_only && <Col sm={6}>
+                                                                            <Row>
+                                                                                <Col>
+                                                                                    <span className="text-success">Loja</span>
+                                                                                </Col>
+                                                                            </Row>
+
+                                                                            <Row>
+                                                                                <Col>
+                                                                                    <h6 className="text-secondary">{data.store.name}</h6>
+                                                                                </Col>
+                                                                            </Row>
+                                                                        </Col>
+                                                                    }
                                                                 </Row>
 
                                                                 <Col className="border-top mt-3 mb-3"></Col>

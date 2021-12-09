@@ -2,8 +2,9 @@ import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { Button, Col, Container, Form, Navbar, Row, Toast } from 'react-bootstrap';
-import { FaSignOutAlt, FaRegUserCircle, FaUserTie, FaUserCog } from 'react-icons/fa';
+import { FaCog, FaSignOutAlt, FaRegUserCircle, FaStickyNote, FaUserTie, FaUserCog } from 'react-icons/fa';
 
+import { can } from '../Users';
 import { AuthContext } from '../../contexts/AuthContext';
 import { SideNavBar } from '../Sidebar';
 
@@ -65,6 +66,16 @@ export function Header() {
 
             <Form>
                 <Row>
+                    <Col>
+                        <Button
+                            variant="outline-light"
+                            onClick={() => handleRoute('/notes')}
+                            title="Anotações"
+                        >
+                            <FaStickyNote />
+                        </Button>
+                    </Col>
+
                     {
                         user && <Col>
                             <Button
@@ -123,6 +134,18 @@ export function Header() {
                                     </Row>
                                 </Toast.Body>
                             </Toast>
+                        </Col>
+                    }
+
+                    {
+                        user && can(user, "projects", "read:any") && <Col>
+                            <Button
+                                variant="outline-light"
+                                onClick={() => handleRoute('/settings')}
+                                title="Configurações"
+                            >
+                                <FaCog />
+                            </Button>
                         </Col>
                     }
                 </Row>

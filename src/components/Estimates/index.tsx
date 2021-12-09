@@ -9,7 +9,7 @@ import { EstimateItem } from '../EstimateItems';
 export interface Estimate {
     id: string;
     customer: string;
-    customer_from: string;
+    customer_from: 'site' | 'social' | 'customer' | 'internet' | 'street';
     document: string;
     phone: string;
     cellphone: string;

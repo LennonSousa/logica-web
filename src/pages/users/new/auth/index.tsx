@@ -281,7 +281,7 @@ const NewUserAuth: NextPage = ({ authenticated, user, token }: InferGetServerSid
                             backdrop="static"
                             keyboard={false}
                         >
-                            <Modal.Header closeButton>
+                            <Modal.Header>
                                 <Modal.Title>Senha alterada!</Modal.Title>
                             </Modal.Header>
 

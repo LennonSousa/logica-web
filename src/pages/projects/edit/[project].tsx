@@ -19,6 +19,7 @@ import { AuthContext } from '../../../contexts/AuthContext';
 import { can } from '../../../components/Users';
 import { Project } from '../../../components/Projects';
 import { ProjectStatus } from '../../../components/ProjectStatus';
+import { Store } from '../../../components/Stores';
 import { EventProject } from '../../../components/EventsProject';
 import { AttachmentRequired } from '../../../components/AttachmentsRequiredProject';
 import Incomings, { Income } from '../../../components/Incomings';
@@ -78,6 +79,7 @@ const validationSchema = Yup.object().shape({
     financier_complement: Yup.string().notRequired().nullable(),
     financier_city: Yup.string().required('Obrigatório!'),
     financier_state: Yup.string().required('Obrigatório!'),
+    store: Yup.string().required('Obrigatório!'),
     status: Yup.string().required('Obrigatório!'),
 });
 
@@ -97,6 +99,7 @@ const ProjectEdit: NextPage = () => {
 
     const [projectData, setProjectData] = useState<Project>();
     const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
+    const [stores, setStores] = useState<Store[]>([]);
     const [projectEvents, setProjectEvents] = useState<ProjectEvent[]>([]);
     const [projectAttachments, setProjectAttachments] = useState<ProjectAttachment[]>([]);
     const [projectAttachmentsRequired, setProjectAttachmentsRequired] = useState<ProjectAttachmentRequired[]>([]);
@@ -149,7 +152,6 @@ const ProjectEdit: NextPage = () => {
         if (user) {
             if (can(user, "projects", "update:any")) {
                 if (project) {
-
                     api.get(`projects/${project}`).then(res => {
                         let projectRes: Project = res.data;
 
@@ -176,6 +178,16 @@ const ProjectEdit: NextPage = () => {
                             setProjectStatus(res.data);
                         }).catch(err => {
                             console.log('Error to get project status, ', err);
+
+                            setTypeLoadingMessage("error");
+                            setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
+                            setHasErrors(true);
+                        });
+
+                        api.get('stores').then(res => {
+                            setStores(res.data);
+                        }).catch(err => {
+                            console.log('Error to get stores, ', err);
 
                             setTypeLoadingMessage("error");
                             setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
@@ -490,6 +502,7 @@ const ProjectEdit: NextPage = () => {
                                                                     financier_complement: projectData.financier_complement,
                                                                     financier_city: projectData.financier_city,
                                                                     financier_state: projectData.financier_state,
+                                                                    store: projectData.store.id,
                                                                     status: projectData.status.id,
                                                                 }}
                                                                 onSubmit={async values => {
@@ -538,6 +551,7 @@ const ProjectEdit: NextPage = () => {
                                                                             financier_complement: values.financier_complement,
                                                                             financier_city: values.financier_city,
                                                                             financier_state: values.financier_state,
+                                                                            store: values.store,
                                                                             status: values.status,
                                                                         });
 
@@ -1353,25 +1367,49 @@ const ProjectEdit: NextPage = () => {
                                                                             </Form.Group>
                                                                         </Row>
 
-                                                                        <Form.Group as={Col} sm={4} controlId="formGridStatus">
-                                                                            <Form.Label>Fase</Form.Label>
-                                                                            <Form.Control
-                                                                                as="select"
-                                                                                onChange={handleChange}
-                                                                                onBlur={handleBlur}
-                                                                                value={values.status}
-                                                                                name="status"
-                                                                                isInvalid={!!errors.status && touched.status}
-                                                                            >
-                                                                                <option hidden>...</option>
-                                                                                {
-                                                                                    projectStatus.map((status, index) => {
-                                                                                        return <option key={index} value={status.id}>{status.name}</option>
-                                                                                    })
-                                                                                }
-                                                                            </Form.Control>
-                                                                            <Form.Control.Feedback type="invalid">{touched.status && errors.status}</Form.Control.Feedback>
-                                                                        </Form.Group>
+                                                                        <Row className="mb-3">
+                                                                            <Form.Group as={Col} sm={6} controlId="formGridStatus">
+                                                                                <Form.Label>Fase</Form.Label>
+                                                                                <Form.Control
+                                                                                    as="select"
+                                                                                    onChange={handleChange}
+                                                                                    onBlur={handleBlur}
+                                                                                    value={values.status}
+                                                                                    name="status"
+                                                                                    isInvalid={!!errors.status && touched.status}
+                                                                                >
+                                                                                    <option hidden>...</option>
+                                                                                    {
+                                                                                        projectStatus.map((status, index) => {
+                                                                                            return <option key={index} value={status.id}>{status.name}</option>
+                                                                                        })
+                                                                                    }
+                                                                                </Form.Control>
+                                                                                <Form.Control.Feedback type="invalid">{touched.status && errors.status}</Form.Control.Feedback>
+                                                                            </Form.Group>
+
+                                                                            {
+                                                                                !user.store_only && <Form.Group as={Col} sm={4} controlId="formGridStore">
+                                                                                    <Form.Label>Loja</Form.Label>
+                                                                                    <Form.Control
+                                                                                        as="select"
+                                                                                        onChange={handleChange}
+                                                                                        onBlur={handleBlur}
+                                                                                        value={values.store}
+                                                                                        name="store"
+                                                                                        isInvalid={!!errors.store && touched.store}
+                                                                                    >
+                                                                                        <option hidden>Escolha uma opção</option>
+                                                                                        {
+                                                                                            stores.map((store, index) => {
+                                                                                                return <option key={index} value={store.id}>{store.name}</option>
+                                                                                            })
+                                                                                        }
+                                                                                    </Form.Control>
+                                                                                    <Form.Control.Feedback type="invalid">{touched.store && errors.store}</Form.Control.Feedback>
+                                                                                </Form.Group>
+                                                                            }
+                                                                        </Row>
 
                                                                         <Row className="mb-3 justify-content-end">
                                                                             {

@@ -3,12 +3,14 @@ import { GetServerSideProps } from 'next';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
-import { Button, Col, Container, Row } from 'react-bootstrap';
-import { FaSearch } from 'react-icons/fa';
+import { Button, Col, Container, Row, Toast } from 'react-bootstrap';
+import { FaFilter, FaSearch } from 'react-icons/fa';
+import { endOfToday, format, subDays } from 'date-fns';
 
 import api from '../../api/api';
 import { TokenVerify } from '../../utils/tokenVerify';
 import { AuthContext } from '../../contexts/AuthContext';
+import { StoresContext } from '../../contexts/StoresContext';
 import { SideBarContext } from '../../contexts/SideBarContext';
 import { can } from '../../components/Users';
 import { Estimate } from '../../components/Estimates';
@@ -17,6 +19,7 @@ import { CardItemShimmer } from '../../components/Interfaces/CardItemShimmer';
 import { PageWaiting, PageType } from '../../components/PageWaiting';
 import { Paginations } from '../../components/Interfaces/Pagination';
 import SearchEstimates from '../../components/Interfaces/SearchEstimates';
+import SearchFilters, { SearchParams } from '../../components/Interfaces/SearchFilters';
 
 const limit = 15;
 
@@ -25,10 +28,20 @@ const Estimates: NextPage = () => {
 
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
+    const { stores } = useContext(StoresContext);
 
     const [estimates, setEstimates] = useState<Estimate[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [activePage, setActivePage] = useState(1);
+
+    const [searchParams, setSearchParams] = useState<SearchParams>({
+        store: "all",
+        status: "all",
+        range: "30",
+        start: subDays(endOfToday(), 30),
+        end: endOfToday(),
+    });
+    const [queryFilters, setQueryFilters] = useState<String[]>([]);
 
     const [loadingData, setLoadingData] = useState(true);
     const [typeLoadingMessage, setTypeLoadingMessage] = useState<PageType>("waiting");
@@ -39,13 +52,24 @@ const Estimates: NextPage = () => {
     const handleCloseSearchModal = () => setShowSearchModal(false);
     const handleShowSearchModal = () => setShowSearchModal(true);
 
+    const [showSearchFiltersModal, setShowSearchFiltersModal] = useState(false);
+
+    const handleCloseSearchFiltersModal = () => setShowSearchFiltersModal(false);
+    const handleShowSearchFiltersModal = () => setShowSearchFiltersModal(true);
+
     useEffect(() => {
         handleItemSideBar('estimates');
         handleSelectedMenu('estimates-index');
 
         if (user) {
-            if (can(user, "estimates", "read:any")) {
-                let requestUrl = `estimates?limit=${limit}&page=${activePage}`;
+            if (can(user, "estimates", "read:any") || can(user, "estimates", "read:own")) {
+                let findConditions = `?limit=${limit}&page=${activePage}`;
+
+                findConditions += `&start=${format(searchParams.start, 'yyyy-MM-dd')}&end=${format(searchParams.end, 'yyyy-MM-dd')}`;
+
+                setQueryFilters(["Últimos 30 dias"]);
+
+                const requestUrl = `estimates${findConditions}`;
 
                 api.get(requestUrl).then(res => {
                     setEstimates(res.data);
@@ -71,7 +95,16 @@ const Estimates: NextPage = () => {
         setActivePage(page);
 
         try {
-            let requestUrl = `estimates?limit=${limit}&page=${activePage}`;
+            let query = `?limit=${limit}&page=${activePage}`;
+
+            if (searchParams.range !== "unlimited")
+                query += `?start=${format(searchParams.start, 'yyyy-MM-dd')}&end=${format(searchParams.end, 'yyyy-MM-dd')}`;
+
+
+            if (searchParams.store !== "all")
+                query += `&store=${searchParams.store}`;
+
+            let requestUrl = `estimates${query}`;
 
             const res = await api.get(requestUrl);
 
@@ -89,6 +122,55 @@ const Estimates: NextPage = () => {
 
     function handleSearchTo(estimate: Estimate) {
         handleRoute(`/estimates/details/${estimate.id}`);
+    }
+
+    async function handleSetFilters(newSearchParams: SearchParams) {
+        setLoadingData(true);
+        setActivePage(1);
+
+        try {
+            let newQueryFilters: String[] = [];
+            let query = `?limit=${limit}&page=1`;
+
+            if (newSearchParams.range === "custom") {
+                query += `&start=${format(newSearchParams.start, 'yyyy-MM-dd')}&end=${format(newSearchParams.end, 'yyyy-MM-dd')}`;
+
+                newQueryFilters.push(`De: ${format(newSearchParams.start, 'dd/MM/yyyy')}, até: ${format(newSearchParams.end, 'dd/MM/yyyy')}`);
+            }
+            else if (newSearchParams.range === "30") {
+                query += `&start=${format(newSearchParams.start, 'yyyy-MM-dd')}&end=${format(newSearchParams.end, 'yyyy-MM-dd')}`;
+
+                newQueryFilters.push("Últimos 30 dias");
+            }
+
+            if (newSearchParams.store !== "all") {
+                query += `&store=${newSearchParams.store}`;
+
+                const store = stores.find(item => { return item.id === newSearchParams.store });
+
+                if (store) {
+                    newQueryFilters.push(store.name.slice(0, 30));
+                }
+            }
+
+            const requestUrl = `estimates${query}`;
+
+            const res = await api.get(requestUrl);
+
+            setQueryFilters(newQueryFilters);
+
+            setSearchParams(newSearchParams);
+
+            setEstimates(res.data);
+
+            setTotalPages(Number(res.headers['x-total-pages']));
+        }
+        catch (err) {
+            setTypeLoadingMessage("error");
+            setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
+        }
+
+        setLoadingData(false);
     }
 
     function handleRoute(route: string) {
@@ -118,7 +200,7 @@ const Estimates: NextPage = () => {
                 !user || loading ? <PageWaiting status="waiting" /> :
                     <>
                         {
-                            can(user, "estimates", "read:any") ? <>
+                            can(user, "estimates", "read:any") || can(user, "estimates", "read:own") ? <>
                                 <Container className="page-container">
                                     <Row>
                                         {
@@ -132,19 +214,46 @@ const Estimates: NextPage = () => {
                                                 }
                                             </> :
                                                 <Col>
-                                                    {
-                                                        !!estimates.length && <Row className="mt-3">
-                                                            <Col className="col-row">
-                                                                <Button
-                                                                    variant="success"
-                                                                    title="Procurar um orçamento."
-                                                                    onClick={handleShowSearchModal}
+                                                    <Row className="mt-3">
+                                                        <Col className="col-row">
+                                                            <Button
+                                                                variant="success"
+                                                                title="Procurar um orçamento."
+                                                                onClick={handleShowSearchModal}
+                                                            >
+                                                                <FaSearch />
+                                                            </Button>
+                                                        </Col>
+
+                                                        <Col className="col-row">
+                                                            <Button
+                                                                variant="success"
+                                                                title="Filtrar resultados."
+                                                                onClick={handleShowSearchFiltersModal}
+                                                            >
+                                                                <FaFilter />
+                                                            </Button>
+                                                        </Col>
+
+                                                        {
+                                                            queryFilters.map((filter, index) => {
+                                                                return <Toast
+                                                                    key={index}
+                                                                    style={{
+                                                                        width: 'auto',
+                                                                        maxWidth: 'fit-content',
+                                                                        marginRight: '1rem',
+                                                                        marginLeft: '1rem',
+                                                                    }}
                                                                 >
-                                                                    <FaSearch />
-                                                                </Button>
-                                                            </Col>
-                                                        </Row>
-                                                    }
+                                                                    <Toast.Header>
+                                                                        <strong className="me-auto">{filter}</strong>
+                                                                    </Toast.Header>
+                                                                </Toast>
+                                                            })
+                                                        }
+                                                    </Row>
+
                                                     <Row>
                                                         {
                                                             !!estimates.length ? estimates.map((estimate, index) => {
@@ -175,8 +284,17 @@ const Estimates: NextPage = () => {
 
                                     <SearchEstimates
                                         show={showSearchModal}
+                                        storeOnly={user.store_only}
                                         handleSearchTo={handleSearchTo}
                                         handleCloseSearchModal={handleCloseSearchModal}
+                                    />
+
+                                    <SearchFilters
+                                        searchParams={searchParams}
+                                        show={showSearchFiltersModal}
+                                        storeOnly={user.store_only}
+                                        handleSetFilters={handleSetFilters}
+                                        handleCloseSearchFiltersModal={handleCloseSearchFiltersModal}
                                     />
                                 </Container>
                             </> :

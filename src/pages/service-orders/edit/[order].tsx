@@ -16,6 +16,8 @@ import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { can } from '../../../components/Users';
 import { ServiceOrder } from '../../../components/ServiceOrders';
+import { Store } from '../../../components/Stores';
+import Members from '../../../components/ServiceOrdersMembers';
 
 import { statesCities } from '../../../components/StatesCities';
 import { cpf, cnpj, cellphone } from '../../../components/InputMask/masks';
@@ -54,7 +56,9 @@ const validationSchema = Yup.object().shape({
     explanation: Yup.boolean().notRequired(),
     start_at: Yup.date().notRequired(),
     finish_at: Yup.date().notRequired(),
+    technical: Yup.string().required('Obrigatório!'),
     project: Yup.string().notRequired(),
+    store: Yup.string().required('Obrigatório!'),
 });
 
 const ServiceOrderEdit: NextPage = () => {
@@ -64,6 +68,7 @@ const ServiceOrderEdit: NextPage = () => {
     const { loading, user } = useContext(AuthContext);
 
     const [data, setData] = useState<ServiceOrder>();
+    const [stores, setStores] = useState<Store[]>([]);
 
     const [spinnerCep, setSpinnerCep] = useState(false);
     const [documentType, setDocumentType] = useState("CPF");
@@ -105,9 +110,20 @@ const ServiceOrderEdit: NextPage = () => {
                         catch { }
 
                         setData(serviceOrderRes);
-                        setLoadingData(false);
                     }).catch(err => {
                         console.log('Error to get project, ', err);
+
+                        setTypeLoadingMessage("error");
+                        setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
+                        setHasErrors(true);
+                    });
+
+                    api.get('stores').then(res => {
+                        setStores(res.data);
+
+                        setLoadingData(false);
+                    }).catch(err => {
+                        console.log('Error to get stores, ', err);
 
                         setTypeLoadingMessage("error");
                         setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
@@ -183,7 +199,20 @@ const ServiceOrderEdit: NextPage = () => {
                                                         <>
                                                             <Row className="mb-3">
                                                                 <Col>
-                                                                    <PageBack href={`/services/orders/details/${data.id}`} subTitle="Voltar para detalhes da ordem de serviço" />
+                                                                    <PageBack href={`/service-orders/details/${data.id}`} subTitle="Voltar para detalhes da ordem de serviço" />
+                                                                </Col>
+                                                            </Row>
+
+                                                            <Row className="mb-3">
+                                                                <Col>
+                                                                    <Row>
+                                                                        <Col>
+                                                                            <h6 className="text-success">Conferente</h6>
+                                                                        </Col>
+                                                                    </Row>
+                                                                    <Row>
+                                                                        <Members name={data.user ? data.user.name : data.created_by} />
+                                                                    </Row>
                                                                 </Col>
                                                             </Row>
 
@@ -217,6 +246,8 @@ const ServiceOrderEdit: NextPage = () => {
                                                                     explanation: data.explanation,
                                                                     start_at: format(new Date(data.start_at), 'yyyy-MM-dd'),
                                                                     finish_at: format(new Date(data.finish_at), 'yyyy-MM-dd'),
+                                                                    technical: data.technical,
+                                                                    store: data.store.id,
                                                                 }}
                                                                 onSubmit={async values => {
                                                                     setTypeMessage("waiting");
@@ -252,6 +283,8 @@ const ServiceOrderEdit: NextPage = () => {
                                                                             explanation: values.explanation,
                                                                             start_at: `${values.start_at} 12:00:00`,
                                                                             finish_at: `${values.finish_at} 12:00:00`,
+                                                                            technical: values.technical,
+                                                                            store: values.store,
                                                                         });
 
                                                                         setTypeMessage("success");
@@ -563,7 +596,7 @@ const ServiceOrderEdit: NextPage = () => {
                                                                             </Form.Group>
 
                                                                             <Form.Group as={Col} sm={4} controlId="formGridWifiName">
-                                                                                <Form.Label>Nome do Wifi</Form.Label>
+                                                                                <Form.Label>Nome da rede sem fio</Form.Label>
                                                                                 <Form.Control
                                                                                     type="text"
                                                                                     onChange={handleChange}
@@ -576,7 +609,7 @@ const ServiceOrderEdit: NextPage = () => {
                                                                             </Form.Group>
 
                                                                             <Form.Group as={Col} sm={4} controlId="formGridWifiPassword">
-                                                                                <Form.Label>Senha do Wifi</Form.Label>
+                                                                                <Form.Label>Senha da rede sem fio</Form.Label>
                                                                                 <Form.Control
                                                                                     type="text"
                                                                                     onChange={handleChange}
@@ -771,6 +804,19 @@ const ServiceOrderEdit: NextPage = () => {
                                                                         <Col className="border-top mt-3 mb-3"></Col>
 
                                                                         <Row className="mb-3">
+                                                                            <Form.Group as={Col} sm={6} controlId="formGridEmail">
+                                                                                <Form.Label>Técnico responsável</Form.Label>
+                                                                                <Form.Control
+                                                                                    type="name"
+                                                                                    onChange={handleChange}
+                                                                                    onBlur={handleBlur}
+                                                                                    value={values.technical}
+                                                                                    name="technical"
+                                                                                    isInvalid={!!errors.technical && touched.technical}
+                                                                                />
+                                                                                <Form.Control.Feedback type="invalid">{touched.technical && errors.technical}</Form.Control.Feedback>
+                                                                            </Form.Group>
+
                                                                             <Form.Group as={Col} sm={3} controlId="formGridExpireAt">
                                                                                 <Form.Label>Início do serviço</Form.Label>
                                                                                 <Form.Control
@@ -796,6 +842,30 @@ const ServiceOrderEdit: NextPage = () => {
                                                                                 />
                                                                                 <Form.Control.Feedback type="invalid">{touched.finish_at && errors.finish_at}</Form.Control.Feedback>
                                                                             </Form.Group>
+                                                                        </Row>
+
+                                                                        <Row className="mb-3">
+                                                                            {
+                                                                                !user.store_only && <Form.Group as={Col} sm={4} controlId="formGridStore">
+                                                                                    <Form.Label>Loja</Form.Label>
+                                                                                    <Form.Control
+                                                                                        as="select"
+                                                                                        onChange={handleChange}
+                                                                                        onBlur={handleBlur}
+                                                                                        value={values.store}
+                                                                                        name="store"
+                                                                                        isInvalid={!!errors.store && touched.store}
+                                                                                    >
+                                                                                        <option hidden>Escolha uma opção</option>
+                                                                                        {
+                                                                                            stores.map((store, index) => {
+                                                                                                return <option key={index} value={store.id}>{store.name}</option>
+                                                                                            })
+                                                                                        }
+                                                                                    </Form.Control>
+                                                                                    <Form.Control.Feedback type="invalid">{touched.store && errors.store}</Form.Control.Feedback>
+                                                                                </Form.Group>
+                                                                            }
                                                                         </Row>
 
                                                                         <Row className="mb-3 justify-content-end">

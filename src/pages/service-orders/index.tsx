@@ -45,7 +45,7 @@ const ServiceOrdersPages: NextPage = () => {
         handleSelectedMenu('service-orders-index');
 
         if (user) {
-            if (can(user, "services", "read:any")) {
+            if (can(user, "services", "read:any") || can(user, "services", "read:own")) {
                 let requestUrl = `services/orders?limit=${limit}&page=${activePage}`;
 
                 api.get(requestUrl).then(res => {
@@ -119,7 +119,7 @@ const ServiceOrdersPages: NextPage = () => {
                 !user || loading ? <PageWaiting status="waiting" /> :
                     <>
                         {
-                            can(user, "projects", "read:any") ? <>
+                            can(user, "projects", "read:any") || can(user, "projects", "read:own") ? <>
                                 <Container className="page-container">
                                     <Row>
                                         {

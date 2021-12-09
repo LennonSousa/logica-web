@@ -244,7 +244,7 @@ const UserResetAuth: NextPage = ({ authenticated, user, token }: InferGetServerS
                             backdrop="static"
                             keyboard={false}
                         >
-                            <Modal.Header closeButton>
+                            <Modal.Header>
                                 <Modal.Title>Cadastro concluído!</Modal.Title>
                             </Modal.Header>
 

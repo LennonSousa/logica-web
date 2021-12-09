@@ -13,6 +13,7 @@ import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { can } from '../../../components/Users';
 import { ServiceOrder } from '../../../components/ServiceOrders';
+import Members from '../../../components/ServiceOrdersMembers';
 
 import PageBack from '../../../components/PageBack';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';
@@ -40,7 +41,7 @@ const ServiceOrderDetails: NextPage = () => {
             handleItemSideBar('service-orders');
             handleSelectedMenu('service-orders-index');
 
-            if (can(user, "projects", "read:any")) {
+            if (can(user, "projects", "read:any") || can(user, "projects", "read:own")) {
                 if (order) {
                     api.get(`services/orders/${order}`).then(res => {
                         let serviceOrderRes: ServiceOrder = res.data;
@@ -92,7 +93,7 @@ const ServiceOrderDetails: NextPage = () => {
                 !user || loading ? <PageWaiting status="waiting" /> :
                     <>
                         {
-                            can(user, "services", "read:any") ? <>
+                            can(user, "services", "read:any") || can(user, "services", "read:own") ? <>
                                 {
                                     loadingData || hasErrors ? <PageWaiting
                                         status={typeLoadingMessage}
@@ -127,6 +128,19 @@ const ServiceOrderDetails: NextPage = () => {
                                                                                 <FaPrint />
                                                                             </Button>
                                                                         </ButtonGroup>
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <Row className="mb-3">
+                                                                    <Col>
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <h6 className="text-success">Conferente</h6>
+                                                                            </Col>
+                                                                        </Row>
+                                                                        <Row>
+                                                                            <Members name={data.user ? data.user.name : data.created_by} />
+                                                                        </Row>
                                                                     </Col>
                                                                 </Row>
 
@@ -332,7 +346,7 @@ const ServiceOrderDetails: NextPage = () => {
                                                                     <Col sm={4}>
                                                                         <Row>
                                                                             <Col>
-                                                                                <span className="text-success">Nome do Wifi</span>
+                                                                                <span className="text-success">Nome da rede sem fio</span>
                                                                             </Col>
                                                                         </Row>
 
@@ -346,7 +360,7 @@ const ServiceOrderDetails: NextPage = () => {
                                                                     <Col sm={4} >
                                                                         <Row>
                                                                             <Col>
-                                                                                <span className="text-success">Senha do Wifi</span>
+                                                                                <span className="text-success">Senha da rede sem fio</span>
                                                                             </Col>
                                                                         </Row>
 
@@ -533,7 +547,7 @@ const ServiceOrderDetails: NextPage = () => {
                                                                 <Col className="border-top mt-3 mb-3"></Col>
 
                                                                 <Row className="mb-3">
-                                                                    <Col sm={4} >
+                                                                    <Col sm={3} >
                                                                         <Row>
                                                                             <Col>
                                                                                 <span className="text-success">Início do serviço</span>
@@ -547,7 +561,7 @@ const ServiceOrderDetails: NextPage = () => {
                                                                         </Row>
                                                                     </Col>
 
-                                                                    <Col sm={4} >
+                                                                    <Col sm={3} >
                                                                         <Row>
                                                                             <Col>
                                                                                 <span className="text-success">Previsão de entrega</span>
@@ -560,6 +574,38 @@ const ServiceOrderDetails: NextPage = () => {
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
+
+                                                                    <Col sm={6} >
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <span className="text-success">Técnico responsável</span>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <h6 className="text-secondary text-wrap">{data.technical}</h6>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <Row className="mb-3">
+                                                                    {
+                                                                        !user.store_only && <Col sm={6}>
+                                                                            <Row>
+                                                                                <Col>
+                                                                                    <span className="text-success">Loja</span>
+                                                                                </Col>
+                                                                            </Row>
+
+                                                                            <Row>
+                                                                                <Col>
+                                                                                    <h6 className="text-secondary">{data.store.name}</h6>
+                                                                                </Col>
+                                                                            </Row>
+                                                                        </Col>
+                                                                    }
                                                                 </Row>
                                                             </Col>
                                                         </Row>

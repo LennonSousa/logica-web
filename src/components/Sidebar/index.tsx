@@ -71,7 +71,7 @@ const Sidebar: React.FC = () => {
                 </Card> */}
 
                 {
-                    can(user, "estimates", "read:any") && <Card className={styles.menuCard}>
+                    (can(user, "estimates", "read:any") || can(user, "estimates", "read:own") || can(user, "estimates", "read:own")) && <Card className={styles.menuCard}>
                         <AccordionButton
                             as={Card.Header}
                             className={styles.menuCardHeader}
@@ -207,7 +207,7 @@ const Sidebar: React.FC = () => {
                 }
 
                 {
-                    can(user, "projects", "read:any") && <Card className={styles.menuCard}>
+                    (can(user, "projects", "read:any") || can(user, "projects", "read:own") || can(user, "projects", "read:own")) && <Card className={styles.menuCard}>
                         <AccordionButton
                             as={Card.Header}
                             className={styles.menuCardHeader}
@@ -324,7 +324,7 @@ const Sidebar: React.FC = () => {
                 }
 
                 {
-                    can(user, "services", "read:any") && <Card className={styles.menuCard}>
+                    (can(user, "services", "read:any") || can(user, "services", "read:own") || can(user, "services", "read:own")) && <Card className={styles.menuCard}>
                         <AccordionButton
                             as={Card.Header}
                             className={styles.menuCardHeader}
@@ -450,18 +450,36 @@ const Sidebar: React.FC = () => {
                             onClick={() => handleItemSideBar('store')}
                         >
                             <div>
-                                <FaStore /> <span>Loja</span>
+                                <FaStore /> <span>Lojas</span>
                             </div>
                         </AccordionButton>
 
-                        <Accordion.Collapse eventKey="store">
+                        <Accordion.Collapse eventKey="stores">
                             <Card.Body className={styles.menuCardBody}>
+                                <Link href="/stores">
+                                    <a title="Listar todas a lojas." data-title="Listar todas a lojas.">
+                                        <Row
+                                            className={
+                                                selectedMenu === 'stores-index' ? styles.selectedMenuCardBodyItem :
+                                                    styles.menuCardBodyItem
+                                            }
+                                        >
+                                            <Col sm={1}>
+                                                <FaList size={14} />
+                                            </Col>
+                                            <Col>
+                                                <span>Lista</span>
+                                            </Col>
+                                        </Row>
+                                    </a>
+                                </Link>
+
                                 {
-                                    can(user, "store", "update:any") && <Link href="/store">
-                                        <a title="Editar as informações da loja." data-title="Editar as informações da loja.">
+                                    can(user, "store", "create") && <Link href="/stores/new">
+                                        <a title="Cria uma loja." data-title="Cria uma loja.">
                                             <Row
                                                 className={
-                                                    selectedMenu === 'store-edit' ? styles.selectedMenuCardBodyItem :
+                                                    selectedMenu === 'stores-new' ? styles.selectedMenuCardBodyItem :
                                                         styles.menuCardBodyItem
                                                 }
                                             >
@@ -469,7 +487,7 @@ const Sidebar: React.FC = () => {
                                                     <FaPencilAlt size={14} />
                                                 </Col>
                                                 <Col>
-                                                    <span>Configurar</span>
+                                                    <span>Criar</span>
                                                 </Col>
                                             </Row>
                                         </a>
@@ -550,7 +568,7 @@ export function SideNavBar() {
             </Link>
 
             {
-                can(user, "estimates", "read:any") && <NavDropdown title="Clientes" id="estimates-dropdown">
+                can(user, "estimates", "read:any") || can(user, "estimates", "read:own") || can(user, "estimates", "read:own") && <NavDropdown title="Clientes" id="estimates-dropdown">
                     <Link href="/estimates" passHref>
                         <NavDropdown.Item ><FaList size={14} /> Lista</NavDropdown.Item>
                     </Link>
@@ -578,7 +596,7 @@ export function SideNavBar() {
             }
 
             {
-                can(user, "projects", "read:any") && <NavDropdown title="Projetos" id="projects-dropdown">
+                can(user, "projects", "read:any") || can(user, "projects", "read:own") || can(user, "projects", "read:own") && <NavDropdown title="Projetos" id="projects-dropdown">
                     <Link href="/projects" passHref>
                         <NavDropdown.Item ><FaList size={14} /> Lista</NavDropdown.Item>
                     </Link>

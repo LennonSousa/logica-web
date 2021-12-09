@@ -89,10 +89,10 @@ export default function TextEditor({ type, data }: WaitingModalProps) {
     }
 
     return (
-        <Row>
+        <Row className="mt-3">
             <Col>
                 <Row>
-                    <Col className="border-top mt-3 mb-3"></Col>
+                    <Col className="border-top mt-3 mb-5"></Col>
                 </Row>
 
                 <Row className="mb-3">
