@@ -235,7 +235,7 @@ const EditStore: NextPage = () => {
 
                                                                     <Row className="mb-3 align-items-end">
                                                                         <Col md={3} sm={1}>
-                                                                            <Image src={imagePreview} rounded fluid thumbnail />
+                                                                            <Image src={imagePreview} alt={values.name} rounded fluid thumbnail />
                                                                         </Col>
                                                                         <Col md={6} sm={4}>
                                                                             <Form.Group controlId="procuctImageFile" className="mb-3">

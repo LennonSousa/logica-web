@@ -69,7 +69,7 @@ const Notifications: React.FC<NotificationsProps> = ({ notification, estimateSta
 
             setStageName(foundStatus.description);
         }
-    }, [notification, showModalEditType]);
+    }, [notification, estimateStatusList, showModalEditType]);
 
     async function deleteItem() {
         if (iconDelete) {
