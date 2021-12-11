@@ -574,25 +574,27 @@ const ProjectDetails: NextPage = () => {
                                                                     </Col>
                                                                 </Row>
 
-                                                                <Row className="mb-3">
-                                                                    <Col sm={3}>
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Valor</span>
-                                                                            </Col>
-                                                                        </Row>
+                                                                {
+                                                                    can(user, "finances", "read:any") && <Row className="mb-3">
+                                                                        <Col sm={3}>
+                                                                            <Row>
+                                                                                <Col>
+                                                                                    <span className="text-success">Valor</span>
+                                                                                </Col>
+                                                                            </Row>
 
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6
-                                                                                    className="text-secondary"
-                                                                                >
-                                                                                    {`R$ ${Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(data.price)}`}
-                                                                                </h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-                                                                </Row>
+                                                                            <Row>
+                                                                                <Col>
+                                                                                    <h6
+                                                                                        className="text-secondary"
+                                                                                    >
+                                                                                        {`R$ ${Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(data.price)}`}
+                                                                                    </h6>
+                                                                                </Col>
+                                                                            </Row>
+                                                                        </Col>
+                                                                    </Row>
+                                                                }
 
                                                                 <Col className="border-top mt-3 mb-3"></Col>
 
