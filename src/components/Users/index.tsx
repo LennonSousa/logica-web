@@ -119,6 +119,7 @@ const Users: React.FC<UsersProps> = ({ user, userAuthenticated, handleListUsers 
             if (userAuthenticated.id !== user.id && !user.root) {
                 await api.put(`users/${user.id}`, {
                     name: user.name,
+                    document: user.document,
                     phone: user.phone,
                     paused: !user.paused,
                 });
