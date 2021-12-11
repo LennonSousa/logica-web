@@ -13,9 +13,9 @@ import api from '../../../api/api';
 import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
+import { StoresContext } from '../../../contexts/StoresContext';
 import { can } from '../../../components/Users';
 import { ProjectStatus } from '../../../components/ProjectStatus';
-import { Store } from '../../../components/Stores';
 import { EventProject } from '../../../components/EventsProject';
 import ProjectEvents, { ProjectEvent } from '../../../components/ProjectEvents';
 import { Estimate } from '../../../components/Estimates';
@@ -83,10 +83,10 @@ const NewProject: NextPage = () => {
 
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
+    const { stores } = useContext(StoresContext);
 
     const [projectEvents, setProjectEvents] = useState<ProjectEvent[]>([]);
     const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
-    const [stores, setStores] = useState<Store[]>([]);
     const [estimateFrom, setEstimateFrom] = useState<Estimate>();
 
     const [monthsAverage, setMonthsAverage] = useState(0);
@@ -118,16 +118,6 @@ const NewProject: NextPage = () => {
                     setProjectStatus(res.data);
                 }).catch(err => {
                     console.log('Error to get project status, ', err);
-
-                    setTypeLoadingMessage("error");
-                    setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
-                    setHasErrors(true);
-                });
-
-                api.get('stores').then(res => {
-                    setStores(res.data);
-                }).catch(err => {
-                    console.log('Error to get stores, ', err);
 
                     setTypeLoadingMessage("error");
                     setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
@@ -332,7 +322,7 @@ const NewProject: NextPage = () => {
                                                     financier_city: '',
                                                     financier_state: '',
                                                     status: '',
-                                                    store: user.store_only ? user.store.id : '',
+                                                    store: user.store_only ? (user.store ? user.store.id : '') : '',
                                                 }}
                                                 onSubmit={async values => {
                                                     setTypeMessage("waiting");

@@ -29,9 +29,10 @@ export interface Store {
 
 interface StoreProps {
     store: Store;
+    canEdit?: boolean;
 }
 
-const Stores: React.FC<StoreProps> = ({ store }) => {
+const Stores: React.FC<StoreProps> = ({ store, canEdit = false }) => {
     const router = useRouter();
 
     function goToEdit() {
@@ -47,9 +48,11 @@ const Stores: React.FC<StoreProps> = ({ store }) => {
 
                 <Col><span>{store.state}</span></Col>
 
-                <Col className="text-end">
-                    <Button variant="outline-success" className="button-link" onClick={goToEdit}><FaPencilAlt /> Editar</Button>
-                </Col>
+                {
+                    canEdit && <Col className="text-end">
+                        <Button variant="outline-success" className="button-link" onClick={goToEdit}><FaPencilAlt /> Editar</Button>
+                    </Col>
+                }
             </Row>
         </ListGroup.Item>
     )

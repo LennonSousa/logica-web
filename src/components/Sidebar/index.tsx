@@ -476,7 +476,7 @@ const Sidebar: React.FC = () => {
 
                                 {
                                     can(user, "store", "create") && <Link href="/stores/new">
-                                        <a title="Cria uma loja." data-title="Cria uma loja.">
+                                        <a title="Criar uma loja." data-title="Criar uma loja.">
                                             <Row
                                                 className={
                                                     selectedMenu === 'stores-new' ? styles.selectedMenuCardBodyItem :

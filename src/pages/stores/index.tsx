@@ -93,6 +93,7 @@ const StoresPage: NextPage = () => {
                                                                     return <Stores
                                                                         key={store.id}
                                                                         store={store}
+                                                                        canEdit={can(user, "store", "update:any")}
                                                                     />
                                                                 })
                                                             }

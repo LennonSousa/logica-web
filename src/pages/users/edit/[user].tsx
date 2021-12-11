@@ -31,10 +31,6 @@ const rolesToViewSelf = [
     'services',
 ];
 
-const rolesToEditSelf = [
-    'users',
-];
-
 const UserEdit: NextPage = () => {
     const router = useRouter();
     const userId = router.query['user'];
@@ -466,30 +462,15 @@ const UserEdit: NextPage = () => {
 
                                                                                                             <Col>
                                                                                                                 <Form.Check
-                                                                                                                    checked={role.update}
+                                                                                                                    checked={role.update_self}
                                                                                                                     type="checkbox"
-                                                                                                                    label="Editar"
+                                                                                                                    label="Editar próprio"
                                                                                                                     name="type"
-                                                                                                                    id={`formUserRoles${role.id}Update`}
-                                                                                                                    value={`${role.id}@update`}
+                                                                                                                    id={`formUserRoles${role.id}UpdateSelf`}
+                                                                                                                    value={`${role.id}@update_self`}
                                                                                                                     onChange={handleChecks}
-                                                                                                                    disabled={!role.view && !role.view_self}
                                                                                                                 />
                                                                                                             </Col>
-
-                                                                                                            {
-                                                                                                                rolesToEditSelf.find(item => { return item === role.role }) && <Col>
-                                                                                                                    <Form.Check
-                                                                                                                        checked={role.update_self}
-                                                                                                                        type="checkbox"
-                                                                                                                        label="Editar próprio"
-                                                                                                                        name="type"
-                                                                                                                        id={`formUserRoles${role.id}UpdateSelf`}
-                                                                                                                        value={`${role.id}@update_self`}
-                                                                                                                        onChange={handleChecks}
-                                                                                                                    />
-                                                                                                                </Col>
-                                                                                                            }
 
                                                                                                             <Col>
                                                                                                                 <Form.Check

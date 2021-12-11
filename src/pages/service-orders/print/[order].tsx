@@ -692,7 +692,7 @@ const ServiceOrderPrint: NextPage = () => {
                                                                     </Col>
                                                                 </Row>
 
-                                                                <Row>
+                                                                <Row className="mt-2 text-end">
                                                                     <Col>
                                                                         <span className="text-secondary text-wrap">
                                                                             {`${data.store.city}, ${format(new Date(), 'dd/MM/yyyy')}`}

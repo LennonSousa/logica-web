@@ -77,6 +77,18 @@ export function Header() {
                     </Col>
 
                     {
+                        user && can(user, "projects", "read:any") && <Col>
+                            <Button
+                                variant="outline-light"
+                                onClick={() => handleRoute('/settings')}
+                                title="Configurações"
+                            >
+                                <FaCog />
+                            </Button>
+                        </Col>
+                    }
+
+                    {
                         user && <Col>
                             <Button
                                 variant="outline-light"
@@ -134,18 +146,6 @@ export function Header() {
                                     </Row>
                                 </Toast.Body>
                             </Toast>
-                        </Col>
-                    }
-
-                    {
-                        user && can(user, "projects", "read:any") && <Col>
-                            <Button
-                                variant="outline-light"
-                                onClick={() => handleRoute('/settings')}
-                                title="Configurações"
-                            >
-                                <FaCog />
-                            </Button>
                         </Col>
                     }
                 </Row>

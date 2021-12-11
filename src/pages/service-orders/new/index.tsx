@@ -14,9 +14,9 @@ import api from '../../../api/api';
 import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
+import { StoresContext } from '../../../contexts/StoresContext';
 import { can } from '../../../components/Users';
 
-import { Store } from '../../../components/Stores';
 import { Project } from '../../../components/Projects';
 import Members from '../../../components/ServiceOrdersMembers';
 
@@ -67,9 +67,9 @@ const NewServiceOrder: NextPage = () => {
 
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
+    const { stores } = useContext(StoresContext);
 
     const [projectFrom, setProjectFrom] = useState<Project>();
-    const [stores, setStores] = useState<Store[]>([]);
 
     const [spinnerCep, setSpinnerCep] = useState(false);
     const [documentType, setDocumentType] = useState("CPF");
@@ -90,9 +90,9 @@ const NewServiceOrder: NextPage = () => {
             if (can(user, "services", "create")) {
                 if (from) {
                     api.get(`projects/${from}`).then(res => {
-                        let estimateRes: Project = res.data;
+                        let projectRes: Project = res.data;
 
-                        if (estimateRes.document.length > 14)
+                        if (projectRes.document.length > 14)
                             setDocumentType("CNPJ");
 
                         try {
@@ -103,7 +103,9 @@ const NewServiceOrder: NextPage = () => {
                         }
                         catch { }
 
-                        setProjectFrom(estimateRes);
+                        setProjectFrom(projectRes);
+
+                        setLoadingData(false);
                     }).catch(err => {
                         console.log('Error to get from project, ', err);
 
@@ -112,18 +114,6 @@ const NewServiceOrder: NextPage = () => {
                         setHasErrors(true);
                     });
                 }
-
-                api.get('stores').then(res => {
-                    setStores(res.data);
-
-                    setLoadingData(false);
-                }).catch(err => {
-                    console.log('Error to get stores, ', err);
-
-                    setTypeLoadingMessage("error");
-                    setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
-                    setHasErrors(true);
-                });
             }
         }
     }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -209,7 +199,7 @@ const NewServiceOrder: NextPage = () => {
                                                     finish_at: format(new Date(), 'yyyy-MM-dd'),
                                                     technical: '',
                                                     project: projectFrom ? projectFrom.id : '',
-                                                    store: user.store_only ? user.store.id : '',
+                                                    store: user.store_only ? (user.store ? user.store.id : '') : projectFrom ? projectFrom.store.id : '',
                                                 }}
                                                 onSubmit={async values => {
                                                     setTypeMessage("waiting");

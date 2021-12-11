@@ -11,10 +11,10 @@ import { FaKey } from 'react-icons/fa';
 import api from '../../../api/api';
 import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
+import { StoresContext } from '../../../contexts/StoresContext';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { UserRole, can, translatedRoles } from '../../../components/Users';
 import { cpf, cnpj } from '../../../components/InputMask/masks';
-import { Store } from '../../../components/Stores';
 import PageBack from '../../../components/PageBack';
 import { AlertMessage, statusModal } from '../../../components/Interfaces/AlertMessage';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';
@@ -28,10 +28,6 @@ const rolesToViewSelf = [
     'estimates',
     'projects',
     'services',
-];
-
-const rolesToEditSelf = [
-    'users',
 ];
 
 const validationSchema = Yup.object().shape({
@@ -56,9 +52,9 @@ const validationSchema = Yup.object().shape({
 const NewUser: NextPage = () => {
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
+    const { stores } = useContext(StoresContext);
 
     const [usersRoles, setUsersRoles] = useState<UserRole[]>([]);
-    const [stores, setStores] = useState<Store[]>([]);
 
     const [loadingData, setLoadingData] = useState(true);
     const [hasErrors, setHasErrors] = useState(false);
@@ -79,6 +75,19 @@ const NewUser: NextPage = () => {
                 const roles: userRoles[] = res.data;
 
                 setUsersRoles(roles.map(role => {
+                    if (role.role === "users") {
+                        return {
+                            id: role.role,
+                            role: role.role,
+                            view: false,
+                            view_self: true,
+                            create: false,
+                            update: false,
+                            update_self: true,
+                            remove: false,
+                        }
+                    }
+
                     return {
                         id: role.role,
                         role: role.role,
@@ -90,20 +99,10 @@ const NewUser: NextPage = () => {
                         remove: false,
                     }
                 }));
-            }).catch(err => {
-                console.log('Error get users roles, ', err);
-
-                setTypeLoadingMessage("error");
-                setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
-                setHasErrors(true);
-            });
-
-            api.get('stores').then(res => {
-                setStores(res.data);
 
                 setLoadingData(false);
             }).catch(err => {
-                console.log('Error to get stores, ', err);
+                console.log('Error get users roles, ', err);
 
                 setTypeLoadingMessage("error");
                 setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
@@ -214,7 +213,7 @@ const NewUser: NextPage = () => {
                                                     document: '',
                                                     email: '',
                                                     store_only: user.store_only,
-                                                    store: user.store_only ? user.store.id : '',
+                                                    store: user.store_only ? (user.store ? user.store.id : '') : '',
                                                 }}
                                                 onSubmit={async values => {
                                                     if (values.store_only && !!!values.store) return;

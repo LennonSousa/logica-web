@@ -14,8 +14,8 @@ import api from '../../../api/api';
 import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
+import { StoresContext } from '../../../contexts/StoresContext';
 import { can } from '../../../components/Users';
-import { Store } from '../../../components/Stores';
 import { Note } from '../../../components/Notes';
 import { User } from '../../../components/Users';
 import NoteShareItem, { NoteShare } from '../../../components/NoteShares';
@@ -60,8 +60,8 @@ const NewNote: NextPage = () => {
 
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
+    const { stores } = useContext(StoresContext);
 
-    const [stores, setStores] = useState<Store[]>([]);
     const [noteShares, setNoteShares] = useState<NoteShare[]>([]);
     const [noteAttachments, setNoteAttachments] = useState<NoteAttachment[]>([]);
 
@@ -109,16 +109,6 @@ const NewNote: NextPage = () => {
             }
 
             setNoteShares([...noteShares, share]);
-
-            api.get('stores').then(res => {
-                setStores(res.data);
-            }).catch(err => {
-                console.log('Error to get stores, ', err);
-
-                setTypeLoadingMessage("error");
-                setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
-                setHasErrors(true);
-            });
 
             setLoadingData(false);
         }
@@ -212,7 +202,7 @@ const NewNote: NextPage = () => {
                                             title: '',
                                             text: '',
                                             store_only: user.store_only,
-                                            store: user.store_only ? user.store.id : '',
+                                            store: user.store_only ? (user.store ? user.store.id : '') : '',
                                         }}
                                         onSubmit={async values => {
                                             setTypeMessage("waiting");
