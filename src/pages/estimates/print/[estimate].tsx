@@ -73,7 +73,7 @@ const EstimatePrint: NextPage = () => {
                         if (estimateRes.document.length > 14)
                             setDocumentType("CNPJ");
 
-                        if (estimateRes.store.document.length > 14)
+                        if (estimateRes.user && estimateRes.user.document.length > 14)
                             setUserDocumentType("CNPJ");
 
                         setData(estimateRes);

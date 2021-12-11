@@ -462,18 +462,6 @@ const UserEdit: NextPage = () => {
 
                                                                                                             <Col>
                                                                                                                 <Form.Check
-                                                                                                                    checked={role.update_self}
-                                                                                                                    type="checkbox"
-                                                                                                                    label="Editar próprio"
-                                                                                                                    name="type"
-                                                                                                                    id={`formUserRoles${role.id}UpdateSelf`}
-                                                                                                                    value={`${role.id}@update_self`}
-                                                                                                                    onChange={handleChecks}
-                                                                                                                />
-                                                                                                            </Col>
-
-                                                                                                            <Col>
-                                                                                                                <Form.Check
                                                                                                                     checked={role.remove}
                                                                                                                     type="checkbox"
                                                                                                                     label="Excluir"
