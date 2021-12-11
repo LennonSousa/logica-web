@@ -104,6 +104,8 @@ const NewServiceOrder: NextPage = () => {
                         catch { }
 
                         setProjectFrom(projectRes);
+
+                        setLoadingData(false);
                     }).catch(err => {
                         console.log('Error to get from project, ', err);
 
@@ -112,8 +114,8 @@ const NewServiceOrder: NextPage = () => {
                         setHasErrors(true);
                     });
                 }
-
-                setLoadingData(false);
+                else
+                    setLoadingData(false);
             }
         }
     }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
