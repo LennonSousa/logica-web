@@ -11,6 +11,7 @@ import {
     FaFileExport,
     FaHistory,
     FaPencilAlt,
+    FaPrint,
     FaSolarPanel,
     FaStickyNote,
     FaUserTag,
@@ -201,6 +202,14 @@ const ProjectDetails: NextPage = () => {
                                                                                     <FaFileExport />
                                                                                 </Button>
                                                                             }
+
+                                                                            <Button
+                                                                                title="Imprimir contrato."
+                                                                                variant="success"
+                                                                                onClick={() => handleRoute(`/projects/print/${data.id}`)}
+                                                                            >
+                                                                                <FaPrint />
+                                                                            </Button>
                                                                         </ButtonGroup>
                                                                     </Col>
                                                                 </Row>
