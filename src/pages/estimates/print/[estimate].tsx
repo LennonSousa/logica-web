@@ -37,9 +37,8 @@ import {
     CalcResultProps,
     CalcProps
 } from '../../../utils/calcEstimate';
+import { PrintButton } from '../../../components/Interfaces/PrintButton';
 import { getHtml } from '../../../utils/textEditor';
-
-import styles from './styles.module.css'
 
 const EstimatePrint: NextPage = () => {
     const router = useRouter();
@@ -1252,16 +1251,7 @@ const EstimatePrint: NextPage = () => {
                                                             </Col>
                                                         </Row>
 
-                                                        <div className={`d-print-none ${styles.buttonPrintContainer}`}>
-                                                            <Button
-                                                                className={styles.buttonPrint}
-                                                                variant="success"
-                                                                onClick={() => window.print()}
-                                                                title="Imprimir orçamento."
-                                                            >
-                                                                <FaPrint />
-                                                            </Button>
-                                                        </div>
+                                                        <PrintButton title="Imprimir orçamento." />
                                                     </Container>
                                             }
                                         </>
