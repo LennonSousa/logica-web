@@ -159,14 +159,14 @@ const ProjectPrint: NextPage = () => {
                                                                 </Row>
 
                                                                 <p className="text-secondary text-wrap">
-                                                                    A empresa {data.store.name}
-                                                                    CNPJ {data.store.document} denominada <b>CONTRATADA</b>,
+                                                                    A empresa {data.store.name},{` `}
+                                                                    CNPJ {data.store.document} denominada, <b>CONTRATADA</b>,
                                                                     com sede na {data.store.street} - N° {data.store.number}, {data.store.neighborhood}
                                                                     na cidade de {data.store.city} - {data.store.state}.
                                                                 </p>
 
                                                                 <p className="text-secondary text-wrap">
-                                                                    E por outro lado {data.customer}, {documentType}: {data.document}, endereço:
+                                                                    E por outro lado {data.customer}, {documentType}: {data.document}, endereço:{` `}
                                                                     {data.street}, Nº {data.number}, {data.neighborhood}, {data.city} – {data.state}, denominada <b>CONTRATANTE</b>,
                                                                     mediante o presente contrato têm entre si justo o presente instrumento
                                                                     particular de Contrato de Compra de um sistema fotovoltaico
@@ -192,7 +192,7 @@ const ProjectPrint: NextPage = () => {
                                                                 </p>
 
                                                                 <p className="text-secondary ps-5 text-wrap">
-                                                                    A CONTRATANTE compromete-se a pagar à CONTRATADA a quantia de
+                                                                    A CONTRATANTE compromete-se a pagar à CONTRATADA a quantia de{` `}
                                                                     <b>{`R$ ${Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(data.price)}`}</b>,
                                                                     nesta data de acordo com o sistema fotovoltaico,
                                                                     o pagamento do mesmo será financiado pela financeira SOLFÁCIL.
@@ -320,7 +320,7 @@ const ProjectPrint: NextPage = () => {
 
                                                                 <p className="text-secondary text-wrap">
                                                                     Para o sistema fotovoltaico conectado rede (SFCR) ora contratado, é garantida a produção energética em condições
-                                                                    ótimas de irradiação de
+                                                                    ótimas de irradiação de{` `}
                                                                     <b>
                                                                         {
                                                                             `${prettifyCurrency(
@@ -543,6 +543,10 @@ const ProjectPrint: NextPage = () => {
                                                                 <br />
                                                                 <br />
                                                                 <br />
+                                                                <br />
+                                                                <br />
+                                                                <br />
+                                                                <br />
 
                                                                 <Col className="border-top mt-1 mb-3"></Col>
 
@@ -609,28 +613,36 @@ const ProjectPrint: NextPage = () => {
                                                                     ação judicial oriunda do presente contrato.<br />
                                                                 </p>
 
-                                                                <Row className="mt-2 text-end">
+                                                                <Row className="mt-2">
                                                                     <Col>
                                                                         <span className="text-secondary text-wrap">
-                                                                            CONTRATADA:<br />
-                                                                            Assinatura:		_________________________________________________<br />
-                                                                            Empresa:		{data.store.name}<br />
-                                                                            CNPJ:		    {data.store.document}
+                                                                            <b>
+                                                                                CONTRATADA:<br />
+                                                                                Assinatura:		_________________________________________________<br />
+                                                                                Empresa:		{data.store.name}<br />
+                                                                                CNPJ:		    {data.store.document}
+                                                                            </b>
                                                                         </span>
                                                                     </Col>
                                                                 </Row>
 
-                                                                <Row className="mt-2 text-end">
+                                                                <Row className="mt-2">
                                                                     <Col>
                                                                         <span className="text-secondary text-wrap">
-                                                                            CONTRATANTE:<br />
-                                                                            Assinatura:		________________________________________________<br />
-                                                                            Representante:  {data.customer}<br />
-                                                                            {documentType}: {data.document}
+                                                                            <b>
+                                                                                CONTRATANTE:<br />
+                                                                                Assinatura:		________________________________________________<br />
+                                                                                Representante:  {data.customer}<br />
+                                                                                {documentType}: {data.document}
+                                                                            </b>
                                                                         </span>
                                                                     </Col>
                                                                 </Row>
 
+                                                                <br />
+                                                                <br />
+                                                                <br />
+                                                                <br />
                                                                 <br />
                                                                 <br />
                                                                 <br />
