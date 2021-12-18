@@ -6,7 +6,7 @@ import { NextSeo } from 'next-seo';
 import { Button, Col, Container, Form, InputGroup, ListGroup, Modal, Row, Spinner } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { FaHistory, FaFileAlt, FaPlus, FaUserTie, FaUserTag, FaDonate, FaSolarPanel } from 'react-icons/fa';
+import { FaClipboardList, FaHistory, FaFileAlt, FaPlus, FaUserTie, FaUserTag, FaDonate, FaSolarPanel } from 'react-icons/fa';
 import { format } from 'date-fns';
 import cep, { CEP } from 'cep-promise';
 import { CircularProgressbar } from 'react-circular-progressbar';
@@ -25,6 +25,7 @@ import { AttachmentRequired } from '../../../components/AttachmentsRequiredProje
 import Incomings, { Income } from '../../../components/Incomings';
 import NewIncomeModal from '../../../components/Incomings/ModalNew';
 import ProjectEvents, { ProjectEvent } from '../../../components/ProjectEvents';
+import ProjectItems, { ProjectItem } from '../../../components/ProjectItems';
 import ProjectAttachments, { ProjectAttachment } from '../../../components/ProjectAttachments';
 import ProjectAttachmentsRequired, { ProjectAttachmentRequired } from '../../../components/ProjectAttachmentsRequired';
 
@@ -104,6 +105,7 @@ const ProjectEdit: NextPage = () => {
     const [projectAttachments, setProjectAttachments] = useState<ProjectAttachment[]>([]);
     const [projectAttachmentsRequired, setProjectAttachmentsRequired] = useState<ProjectAttachmentRequired[]>([]);
     const [incomings, setIncomings] = useState<Income[]>([]);
+    const [projectItemsList, setProjectItemsList] = useState<ProjectItem[]>([]);
 
     const [spinnerCep, setSpinnerCep] = useState(false);
     const [documentType, setDocumentType] = useState("CPF");
@@ -212,6 +214,7 @@ const ProjectEdit: NextPage = () => {
                             if (attachmentsRequiredData) setProjectAttachmentsRequired(attachmentsRequiredData);
 
                             setProjectData(projectRes);
+                            setProjectItemsList(projectRes.items);
 
                             setLoadingData(false);
                         }).catch(err => {
@@ -365,6 +368,10 @@ const ProjectEdit: NextPage = () => {
         catch {
             return undefined;
         }
+    }
+
+    function handleListProjectItems(projectItemsList: ProjectItem[]) {
+        setProjectItemsList(projectItemsList);
     }
 
     function handleImages(event: ChangeEvent<HTMLInputElement>) {
@@ -1067,6 +1074,36 @@ const ProjectEdit: NextPage = () => {
                                                                                 </Form.Group>
                                                                             </Row>
                                                                         }
+
+                                                                        <Col className="border-top mt-3 mb-3"></Col>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <Row>
+                                                                                    <Col>
+                                                                                        <h6 className="text-success">Itens <FaClipboardList /></h6>
+                                                                                    </Col>
+                                                                                </Row>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col sm={2}><h6 className="text-secondary">Quantidade</h6></Col>
+                                                                            <Col sm={10}><h6 className="text-secondary">Produto</h6></Col>
+                                                                        </Row>
+
+                                                                        {
+                                                                            projectItemsList && projectItemsList.map(projectItem => {
+                                                                                return <ProjectItems
+                                                                                    key={projectItem.id}
+                                                                                    projectItem={projectItem}
+                                                                                    projectItemsList={projectItemsList}
+                                                                                    handleListProjectItems={handleListProjectItems}
+                                                                                />
+                                                                            })
+                                                                        }
+
+                                                                        <Col className="border-top mt-3 mb-3"></Col>
 
                                                                         <Row className="mt-5 mb-3">
                                                                             <Col>
