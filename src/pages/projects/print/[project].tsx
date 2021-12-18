@@ -539,6 +539,11 @@ const ProjectPrint: NextPage = () => {
                                                                     IX.5.	15 anos de garantia das estruturas de fixação
                                                                 </p>
 
+                                                                <br />
+                                                                <br />
+                                                                <br />
+                                                                <br />
+
                                                                 <Col className="border-top mt-1 mb-3"></Col>
 
                                                                 <Row className="justify-content-center align-items-center text-center mb-3">
@@ -607,9 +612,9 @@ const ProjectPrint: NextPage = () => {
                                                                 <Row className="mt-2 text-end">
                                                                     <Col>
                                                                         <span className="text-secondary text-wrap">
-                                                                            CONTRATADA:
-                                                                            Assinatura:		_________________________________________________
-                                                                            Empresa:		{data.store.name}
+                                                                            CONTRATADA:<br />
+                                                                            Assinatura:		_________________________________________________<br />
+                                                                            Empresa:		{data.store.name}<br />
                                                                             CNPJ:		    {data.store.document}
                                                                         </span>
                                                                     </Col>
@@ -618,11 +623,56 @@ const ProjectPrint: NextPage = () => {
                                                                 <Row className="mt-2 text-end">
                                                                     <Col>
                                                                         <span className="text-secondary text-wrap">
-                                                                            CONTRATANTE:
-                                                                            Assinatura:		________________________________________________
-                                                                            Representante:  {data.customer}
+                                                                            CONTRATANTE:<br />
+                                                                            Assinatura:		________________________________________________<br />
+                                                                            Representante:  {data.customer}<br />
                                                                             {documentType}: {data.document}
                                                                         </span>
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <br />
+                                                                <br />
+                                                                <br />
+                                                                <br />
+                                                                <br />
+                                                                <br />
+                                                                <br />
+                                                                <br />
+
+                                                                <Col className="border-top mt-1 mb-3"></Col>
+
+                                                                <Row className="justify-content-center align-items-center text-center mb-3">
+                                                                    <Col sm={9}>
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <small className="text-dark">{data.store.title}</small>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <small className="text-dark">{`${data.store.street}, ${data.store.number} - ${data.store.neighborhood}`}</small>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <small className="text-dark">{data.store.complement}</small>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <small className="text-dark">{`${data.store.zip_code}, ${data.store.city} - ${data.store.state}`}</small>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <small className="text-dark">{`${data.store.phone}, ${data.store.email}`}</small>
+                                                                            </Col>
+                                                                        </Row>
                                                                     </Col>
                                                                 </Row>
                                                             </Col>

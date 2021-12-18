@@ -68,7 +68,7 @@ export default function TextEditor({ type, data }: WaitingModalProps) {
 
                 const dataToSave = convertToRaw(state.getCurrentContent());
 
-                await api.put(`store/${data.id}`, {
+                await api.put(`stores/${data.id}`, {
                     title: data.title,
                     name: data.name,
                     city: data.city,
