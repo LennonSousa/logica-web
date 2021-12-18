@@ -9,7 +9,7 @@ import { Store } from '..';
 import { AlertMessage, statusModal } from '../../Interfaces/AlertMessage';
 
 
-export type typeText = 'services_in' | 'warranty' | 'engineer';
+export type typeText = 'services_in' | 'warranty' | 'engineer' | 'bank_account';
 
 interface WaitingModalProps {
     type: typeText;
@@ -47,6 +47,11 @@ export default function TextEditor({ type, data }: WaitingModalProps) {
                     setTitle("Engenheiro responsável");
 
                     setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(data.engineer))));
+                }
+                else if (type === "bank_account") {
+                    setTitle("Conta bancária");
+
+                    setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(data.bank_account))));
                 }
             }
             catch {

@@ -27,6 +27,7 @@ import PageBack from '../../../components/PageBack';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';
 import { prettifyCurrency } from '../../../components/InputMask/masks';
 import { PrintButton } from '../../../components/Interfaces/PrintButton';
+import { getHtml } from '../../../utils/textEditor';
 
 const ProjectPrint: NextPage = () => {
     const router = useRouter();
@@ -208,17 +209,10 @@ const ProjectPrint: NextPage = () => {
                                                                     ou depósito para a CONTRATADA.
                                                                 </p>
 
-                                                                <p className="text-secondary text-wrap">
-                                                                    <b>
-                                                                        CONTA DA CONTRATADA:<br />
-                                                                        BENEFICIÁRIO: J.S. LUCENA- TECNOLOGIA E PROTEÇÃO DE SISTEMAS -ME<br />
-                                                                        BANCO DO BRASIL<br />
-                                                                        AGENCIA:4322-2<br />
-                                                                        CONTA CORRENTE: 19157-4<br /><br />
-
-                                                                        CNPJ:    10.861.070/0001-98<br />
-                                                                        PIX: 10.861.070/0001-98
-                                                                    </b>
+                                                                <p
+                                                                    className="text-secondary text-wrap"
+                                                                    dangerouslySetInnerHTML={{ __html: getHtml(data.store.bank_account) }}
+                                                                >
                                                                 </p>
 
                                                                 <Col className="border-top mb-3"></Col>
@@ -432,7 +426,7 @@ const ProjectPrint: NextPage = () => {
                                                                     de processo de compra e venda.
                                                                 </p>
 
-                                                                <h5 className="text-dark"><FaClipboardList /> Bens</h5>
+                                                                <h5 className="text-dark"><FaClipboardList /> BENS</h5>
 
                                                                 <Table striped hover size="sm" responsive>
                                                                     <thead>
@@ -453,38 +447,181 @@ const ProjectPrint: NextPage = () => {
                                                                     </tbody>
                                                                 </Table>
 
-                                                                <Col className="border-top mt-1 mb-3"></Col>
+                                                                <Col className="border-top mb-3"></Col>
 
-                                                                <Row className="mb-4">
-                                                                    <Col>
-                                                                        <h5 className="text-dark"><FaFileSignature /> TERMO DE ACEITE</h5>
+                                                                <Row className="justify-content-center align-items-center text-center mb-3">
+                                                                    <Col sm={9}>
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <small className="text-dark">{data.store.title}</small>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <small className="text-dark">{`${data.store.street}, ${data.store.number} - ${data.store.neighborhood}`}</small>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <small className="text-dark">{data.store.complement}</small>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <small className="text-dark">{`${data.store.zip_code}, ${data.store.city} - ${data.store.state}`}</small>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <small className="text-dark">{`${data.store.phone}, ${data.store.email}`}</small>
+                                                                            </Col>
+                                                                        </Row>
                                                                     </Col>
                                                                 </Row>
 
-                                                                <Row className="justify-content-around text-center">
-                                                                    <Col sm={4}>
-                                                                        <Row className="justify-content-center">
-                                                                            <Col sm={11} className="border-top mt-1 mb-1"></Col>
-                                                                        </Row>
+                                                                <Col style={{ pageBreakBefore: 'always' }} className="border-top mt-1 mb-3"></Col>
 
-                                                                        <Row className="justify-content-center">
+                                                                <Row className="justify-content-center">
+                                                                    <Col className="col-3">
+                                                                        <Image fluid src={data.store.avatar} alt={data.store.title} />
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <p className="text-secondary text-wrap">
+                                                                    <b>TEMPO DE ENTREGA E INSTALAÇÕES DO SISTEMA. </b>
+                                                                </p>
+
+                                                                <p className="text-secondary ps-5 text-wrap">
+                                                                    <b>VI.	ENVIO E CONDIÇÕES DE ENTREGA.</b><br />
+                                                                    VI.1.	Condições da entrega: CIF Brasil<br />
+                                                                    VI.2.	Incluir um conjunto de documentação técnica com instruções, manutenção,
+                                                                    com suas respectivas instruções de instalação e uso.<br />
+                                                                    VI.3.	Tempo de entrega de até 180 dias de instalação total dos equipamentos.
+                                                                </p>
+
+                                                                <p className="text-secondary ps-5 text-wrap">
+                                                                    <b>VII.	ATRASOS.</b><br />
+                                                                    VII.1.	Se a CONTRATADA sofrer qualquer atraso no desempenho devido a causas fora
+                                                                    do seu controle, incluindo causas naturais resultantes da lei de Deus, guerra,
+                                                                    atos de violência ou omissão por parte dos governos, incêndio, desastre, falha
+                                                                    de energia, greves, sabotagem ou atraso na obtenção de permissões, serviços,
+                                                                    materiais, ferramentas, componentes necessários para a instalação, falta de
+                                                                    transporte, a instalação será alargada a um período de dias iguais ao tempo
+                                                                    causado pelo atraso e as suas consequências.  A CONTRATADA dará a CONTRATANTE
+                                                                    um aviso num prazo razoável a partir da data em que a empresa tem consciência
+                                                                    e pleno conhecimento do referido atraso.
+                                                                </p>
+
+                                                                <p className="text-secondary ps-5 text-wrap">
+                                                                    <b>VIII.	LOCAL DA INSTALAÇÃO DO SISTEMA</b><br />
+                                                                    VIII.1.	Os módulos fotovoltaicos serão instalados em área a ser fornecida pelo
+                                                                    cliente. Caso seja necessário, realização de reformas para alteração, inclusão
+                                                                    de reforços ou quaisquer adequações necessárias para a instalação do sistema,
+                                                                    não estão incluídas nesta proposta, sendo objeto de negociação entre as partes,
+                                                                    o local estará juntamente com a proforma.
+                                                                </p>
+
+                                                                <p className="text-secondary ps-5 text-wrap">
+                                                                    <b>IX.	GARANTIAS</b><br />
+                                                                    IX.1.	Instalação 1 ano.<br />
+                                                                    IX.2.	10 anos de garantia pela fabricante, nos módulos fotovoltaicos contra
+                                                                    defeito de fabricação direto com a fábrica com o intermédio da contratada, os
+                                                                    custos de envio e visita técnica por parte da contratante.<br />
+                                                                    IX.3.	Garantia de 25 anos pela fabricante dos módulos fotovoltaicos relativa a
+                                                                    Capacidade de geração de energia em até 82% de eficiência direto com a fábrica.
+                                                                    Mas os custos de envio e visita técnica por parte da contratante.<br />
+                                                                    IX.4.	05 anos de garantia do inversor solar fotovoltaico contra defeito de
+                                                                    fabricação direto com a fábrica.<br />
+                                                                    IX.5.	15 anos de garantia das estruturas de fixação
+                                                                </p>
+
+                                                                <Col className="border-top mt-1 mb-3"></Col>
+
+                                                                <Row className="justify-content-center align-items-center text-center mb-3">
+                                                                    <Col sm={9}>
+                                                                        <Row>
                                                                             <Col>
-                                                                                <h6 className="text-dark">Assinatura do cliente</h6>
+                                                                                <small className="text-dark">{data.store.title}</small>
                                                                             </Col>
                                                                         </Row>
 
-                                                                        <Row className="justify-content-center">
+                                                                        <Row>
                                                                             <Col>
-                                                                                <h6 className="text-dark">{data.customer}</h6>
+                                                                                <small className="text-dark">{`${data.store.street}, ${data.store.number} - ${data.store.neighborhood}`}</small>
                                                                             </Col>
                                                                         </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <small className="text-dark">{data.store.complement}</small>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <small className="text-dark">{`${data.store.zip_code}, ${data.store.city} - ${data.store.state}`}</small>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <small className="text-dark">{`${data.store.phone}, ${data.store.email}`}</small>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <Col style={{ pageBreakBefore: 'always' }} className="border-top mt-1 mb-3"></Col>
+
+                                                                <Row className="justify-content-center">
+                                                                    <Col className="col-3">
+                                                                        <Image fluid src={data.store.avatar} alt={data.store.title} />
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <p className="text-secondary ps-5 text-wrap">
+                                                                    <b>X.	RESPONSABILIDADE DE INSTALAÇÃO E GARANTIA EM TERRITÓRIO NACIONAL</b><br />
+                                                                    X.1.	A CONTRATADA irá atuar como vendedora, e efetuará instalação completa
+                                                                    do sistema no local indicado pelo CONTRATANTE, bem como dará posteriormente o
+                                                                    suporte pós-venda, e manutenções do sistema dentro da garantia de instalação em
+                                                                    todo o território nacional com as garantias do sistema no Brasil para o perfeito
+                                                                    funcionamento do gerador
+                                                                </p>
+
+                                                                <p className="text-secondary ps-5 text-wrap">
+                                                                    <b>XI.	ACEITAÇÃO DE CLÁUSULAS E FINALIZAÇÃO DE CONTRATO</b><br />
+                                                                    XI.1.	Desta forma sendo finalizado e formalizada de negociações entre as partes
+                                                                    CONTRATADA e CONTRATANTE as partes entre si tem aqui acordado de boa-fé a efetivação
+                                                                    de negócios de bens entre as partes cumprindo integralmente com suas responsabilidade
+                                                                    e formalidades legais deste contrato. E, por estarem assim justos e acordados,
+                                                                    lavram, datam e assinam o presente instrumento juntamente em 2 (Duas) vias de igual
+                                                                    teor e forma, obrigando-se por si.<br />
+                                                                    XI.2.	Fica eleito o Foro da comarca de Imperatriz- MA como competente para qualquer
+                                                                    ação judicial oriunda do presente contrato.<br />
+                                                                </p>
+
+                                                                <Row className="mt-2 text-end">
+                                                                    <Col>
+                                                                        <span className="text-secondary text-wrap">
+                                                                            CONTRATADA:
+                                                                            Assinatura:		_________________________________________________
+                                                                            Empresa:		{data.store.name}
+                                                                            CNPJ:		    {data.store.document}
+                                                                        </span>
                                                                     </Col>
                                                                 </Row>
 
                                                                 <Row className="mt-2 text-end">
                                                                     <Col>
                                                                         <span className="text-secondary text-wrap">
-                                                                            {`${data.store.city}, ${format(new Date(), 'dd/MM/yyyy')}`}
+                                                                            CONTRATANTE:
+                                                                            Assinatura:		________________________________________________
+                                                                            Representante:  {data.customer}
+                                                                            {documentType}: {data.document}
                                                                         </span>
                                                                     </Col>
                                                                 </Row>

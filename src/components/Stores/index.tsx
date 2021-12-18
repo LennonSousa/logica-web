@@ -23,6 +23,7 @@ export interface Store {
     services_in: string;
     warranty: string;
     engineer: string;
+    bank_account: string;
     active: boolean;
     users: User[];
 }
