@@ -90,7 +90,7 @@ const ProjectItems: React.FC<ProjectItemsProps> = ({ projectItem, projectItemsLi
                 />
             </Form.Group>
 
-            <Form.Group as={Col} sm={10} controlId="formGridName">
+            <Form.Group as={Col} sm={9} controlId="formGridName">
                 <Form.Control
                     type="name"
                     onChange={e => {
