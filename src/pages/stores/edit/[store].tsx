@@ -526,6 +526,7 @@ const EditStore: NextPage = () => {
                                                                 <TextEditor type="services_in" data={data} />
                                                                 <TextEditor type="warranty" data={data} />
                                                                 <TextEditor type="engineer" data={data} />
+                                                                <TextEditor type="bank_account" data={data} />
                                                             </>
                                                         }
                                                     </Container>

@@ -562,6 +562,16 @@ const ProjectEdit: NextPage = () => {
                                                                             status: values.status,
                                                                         });
 
+                                                                        projectItemsList.forEach(async item => {
+                                                                            await api.put(`projects/items/${item.id}`, {
+                                                                                name: item.name,
+                                                                                amount: item.amount,
+                                                                                price: item.price,
+                                                                                percent: item.percent,
+                                                                                order: item.order,
+                                                                            });
+                                                                        });
+
                                                                         setTypeMessage("success");
 
                                                                         setTimeout(() => {
