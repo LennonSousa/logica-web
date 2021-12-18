@@ -6,7 +6,7 @@ import { NextSeo } from 'next-seo';
 import { Button, Col, Container, Form, InputGroup, ListGroup, Row, Spinner } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { FaHistory, FaSolarPanel, FaUserTie, FaUserTag } from 'react-icons/fa';
+import { FaClipboardList, FaHistory, FaSolarPanel, FaUserTie, FaUserTag } from 'react-icons/fa';
 import cep, { CEP } from 'cep-promise';
 
 import api from '../../../api/api';
@@ -18,6 +18,7 @@ import { can } from '../../../components/Users';
 import { ProjectStatus } from '../../../components/ProjectStatus';
 import { EventProject } from '../../../components/EventsProject';
 import ProjectEvents, { ProjectEvent } from '../../../components/ProjectEvents';
+import ProjectItems, { ProjectItem } from '../../../components/ProjectItems';
 import { Estimate } from '../../../components/Estimates';
 
 import Members from '../../../components/ProjectMembers';
@@ -88,6 +89,7 @@ const NewProject: NextPage = () => {
     const [projectEvents, setProjectEvents] = useState<ProjectEvent[]>([]);
     const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
     const [estimateFrom, setEstimateFrom] = useState<Estimate>();
+    const [projectItemsList, setProjectItemsList] = useState<ProjectItem[]>([]);
 
     const [monthsAverage, setMonthsAverage] = useState(0);
     const [capacity, setCapacity] = useState(0);
@@ -155,6 +157,7 @@ const NewProject: NextPage = () => {
                             catch { }
 
                             setEstimateFrom(estimateRes);
+                            setProjectItemsList(estimateRes.items);
 
                             setLoadingData(false);
                         }).catch(err => {
@@ -164,7 +167,45 @@ const NewProject: NextPage = () => {
                             setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
                             setHasErrors(true);
                         });
-                    } else setLoadingData(false);
+                    } else {
+                        setProjectItemsList(
+                            [
+                                {
+                                    id: '0',
+                                    name: 'Inversor',
+                                    amount: 1,
+                                    price: 0,
+                                    percent: 20,
+                                    order: 0,
+                                },
+                                {
+                                    id: '1',
+                                    name: 'Painel',
+                                    amount: 1,
+                                    price: 0,
+                                    percent: 65,
+                                    order: 1,
+                                },
+                                {
+                                    id: '2',
+                                    name: 'ESTRUTURA METÁLICA PARA PAINEL SOLAR',
+                                    amount: 1,
+                                    price: 0,
+                                    percent: 10,
+                                    order: 2,
+                                },
+                                {
+                                    id: '3',
+                                    name: 'ENGENHARIA E INSTALAÇÃO',
+                                    amount: 1,
+                                    price: 0,
+                                    percent: 5,
+                                    order: 3,
+                                }
+                            ]
+                        );
+                        setLoadingData(false);
+                    }
                 }).catch(err => {
                     console.log('Error to get docs project, ', err);
 
@@ -229,6 +270,10 @@ const NewProject: NextPage = () => {
         }
 
         setProjectEvents(listEvents);
+    }
+
+    function handleListProjectItems(projectItemsList: ProjectItem[]) {
+        setProjectItemsList(projectItemsList);
     }
 
     return (
@@ -338,6 +383,16 @@ const NewProject: NextPage = () => {
                                                             }
                                                         });
 
+                                                        const items = projectItemsList.map(item => {
+                                                            return {
+                                                                name: item.name,
+                                                                amount: item.amount,
+                                                                price: item.price,
+                                                                percent: item.percent,
+                                                                order: item.order,
+                                                            }
+                                                        });
+
                                                         const res = await api.post('projects', {
                                                             customer: values.customer,
                                                             document: values.document,
@@ -381,6 +436,7 @@ const NewProject: NextPage = () => {
                                                             status: values.status,
                                                             store: values.store,
                                                             events,
+                                                            items,
                                                         });
 
                                                         setTypeMessage("success");
@@ -893,6 +949,34 @@ const NewProject: NextPage = () => {
                                                                 <Form.Control.Feedback type="invalid">{touched.price && errors.price}</Form.Control.Feedback>
                                                             </Form.Group>
                                                         </Row>
+
+                                                        <Col className="border-top mt-3 mb-3"></Col>
+
+                                                        <Row>
+                                                            <Col>
+                                                                <Row>
+                                                                    <Col>
+                                                                        <h6 className="text-success">Itens <FaClipboardList /></h6>
+                                                                    </Col>
+                                                                </Row>
+                                                            </Col>
+                                                        </Row>
+
+                                                        <Row>
+                                                            <Col sm={2}><h6 className="text-secondary">Quantidade</h6></Col>
+                                                            <Col sm={10}><h6 className="text-secondary">Produto</h6></Col>
+                                                        </Row>
+
+                                                        {
+                                                            projectItemsList && projectItemsList.map(projectItem => {
+                                                                return <ProjectItems
+                                                                    key={projectItem.id}
+                                                                    projectItem={projectItem}
+                                                                    projectItemsList={projectItemsList}
+                                                                    handleListProjectItems={handleListProjectItems}
+                                                                />
+                                                            })
+                                                        }
 
                                                         <Col className="border-top mb-3"></Col>
 

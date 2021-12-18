@@ -3,9 +3,10 @@ import { GetServerSideProps } from 'next';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
-import { Col, Container, Button, ButtonGroup, ListGroup, Row } from 'react-bootstrap';
+import { Col, Container, Button, ButtonGroup, ListGroup, Row, Table } from 'react-bootstrap';
 import { format } from 'date-fns';
 import {
+    FaClipboardList,
     FaDonate,
     FaFileAlt,
     FaFileExport,
@@ -604,6 +605,31 @@ const ProjectDetails: NextPage = () => {
                                                                         </Col>
                                                                     </Row>
                                                                 }
+
+                                                                <Row>
+                                                                    <Col>
+                                                                        <h6 className="text-success">Itens <FaClipboardList /></h6>
+                                                                    </Col>
+                                                                </Row>
+
+                                                                <Table striped hover size="sm" responsive>
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Quantidade</th>
+                                                                            <th>Produto</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {
+                                                                            data.items.map((item, index) => {
+                                                                                return <tr key={index}>
+                                                                                    <td>{prettifyCurrency(Number(item.amount).toFixed(2))}</td>
+                                                                                    <td>{item.name}</td>
+                                                                                </tr>
+                                                                            })
+                                                                        }
+                                                                    </tbody>
+                                                                </Table>
 
                                                                 <Col className="border-top mt-3 mb-3"></Col>
 

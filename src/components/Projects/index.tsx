@@ -5,6 +5,7 @@ import { ProjectAttachment } from '../ProjectAttachments';
 import { Income } from '../Incomings';
 import { User } from '../Users';
 import { Store } from '../Stores';
+import { ProjectItem } from '../ProjectItems';
 
 export interface Project {
     id: string;
@@ -58,4 +59,5 @@ export interface Project {
     attachmentsRequired: ProjectAttachmentRequired[];
     attachments: ProjectAttachment[];
     incomings: Income[];
+    items: ProjectItem[];
 }
