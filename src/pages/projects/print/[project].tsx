@@ -613,7 +613,7 @@ const ProjectPrint: NextPage = () => {
                                                                     ação judicial oriunda do presente contrato.<br />
                                                                 </p>
 
-                                                                <Row className="mt-2">
+                                                                <Row className="mt-5 mb-5">
                                                                     <Col>
                                                                         <span className="text-secondary text-wrap">
                                                                             <b>
@@ -626,7 +626,11 @@ const ProjectPrint: NextPage = () => {
                                                                     </Col>
                                                                 </Row>
 
-                                                                <Row className="mt-2">
+                                                                <br />
+                                                                <br />
+                                                                <br />
+
+                                                                <Row className="mt-5 mb-5">
                                                                     <Col>
                                                                         <span className="text-secondary text-wrap">
                                                                             <b>
@@ -639,9 +643,6 @@ const ProjectPrint: NextPage = () => {
                                                                     </Col>
                                                                 </Row>
 
-                                                                <br />
-                                                                <br />
-                                                                <br />
                                                                 <br />
                                                                 <br />
                                                                 <br />
