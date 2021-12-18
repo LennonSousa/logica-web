@@ -5,16 +5,10 @@ import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { Col, Container, Button, ButtonGroup, Image, Row, Table } from 'react-bootstrap';
 import { format } from 'date-fns';
+import br from 'date-fns/locale/pt-BR';
 import {
     FaClipboardList,
     FaPencilAlt,
-    FaTools,
-    FaTasks,
-    FaCheck,
-    FaStickyNote,
-    FaRegSquare,
-    FaUserTie,
-    FaFileSignature,
 } from 'react-icons/fa';
 
 import api from '../../../api/api';
@@ -613,6 +607,9 @@ const ProjectPrint: NextPage = () => {
                                                                     ação judicial oriunda do presente contrato.<br />
                                                                 </p>
 
+                                                                <br />
+                                                                <span className="text-secondary text-wrap">{format(new Date(), 'PPPPp', { locale: br })}</span>
+
                                                                 <Row className="mt-5 mb-5">
                                                                     <Col>
                                                                         <span className="text-secondary text-wrap">
@@ -625,10 +622,6 @@ const ProjectPrint: NextPage = () => {
                                                                         </span>
                                                                     </Col>
                                                                 </Row>
-
-                                                                <br />
-                                                                <br />
-                                                                <br />
 
                                                                 <Row className="mt-5 mb-5">
                                                                     <Col>
@@ -643,8 +636,6 @@ const ProjectPrint: NextPage = () => {
                                                                     </Col>
                                                                 </Row>
 
-                                                                <br />
-                                                                <br />
                                                                 <br />
                                                                 <br />
                                                                 <br />
