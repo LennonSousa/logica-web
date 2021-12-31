@@ -3,7 +3,7 @@ import { GetServerSideProps } from 'next';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
-import { Button, Col, Container, Form, ListGroup, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, InputGroup, ListGroup, Row } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { FaKey } from 'react-icons/fa';
@@ -14,7 +14,7 @@ import { SideBarContext } from '../../../contexts/SideBarContext';
 import { StoresContext } from '../../../contexts/StoresContext';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { UserRole, can, translatedRoles } from '../../../components/Users';
-import { cpf, cnpj } from '../../../components/InputMask/masks';
+import { cpf, cnpj, prettifyCurrency } from '../../../components/InputMask/masks';
 import PageBack from '../../../components/PageBack';
 import { AlertMessage, statusModal } from '../../../components/Interfaces/AlertMessage';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';
@@ -35,6 +35,7 @@ const validationSchema = Yup.object().shape({
     document: Yup.string().required('Obrigatório!'),
     email: Yup.string().email('E-mail invlálido!').required('Obrigatório!'),
     store_only: Yup.boolean().notRequired(),
+    discountLimit: Yup.string().notRequired(),
     store: Yup.string().notRequired(),
     roles: Yup.array(
         Yup.object().shape({
@@ -213,6 +214,9 @@ const NewUser: NextPage = () => {
                                                     document: '',
                                                     email: '',
                                                     store_only: user.store_only,
+                                                    discountLimit: process.env.NEXT_PUBLIC_DEFAULT_DISCOUNT_LIMIT ? prettifyCurrency(
+                                                        Number(process.env.NEXT_PUBLIC_DEFAULT_DISCOUNT_LIMIT).toFixed(2)
+                                                    ) : '0,00',
                                                     store: user.store_only ? (user.store ? user.store.id : '') : '',
                                                 }}
                                                 onSubmit={async values => {
@@ -239,6 +243,7 @@ const NewUser: NextPage = () => {
                                                             document: values.document,
                                                             email: values.email,
                                                             store_only: values.store_only,
+                                                            discountLimit: values.discountLimit,
                                                             store: values.store,
                                                             roles,
                                                         });
@@ -322,6 +327,29 @@ const NewUser: NextPage = () => {
                                                         </Row>
 
                                                         <Row className="mb-2 align-items-center">
+                                                            <Form.Group as={Col} sm={3} controlId="formGridDiscountLimit">
+                                                                <Form.Label>Limite de desconto</Form.Label>
+                                                                <InputGroup className="mb-2">
+                                                                    <InputGroup.Text id="btnGroupDiscountLimit">%</InputGroup.Text>
+
+                                                                    <Form.Control
+                                                                        type="text"
+                                                                        onChange={(e) => {
+                                                                            setFieldValue('discountLimit', prettifyCurrency(e.target.value));
+                                                                        }}
+                                                                        onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                                                            setFieldValue('discountLimit', prettifyCurrency(e.target.value));
+                                                                        }}
+                                                                        value={values.discountLimit}
+                                                                        name="discountLimit"
+                                                                        isInvalid={!!errors.discountLimit && touched.discountLimit}
+                                                                        aria-label="Limite para desconto em orçamentos."
+                                                                        aria-describedby="btnGroupDiscountLimit"
+                                                                    />
+                                                                </InputGroup>
+                                                                <Form.Control.Feedback type="invalid">{touched.discountLimit && errors.discountLimit}</Form.Control.Feedback>
+                                                            </Form.Group>
+
                                                             <Col sm={3}>
                                                                 <Form.Check
                                                                     type="switch"
