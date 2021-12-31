@@ -12,6 +12,7 @@ import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { User, UserRole, can, translatedRoles } from '../../../components/Users';
+import { prettifyCurrency } from '../../../components/InputMask/masks';
 
 import PageBack from '../../../components/PageBack';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';
@@ -190,7 +191,7 @@ const UserDetails: NextPage = () => {
                                                                 <Col className="border-top mb-3"></Col>
 
                                                                 <Row className="mb-3">
-                                                                    <Col sm={4} >
+                                                                    <Col sm={3} >
                                                                         <Row>
                                                                             <Col>
                                                                                 <span className="text-success">Criado em</span>
@@ -204,8 +205,24 @@ const UserDetails: NextPage = () => {
                                                                         </Row>
                                                                     </Col>
 
+                                                                    <Col sm={3} >
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <span className="text-success">Limite de desconto</span>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row>
+                                                                            <Col>
+                                                                                <h6 className="text-secondary">
+                                                                                    {`${prettifyCurrency(Number(userData.discountLimit).toFixed(2))} %`}
+                                                                                </h6>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    </Col>
+
                                                                     {
-                                                                        userData.store_only && <Col sm={4} >
+                                                                        userData.store_only && <Col sm={6} >
                                                                             <Row>
                                                                                 <Col>
                                                                                     <span className="text-success">Vinculado a loja</span>

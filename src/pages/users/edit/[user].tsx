@@ -3,7 +3,7 @@ import { GetServerSideProps } from 'next';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
-import { Button, Col, Container, Form, ListGroup, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, InputGroup, ListGroup, Modal, Row } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { FaKey } from 'react-icons/fa';
@@ -14,7 +14,7 @@ import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { User, UserRole, can, translatedRoles } from '../../../components/Users';
-import { cpf, cnpj } from '../../../components/InputMask/masks';
+import { cpf, cnpj, prettifyCurrency } from '../../../components/InputMask/masks';
 import { Store } from '../../../components/Stores';
 import PageBack from '../../../components/PageBack';
 import { AlertMessage, statusModal } from '../../../components/Interfaces/AlertMessage';
@@ -23,6 +23,7 @@ import { PageWaiting, PageType } from '../../../components/PageWaiting';
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Obrigatório!'),
     phone: Yup.string().notRequired(),
+    discountLimit: Yup.string().notRequired(),
 });
 
 const rolesToViewSelf = [
@@ -229,6 +230,7 @@ const UserEdit: NextPage = () => {
                                                                     document: userData.document,
                                                                     phone: userData.phone ? userData.phone : '',
                                                                     store_only: userData.store_only,
+                                                                    discountLimit: prettifyCurrency(String(userData.discountLimit)),
                                                                     store: userData.store ? userData.store.id : '',
                                                                 }}
                                                                 onSubmit={async values => {
@@ -243,6 +245,11 @@ const UserEdit: NextPage = () => {
                                                                             document: values.document,
                                                                             phone: values.phone,
                                                                             store_only: values.store_only,
+                                                                            discountLimit: Number(
+                                                                                values.discountLimit
+                                                                                    .replaceAll(".", "")
+                                                                                    .replaceAll(",", ".")
+                                                                            ),
                                                                             store: values.store,
                                                                         });
 
@@ -356,6 +363,29 @@ const UserEdit: NextPage = () => {
                                                                         <Row className="mb-2 align-items-center">
                                                                             {
                                                                                 !userData.root && userId !== user.id && <>
+                                                                                    <Form.Group as={Col} sm={3} controlId="formGridDiscountLimit">
+                                                                                        <Form.Label>Limite de desconto</Form.Label>
+                                                                                        <InputGroup className="mb-2">
+                                                                                            <InputGroup.Text id="btnGroupDiscountLimit">%</InputGroup.Text>
+
+                                                                                            <Form.Control
+                                                                                                type="text"
+                                                                                                onChange={(e) => {
+                                                                                                    setFieldValue('discountLimit', prettifyCurrency(e.target.value));
+                                                                                                }}
+                                                                                                onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                                                                                                    setFieldValue('discountLimit', prettifyCurrency(e.target.value));
+                                                                                                }}
+                                                                                                value={values.discountLimit}
+                                                                                                name="discountLimit"
+                                                                                                isInvalid={!!errors.discountLimit && touched.discountLimit}
+                                                                                                aria-label="Limite para desconto em orçamentos."
+                                                                                                aria-describedby="btnGroupDiscountLimit"
+                                                                                            />
+                                                                                        </InputGroup>
+                                                                                        <Form.Control.Feedback type="invalid">{touched.discountLimit && errors.discountLimit}</Form.Control.Feedback>
+                                                                                    </Form.Group>
+
                                                                                     <Col sm={3}>
                                                                                         <Form.Check
                                                                                             type="switch"

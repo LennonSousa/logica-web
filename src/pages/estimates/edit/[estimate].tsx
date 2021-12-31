@@ -36,7 +36,8 @@ import {
     ConsumptionCalcProps,
     CalcResultProps,
     handleFormValues,
-    CalcProps
+    CalcProps,
+    calcDiscountPercent
 } from '../../../utils/calcEstimate';
 
 const validationSchema = Yup.object().shape({
@@ -98,6 +99,7 @@ const EditEstimate: NextPage = () => {
     const [textLoadingMessage, setTextLoadingMessage] = useState('Aguarde, carregando...');
 
     const [errorNotFoundCapacity, setErrorNotFoundCapacity] = useState(false);
+    const [errorDiscountLimit, setErrorDiscountLimit] = useState(false);
 
     // Values calc result.
     const [consumptionValuesToCalc, setConsumptionValuesToCalc] = useState<ConsumptionCalcProps>();
@@ -427,13 +429,24 @@ const EditEstimate: NextPage = () => {
                                                             }}
                                                             onSubmit={async values => {
                                                                 try {
-                                                                    if (errorNotFoundCapacity) return;
+                                                                    const valuesCalcItem = handleFormValues(values, estimateItemsList);
+
+                                                                    if (!valuesCalcItem || !calcResults || errorNotFoundCapacity) return;
+
+                                                                    const discountPercent = values.discount_percent ?
+                                                                        valuesCalcItem.discount :
+                                                                        calcDiscountPercent(calcResults.systemInitialPrice, finalTotal);
+
+                                                                    if (discountPercent > Number(user.discountLimit)) {
+                                                                        setErrorDiscountLimit(true);
+
+                                                                        return;
+                                                                    }
 
                                                                     setTypeMessage("waiting");
                                                                     setMessageShow(true);
 
-                                                                    const valuesCalcItem = handleFormValues(values, estimateItemsList);
-                                                                    if (consumptionValuesToCalc && valuesCalcItem) {
+                                                                    if (consumptionValuesToCalc) {
                                                                         await api.put(`estimates/${data.id}`, {
                                                                             customer: values.customer,
                                                                             customer_from: values.customer_from,
@@ -1252,6 +1265,14 @@ const EditEstimate: NextPage = () => {
                                                                                 />
                                                                             </InputGroup>
                                                                             <Form.Control.Feedback type="invalid">{touched.discount && errors.discount}</Form.Control.Feedback>
+                                                                            <span
+                                                                                className="invalid-feedback text-center"
+                                                                                style={{ display: 'block' }}
+                                                                            >
+                                                                                {
+                                                                                    errorDiscountLimit && 'O desconto é maior que o limite permitido!'
+                                                                                }
+                                                                            </span>
                                                                         </Form.Group>
 
                                                                         <Form.Group as={Col} sm={3} controlId="formGridDiscount">
