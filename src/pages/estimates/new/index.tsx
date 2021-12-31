@@ -35,7 +35,8 @@ import {
     ConsumptionCalcProps,
     CalcResultProps,
     handleFormValues,
-    CalcProps
+    CalcProps,
+    calcDiscountPercent
 } from '../../../utils/calcEstimate';
 
 const validationSchema = Yup.object().shape({
@@ -94,6 +95,7 @@ const NewEstimate: NextPage = () => {
     const [textLoadingMessage, setTextLoadingMessage] = useState('Aguarde, carregando...');
 
     const [errorNotFoundCapacity, setErrorNotFoundCapacity] = useState(false);
+    const [errorDiscountLimit, setErrorDiscountLimit] = useState(false);
 
     // Values calc result.
     const [consumptionValuesToCalc, setConsumptionValuesToCalc] = useState<ConsumptionCalcProps>();
@@ -344,11 +346,21 @@ const NewEstimate: NextPage = () => {
                                                 }}
                                                 onSubmit={async values => {
                                                     try {
-                                                        if (errorNotFoundCapacity) return;
-
                                                         const valuesCalcItem = handleFormValues(values, estimateItemsList);
 
-                                                        if (consumptionValuesToCalc && valuesCalcItem) {
+                                                        if (!valuesCalcItem || !calcResults || errorNotFoundCapacity) return;
+
+                                                        const discountPercent = values.discount_percent ?
+                                                            valuesCalcItem.discount :
+                                                            calcDiscountPercent(calcResults.systemInitialPrice, finalTotal);
+
+                                                        if (discountPercent > Number(user.discountLimit)) {
+                                                            setErrorDiscountLimit(true);
+
+                                                            return;
+                                                        }
+
+                                                        if (consumptionValuesToCalc) {
                                                             setTypeMessage("waiting");
                                                             setMessageShow(true);
 
@@ -1172,6 +1184,14 @@ const NewEstimate: NextPage = () => {
                                                                     />
                                                                 </InputGroup>
                                                                 <Form.Control.Feedback type="invalid">{touched.discount && errors.discount}</Form.Control.Feedback>
+                                                                <span
+                                                                    className="invalid-feedback text-center"
+                                                                    style={{ display: 'block' }}
+                                                                >
+                                                                    {
+                                                                        errorDiscountLimit && 'O desconto é maior que o limite permitido!'
+                                                                    }
+                                                                </span>
                                                             </Form.Group>
 
                                                             <Form.Group as={Col} sm={3} controlId="formGridDiscount">

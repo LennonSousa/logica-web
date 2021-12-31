@@ -251,3 +251,9 @@ export function calcFinalTotal(subTotal: number, isDiscountPercent: boolean, dis
 
     return finalPrice;
 }
+
+export function calcDiscountPercent(initialValue: number, finalValue: number) {
+    const totalDiscount = initialValue - finalValue;
+
+    return Math.fround((totalDiscount / initialValue) * 100);
+}

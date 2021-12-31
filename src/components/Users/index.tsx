@@ -20,6 +20,7 @@ export interface User {
     paused: boolean;
     root: boolean;
     store_only: boolean;
+    discountLimit: number;
     store: Store;
     created_at: Date;
     roles: UserRole[];
