@@ -7,7 +7,7 @@ import { FaHistory, FaPlus } from 'react-icons/fa';
 import api from '../../../api/api';
 import { can } from '../../Users';
 import { AuthContext } from '../../../contexts/AuthContext';
-import { Store } from '../../Stores';
+import { StoresContext } from '../../../contexts/StoresContext';
 import IncomeItems, { IncomeItem } from '../../IncomeItems';
 import { PayType } from '../../PayTypes';
 import { Project } from '../../Projects';
@@ -32,8 +32,8 @@ const validationSchema = Yup.object().shape({
 
 const IncomeModalNew: React.FC<IncomeModalNewProps> = ({ project, show = false, handleListIncomings, handleCloseModal }) => {
     const { user } = useContext(AuthContext);
+    const { stores } = useContext(StoresContext);
 
-    const [stores, setStores] = useState<Store[]>([]);
     const [payTypes, setPayTypes] = useState<PayType[]>([]);
     const [incomeItems, setIncomeItems] = useState<IncomeItem[]>([]);
 
@@ -47,16 +47,6 @@ const IncomeModalNew: React.FC<IncomeModalNewProps> = ({ project, show = false, 
 
         if (user && can(user, "finances", "update:any") && show) {
             setIncomeItems([]);
-
-            if (!project) {
-                api.get('stores').then(res => {
-                    setStores(res.data);
-                }).catch(err => {
-                    console.log('Error to get stores, ', err);
-
-                    setHasErrors(true);
-                });
-            }
 
             api.get('payments/types').then(res => {
                 setPayTypes(res.data);

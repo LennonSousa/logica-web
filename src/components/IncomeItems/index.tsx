@@ -21,6 +21,7 @@ export interface IncomeItem {
 interface IncomeItemsProps {
     item: IncomeItem;
     isNewItem?: boolean;
+    canEdit?: boolean;
     handleListItems: (updatedNewItem?: IncomeItem, toDelete?: boolean) => Promise<void>;
 }
 
@@ -33,7 +34,7 @@ const validationSchema = Yup.object().shape({
     received_at: Yup.date().notRequired(),
 });
 
-const IncomeItems: React.FC<IncomeItemsProps> = ({ item, isNewItem = false, handleListItems }) => {
+const IncomeItems: React.FC<IncomeItemsProps> = ({ item, isNewItem = false, canEdit = true, handleListItems }) => {
     const [fieldsFormTouched, setFieldsFormTouched] = useState(false);
     const [savingItemStatus, setSavingItemStatus] = useState<savingStatus>("saved");
     const [waitingDelete, setWaitingDelete] = useState(false);
@@ -70,39 +71,41 @@ const IncomeItems: React.FC<IncomeItemsProps> = ({ item, isNewItem = false, hand
                 }}
 
                 onSubmit={async values => {
-                    setFieldsFormTouched(false);
+                    if (canEdit) {
+                        setFieldsFormTouched(false);
 
-                    setSavingItemStatus("saving");
+                        setSavingItemStatus("saving");
 
-                    try {
-                        if (isNewItem) {
-                            const updatedNewItem: IncomeItem = {
-                                ...item,
-                                description: values.description,
-                                value: Number(values.value.replaceAll(".", "").replaceAll(",", ".")),
-                                is_paid: values.is_paid,
-                                received_at: new Date(`${values.received_at} 12:00:00`),
+                        try {
+                            if (isNewItem) {
+                                const updatedNewItem: IncomeItem = {
+                                    ...item,
+                                    description: values.description,
+                                    value: Number(values.value.replaceAll(".", "").replaceAll(",", ".")),
+                                    is_paid: values.is_paid,
+                                    received_at: new Date(`${values.received_at} 12:00:00`),
+                                }
+
+                                handleListItems(updatedNewItem);
                             }
+                            else {
+                                await api.put(`incomings/items/${item.id}`, {
+                                    description: values.description,
+                                    value: Number(values.value.replaceAll(".", "").replaceAll(",", ".")),
+                                    is_paid: values.is_paid,
+                                    received_at: `${values.received_at} 12:00:00`,
+                                });
 
-                            handleListItems(updatedNewItem);
+                                handleListItems();
+                            }
                         }
-                        else {
-                            await api.put(`incomings/items/${item.id}`, {
-                                description: values.description,
-                                value: Number(values.value.replaceAll(".", "").replaceAll(",", ".")),
-                                is_paid: values.is_paid,
-                                received_at: `${values.received_at} 12:00:00`,
-                            });
-
-                            handleListItems();
+                        catch (err) {
+                            console.log('error to update items day');
+                            console.log(err);
                         }
-                    }
-                    catch (err) {
-                        console.log('error to update items day');
-                        console.log(err);
-                    }
 
-                    setSavingItemStatus("saved");
+                        setSavingItemStatus("saved");
+                    }
                 }}
                 validationSchema={validationSchema}
             >
@@ -119,6 +122,7 @@ const IncomeItems: React.FC<IncomeItemsProps> = ({ item, isNewItem = false, hand
                                     }}
                                     value={values.description}
                                     name="description"
+                                    disabled={!canEdit}
                                     isInvalid={!!errors.description && touched.description}
                                 />
                                 <Form.Control.Feedback type="invalid">{touched.description && errors.description}</Form.Control.Feedback>
@@ -140,6 +144,7 @@ const IncomeItems: React.FC<IncomeItemsProps> = ({ item, isNewItem = false, hand
                                         }}
                                         value={values.value}
                                         name="value"
+                                        disabled={!canEdit}
                                         isInvalid={!!errors.value && touched.value}
                                         aria-label="Valor do projeto"
                                         aria-describedby="btnGroupValue"
@@ -159,6 +164,7 @@ const IncomeItems: React.FC<IncomeItemsProps> = ({ item, isNewItem = false, hand
                                         setFieldsFormTouched(true);
                                         setSavingItemStatus("touched");
                                     }}
+                                    disabled={!canEdit}
                                 />
                             </Col>
 
@@ -173,43 +179,48 @@ const IncomeItems: React.FC<IncomeItemsProps> = ({ item, isNewItem = false, hand
                                     onBlur={handleBlur}
                                     value={values.received_at}
                                     name="received_at"
+                                    disabled={!canEdit}
                                     isInvalid={!!errors.received_at && touched.received_at}
                                 />
                                 <Form.Control.Feedback type="invalid">{touched.received_at && errors.received_at}</Form.Control.Feedback>
                             </Form.Group>
                         </Row>
 
-                        <Row className="justify-content-end align-items-end">
-                            <Col className="col-row">
-                                <Button variant="outline-danger" onClick={deleteItem}>
-                                    {
-                                        waitingDelete ? <Spinner
-                                            as="span"
-                                            animation="border"
-                                            size="sm"
-                                            role="status"
-                                            aria-hidden="true"
-                                        /> : <FaTrashAlt />
-                                    }
-                                </Button>
-                            </Col>
+                        {
+                            canEdit && <>
+                                <Row className="justify-content-end align-items-end">
+                                    <Col className="col-row">
+                                        <Button variant="outline-danger" onClick={deleteItem}>
+                                            {
+                                                waitingDelete ? <Spinner
+                                                    as="span"
+                                                    animation="border"
+                                                    size="sm"
+                                                    role="status"
+                                                    aria-hidden="true"
+                                                /> : <FaTrashAlt />
+                                            }
+                                        </Button>
+                                    </Col>
 
-                            <Col className="col-row">
-                                <Button variant="outline-success" disabled={!fieldsFormTouched} type="submit" >
-                                    {
-                                        savingItemStatus === "saving" ? <Spinner
-                                            as="span"
-                                            animation="border"
-                                            size="sm"
-                                            role="status"
-                                            aria-hidden="true"
-                                        /> : (
-                                            savingItemStatus === "saved" ? <FaCheck /> : savingItemStatus === "touched" && <FaSave />
-                                        )
-                                    }
-                                </Button>
-                            </Col>
-                        </Row>
+                                    <Col className="col-row">
+                                        <Button variant="outline-success" disabled={!fieldsFormTouched} type="submit" >
+                                            {
+                                                savingItemStatus === "saving" ? <Spinner
+                                                    as="span"
+                                                    animation="border"
+                                                    size="sm"
+                                                    role="status"
+                                                    aria-hidden="true"
+                                                /> : (
+                                                    savingItemStatus === "saved" ? <FaCheck /> : savingItemStatus === "touched" && <FaSave />
+                                                )
+                                            }
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </>
+                        }
                     </Form>
                 )}
             </Formik>

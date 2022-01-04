@@ -20,6 +20,7 @@ export interface IncomeAttachment {
 
 interface IncomeAttachmentsProps {
     attachment: IncomeAttachment;
+    canEdit?: boolean;
     handleListAttachments?: () => Promise<void>;
 }
 
@@ -33,7 +34,7 @@ const attachmentValidationSchema = Yup.object().shape({
     received_at: Yup.date().required('Obrigatório!'),
 });
 
-const IncomeAttachments: React.FC<IncomeAttachmentsProps> = ({ attachment, handleListAttachments }) => {
+const IncomeAttachments: React.FC<IncomeAttachmentsProps> = ({ attachment, canEdit = true, handleListAttachments }) => {
     const [messageShow, setMessageShow] = useState(false);
     const [typeMessage, setTypeMessage] = useState<statusModal>("waiting");
     const [downloadingAttachment, setDownloadingAttachment] = useState(false);
@@ -111,33 +112,35 @@ const IncomeAttachments: React.FC<IncomeAttachmentsProps> = ({ attachment, handl
                         }
                     }
                     onSubmit={async values => {
-                        setTypeMessage("waiting");
-                        setMessageShow(true);
+                        if (canEdit) {
+                            setTypeMessage("waiting");
+                            setMessageShow(true);
 
-                        try {
-                            await api.put(`incomings/attachments/${attachment.id}`, {
-                                name: values.name,
-                                received_at: `${values.received_at} 12:00:00`,
-                            });
+                            try {
+                                await api.put(`incomings/attachments/${attachment.id}`, {
+                                    name: values.name,
+                                    received_at: `${values.received_at} 12:00:00`,
+                                });
 
-                            if (handleListAttachments) await handleListAttachments();
+                                if (handleListAttachments) await handleListAttachments();
 
-                            setTypeMessage("success");
+                                setTypeMessage("success");
 
-                            setTimeout(() => {
-                                setMessageShow(false);
-                                handleCloseEditAttachment();
-                            }, 1000);
-                        }
-                        catch (err) {
-                            console.log('error create category.');
-                            console.log(err);
+                                setTimeout(() => {
+                                    setMessageShow(false);
+                                    handleCloseEditAttachment();
+                                }, 1000);
+                            }
+                            catch (err) {
+                                console.log('error create category.');
+                                console.log(err);
 
-                            setTypeMessage("error");
+                                setTypeMessage("error");
 
-                            setTimeout(() => {
-                                setMessageShow(false);
-                            }, 4000);
+                                setTimeout(() => {
+                                    setMessageShow(false);
+                                }, 4000);
+                            }
                         }
                     }}
                     validationSchema={attachmentValidationSchema}
@@ -154,6 +157,7 @@ const IncomeAttachments: React.FC<IncomeAttachmentsProps> = ({ attachment, handl
                                             onBlur={handleBlur}
                                             value={values.name}
                                             name="name"
+                                            disabled={!canEdit}
                                             isInvalid={!!errors.name && touched.name}
                                         />
                                         <Form.Control.Feedback type="invalid">{touched.name && errors.name}</Form.Control.Feedback>
@@ -171,6 +175,7 @@ const IncomeAttachments: React.FC<IncomeAttachmentsProps> = ({ attachment, handl
                                             onBlur={handleBlur}
                                             value={values.received_at}
                                             name="received_at"
+                                            disabled={!canEdit}
                                             isInvalid={!!errors.received_at && touched.received_at}
                                         />
                                         <Form.Control.Feedback type="invalid">{touched.received_at && errors.received_at}</Form.Control.Feedback>
@@ -195,16 +200,18 @@ const IncomeAttachments: React.FC<IncomeAttachmentsProps> = ({ attachment, handl
                                     </Button>
                                 </Col>
 
-                                <Col className="col-row text-right">
-                                    <Button
-                                        variant={showEditAttachment ? "outline-danger" : "outline-success"}
-                                        className="button-link"
-                                        onClick={() => { showEditAttachment ? handleCloseEditAttachment() : handleShowEditAttachment(); }}
-                                        title={showEditAttachment ? "Fechar." : "Editar o anexo."}
-                                    >
-                                        {showEditAttachment ? <FaTimes /> : <FaPencilAlt />}
-                                    </Button>
-                                </Col>
+                                {
+                                    canEdit && <Col className="col-row text-right">
+                                        <Button
+                                            variant={showEditAttachment ? "outline-danger" : "outline-success"}
+                                            className="button-link"
+                                            onClick={() => { showEditAttachment ? handleCloseEditAttachment() : handleShowEditAttachment(); }}
+                                            title={showEditAttachment ? "Fechar." : "Editar o anexo."}
+                                        >
+                                            {showEditAttachment ? <FaTimes /> : <FaPencilAlt />}
+                                        </Button>
+                                    </Col>
+                                }
                             </Row>
 
                             {
@@ -214,20 +221,24 @@ const IncomeAttachments: React.FC<IncomeAttachmentsProps> = ({ attachment, handl
                                             messageShow ? <AlertMessage status={typeMessage} /> :
                                                 <>
                                                     <Button variant="secondary" onClick={handleCloseEditAttachment}>Cancelar</Button>
-                                                    <Button
-                                                        title="Delete product"
-                                                        variant={iconDelete ? "outline-danger" : "outline-warning"}
-                                                        onClick={deleteProduct}
-                                                    >
-                                                        {
-                                                            iconDelete && "Excluir"
-                                                        }
+                                                    {
+                                                        canEdit && <>
+                                                            <Button
+                                                                title="Delete product"
+                                                                variant={iconDelete ? "outline-danger" : "outline-warning"}
+                                                                onClick={deleteProduct}
+                                                            >
+                                                                {
+                                                                    iconDelete && "Excluir"
+                                                                }
 
-                                                        {
-                                                            iconDeleteConfirm && "Confirmar"
-                                                        }
-                                                    </Button>
-                                                    <Button variant="success" type="submit">Salvar</Button>
+                                                                {
+                                                                    iconDeleteConfirm && "Confirmar"
+                                                                }
+                                                            </Button>
+                                                            <Button variant="success" type="submit">Salvar</Button>
+                                                        </>
+                                                    }
                                                 </>
 
                                         }
