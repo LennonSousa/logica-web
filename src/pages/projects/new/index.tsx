@@ -20,6 +20,7 @@ import { EventProject } from '../../../components/EventsProject';
 import ProjectEvents, { ProjectEvent } from '../../../components/ProjectEvents';
 import ProjectItems, { ProjectItem } from '../../../components/ProjectItems';
 import { Estimate } from '../../../components/Estimates';
+import NewIncomeModal, { NewIncome } from '../../../components/Incomings/ModalNew';
 
 import Members from '../../../components/ProjectMembers';
 import { statesCities } from '../../../components/StatesCities';
@@ -33,6 +34,52 @@ import {
     calcFinalTotal,
     ConsumptionCalcProps
 } from '../../../utils/calcEstimate';
+
+interface NewProject {
+    customer: string;
+    document: string;
+    phone: string;
+    cellphone: string;
+    contacts: string;
+    email: string;
+    zip_code: string;
+    street: string;
+    number: string;
+    neighborhood: string;
+    complement: string;
+    city: string;
+    state: string;
+    energy_company: string;
+    unity: string;
+    months_average: number;
+    average_increase: number;
+    coordinates: string;
+    capacity: number;
+    inversor: string;
+    roof_orientation: string;
+    roof_type: string;
+    panel: string;
+    panel_amount: number;
+    price: number;
+    notes: string;
+    financier_same: boolean;
+    financier: string;
+    financier_document: string;
+    financier_rg: string;
+    financier_cellphone: string;
+    financier_email: string;
+    financier_zip_code: string;
+    financier_street: string;
+    financier_number: string;
+    financier_neighborhood: string;
+    financier_complement: string;
+    financier_city: string;
+    financier_state: string;
+    status: string;
+    store: string;
+    events: Object[];
+    items: Object[];
+}
 
 const validationSchema = Yup.object().shape({
     customer: Yup.string().required('Obrigatório!'),
@@ -86,6 +133,7 @@ const NewProject: NextPage = () => {
     const { loading, user } = useContext(AuthContext);
     const { stores } = useContext(StoresContext);
 
+    const [newProject, setNewProject] = useState<NewProject>();
     const [projectEvents, setProjectEvents] = useState<ProjectEvent[]>([]);
     const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
     const [estimateFrom, setEstimateFrom] = useState<Estimate>();
@@ -109,6 +157,11 @@ const NewProject: NextPage = () => {
 
     const [messageShow, setMessageShow] = useState(false);
     const [typeMessage, setTypeMessage] = useState<statusModal>("waiting");
+
+    const [showModalNew, setShowModalNew] = useState(false);
+
+    const handleCloseModalNew = () => setShowModalNew(false);
+    const handleShowModalNew = () => setShowModalNew(true);
 
     useEffect(() => {
         handleItemSideBar('projects');
@@ -276,6 +329,17 @@ const NewProject: NextPage = () => {
         setProjectItemsList(projectItemsList);
     }
 
+    async function handleListIncomings(newIncome: NewIncome) {
+        const res = await api.post('projects', {
+            ...newProject,
+            incomings: [newIncome],
+        });
+
+        setTimeout(() => {
+            router.push(`/projects/details/${res.data.id}`);
+        }, 1000);
+    }
+
     return (
         <>
             <NextSeo
@@ -370,9 +434,6 @@ const NewProject: NextPage = () => {
                                                     store: user.store_only ? (user.store ? user.store.id : '') : '',
                                                 }}
                                                 onSubmit={async values => {
-                                                    setTypeMessage("waiting");
-                                                    setMessageShow(true);
-
                                                     try {
                                                         const events = projectEvents.map(projectEvent => {
                                                             return {
@@ -393,7 +454,7 @@ const NewProject: NextPage = () => {
                                                             }
                                                         });
 
-                                                        const res = await api.post('projects', {
+                                                        setNewProject({
                                                             customer: values.customer,
                                                             document: values.document,
                                                             phone: values.phone,
@@ -439,11 +500,7 @@ const NewProject: NextPage = () => {
                                                             items,
                                                         });
 
-                                                        setTypeMessage("success");
-
-                                                        setTimeout(() => {
-                                                            router.push(`/projects/details/${res.data.id}`);
-                                                        }, 1000);
+                                                        handleShowModalNew();
                                                     }
                                                     catch {
                                                         setTypeMessage("error");
@@ -1405,6 +1462,15 @@ const NewProject: NextPage = () => {
                                                     </Row>
                                                 </Col>
                                             </Row>
+
+                                            <NewIncomeModal
+                                                show={showModalNew}
+                                                customer={newProject?.customer}
+                                                value={newProject?.price}
+                                                projectIn
+                                                handleListIncomings={handleListIncomings}
+                                                handleCloseModal={handleCloseModalNew}
+                                            />
                                         </Container>
                                 }
                             </> :

@@ -32,7 +32,14 @@ const validationSchema = Yup.object().shape({
     notes: Yup.string().notRequired(),
 });
 
-const ProjectEvent: React.FC<ProjectEventProps> = ({ projectEvent, handleListEvents, listEvents, canEdit = true, isNewItem = false, isNewProject = false }) => {
+const ProjectEvent: React.FC<ProjectEventProps> = ({
+    projectEvent,
+    handleListEvents,
+    listEvents,
+    canEdit = true,
+    isNewItem = false,
+    isNewProject = false
+}) => {
     const [showModalEditEvent, setShowModalEditEvent] = useState(false);
 
     const handleCloseModalEditEvent = () => setShowModalEditEvent(false);
