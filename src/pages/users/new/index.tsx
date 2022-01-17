@@ -243,7 +243,7 @@ const NewUser: NextPage = () => {
                                                             document: values.document,
                                                             email: values.email,
                                                             store_only: values.store_only,
-                                                            discountLimit: values.discountLimit,
+                                                            discountLimit: Number(values.discountLimit.replaceAll(".", "").replaceAll(",", ".")),
                                                             store: values.store,
                                                             roles,
                                                         });

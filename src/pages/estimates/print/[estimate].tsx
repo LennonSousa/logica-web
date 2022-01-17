@@ -208,7 +208,7 @@ const EstimatePrint: NextPage = () => {
                                                                 <Row className="mb-5 text-center">
                                                                     <Col>
                                                                         <h4 className="text-dark text-wrap">PROPOSTA TÉCNICA E COMERCIAL<br></br>
-                                                                            PARA FORNECIMENTO DE SISTEMA SOLAR FOTOVOLTAICO</h4>
+                                                                            PARA FORNECIMENTO DE SISTEMA FOTOVOLTAICO</h4>
                                                                     </Col>
                                                                 </Row>
 
@@ -236,7 +236,7 @@ const EstimatePrint: NextPage = () => {
                                                                     <Col>
                                                                         <span className="text-secondary text-wrap" >
                                                                             <p>
-                                                                                A Lógica está no mercado há dez anos, oferecendo serviços e atendimento de qualidade,
+                                                                                A Lógica está no mercado há de 112 anos, oferecendo serviços e atendimento de qualidade,
                                                                                 nossos profissionais são qualificados e passam por constantes reciclagens para atender melhor nossos
                                                                                 clientes.
                                                                             </p>
@@ -248,7 +248,7 @@ const EstimatePrint: NextPage = () => {
                                                                             </p>
 
                                                                             <p>
-                                                                                Somos registrados no CREA-MA (CONSELHO REGIONAL DE ENEGENHARIA E AGRONOMIA DO MARANHÃO),
+                                                                                Somos registrados no CREA-MA (CONSELHO REGIONAL DE ENEGENHARIA E AGRONOMIA),
                                                                                 ABGD (ASSOCIAÇÃO BRASILEIRA DE GERAÇÃO DISTRIBUIDA) e PORTAL SOLAR. Consideramos ser de suma importância
                                                                                 para nossos clientes estar devidamente credenciados no maior número de órgãos possíveis do setor, para
                                                                                 que sempre, possamos estar atualizados, bem informados e respaldados para assessorar da melhor maneira
@@ -584,7 +584,7 @@ const EstimatePrint: NextPage = () => {
                                                                     <Col sm={3} >
                                                                         <Row>
                                                                             <Col>
-                                                                                <span className="text-success">Irradiação Local em [Kwh/m².dia]</span>
+                                                                                <span className="text-success">Irradiação Local em [kWh/m².dia]</span>
                                                                             </Col>
                                                                         </Row>
 
@@ -625,204 +625,20 @@ const EstimatePrint: NextPage = () => {
                                                                 </Row>
 
                                                                 <Row className="mb-1">
-                                                                    <Col sm={3}>
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Mês 01</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.month_01))} </h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-
                                                                     <Col sm={3} >
                                                                         <Row>
                                                                             <Col>
-                                                                                <span className="text-success">Mês 02</span>
+                                                                                <span className="text-success">Média de consumo</span>
                                                                             </Col>
                                                                         </Row>
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.month_02))}</h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-
-                                                                    <Col sm={3} >
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Mês 03</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.month_03))}</h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-
-                                                                    <Col sm={3} >
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Mês 04</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.month_04))}</h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-                                                                </Row>
-
-                                                                <Row className="mb-1">
-                                                                    <Col sm={3}>
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Mês 05</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.month_05))} </h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-
-                                                                    <Col sm={3} >
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Mês 06</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.month_06))}</h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-
-                                                                    <Col sm={3} >
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Mês 07</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.month_07))}</h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-
-                                                                    <Col sm={3} >
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Mês 08</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.month_08))}</h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-                                                                </Row>
-
-                                                                <Row className="mb-1">
-                                                                    <Col sm={3}>
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Mês 09</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.month_09))} </h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-
-                                                                    <Col sm={3} >
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Mês 10</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.month_10))}</h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-
-                                                                    <Col sm={3} >
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Mês 11</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.month_11))}</h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-
-                                                                    <Col sm={3} >
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Mês 12</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.month_12))}</h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-                                                                </Row>
-
-                                                                <Row className="mb-1">
-                                                                    <Col sm={3}>
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Mês 13</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.month_13))} </h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-
-                                                                    <Col sm={3} >
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Média</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(calcResults ? calcResults.monthsAverageKwh.toFixed(2) : '0.00')}</h6>
+                                                                                <h6 className="text-secondary">
+                                                                                    {
+                                                                                        `${prettifyCurrency(calcResults ? calcResults.monthsAverageKwh.toFixed(2) : '0.00')} kWh`
+                                                                                    }
+                                                                                </h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -836,7 +652,11 @@ const EstimatePrint: NextPage = () => {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(String(data.average_increase))}</h6>
+                                                                                <h6 className="text-secondary">
+                                                                                    {
+                                                                                        `${prettifyCurrency(String(data.average_increase))} kWh`
+                                                                                    }
+                                                                                </h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -850,7 +670,11 @@ const EstimatePrint: NextPage = () => {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{prettifyCurrency(calcResults ? calcResults.finalAverageKwh.toFixed(2) : '0.00')}</h6>
+                                                                                <h6 className="text-secondary">
+                                                                                    {
+                                                                                        `${prettifyCurrency(calcResults ? calcResults.finalAverageKwh.toFixed(2) : '0.00')} kWh`
+                                                                                    }
+                                                                                </h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -918,7 +742,7 @@ const EstimatePrint: NextPage = () => {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{`${prettifyCurrency(calcResults ? calcResults.monthlyGeneratedEnergy.toFixed(2) : '0.00')} Kwh`}</h6>
+                                                                                <h6 className="text-secondary">{`${prettifyCurrency(calcResults ? calcResults.monthlyGeneratedEnergy.toFixed(2) : '0.00')} kWh`}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -932,7 +756,7 @@ const EstimatePrint: NextPage = () => {
 
                                                                         <Row>
                                                                             <Col>
-                                                                                <h6 className="text-secondary">{`${prettifyCurrency(calcResults ? calcResults.yearlyGeneratedEnergy.toFixed(2) : '0.00')} Kwh`}</h6>
+                                                                                <h6 className="text-secondary">{`${prettifyCurrency(calcResults ? calcResults.yearlyGeneratedEnergy.toFixed(2) : '0.00')} kWh`}</h6>
                                                                             </Col>
                                                                         </Row>
                                                                     </Col>
@@ -1042,13 +866,13 @@ const EstimatePrint: NextPage = () => {
                                                                     }
                                                                 </Row>
 
-                                                                <Col style={{ pageBreakBefore: 'always' }} className="border-top mt-1 mb-3"></Col>
-
                                                                 <Row className="mb-2">
                                                                     <Col>
                                                                         <h5 className="text-dark"><FaClipboardList /> ITENS</h5>
                                                                     </Col>
                                                                 </Row>
+
+                                                                <Col className="border-top mt-1 mb-3"></Col>
 
                                                                 <Table striped hover size="sm" responsive>
                                                                     <thead>
@@ -1111,7 +935,7 @@ const EstimatePrint: NextPage = () => {
                                                                     </Col>
                                                                 </Row>
 
-                                                                <Col className="border-top mt-1 mb-3"></Col>
+                                                                <Col style={{ pageBreakBefore: 'always' }} className="border-top mt-1 mb-3"></Col>
 
                                                                 <Row className="mb-2">
                                                                     <Col>
@@ -1145,7 +969,7 @@ const EstimatePrint: NextPage = () => {
                                                                     </Col>
                                                                 </Row>
 
-                                                                <Col style={{ pageBreakBefore: 'always' }} className="border-top mt-1 mb-3"></Col>
+                                                                <Col className="border-top mt-1 mb-3"></Col>
 
                                                                 <Row className="mb-2">
                                                                     <Col>
