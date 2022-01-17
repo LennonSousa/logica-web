@@ -236,7 +236,7 @@ const EstimatePrint: NextPage = () => {
                                                                     <Col>
                                                                         <span className="text-secondary text-wrap" >
                                                                             <p>
-                                                                                A Lógica está no mercado há de 112 anos, oferecendo serviços e atendimento de qualidade,
+                                                                                A Lógica está no mercado há mais de 12 anos, oferecendo serviços e atendimento de qualidade,
                                                                                 nossos profissionais são qualificados e passam por constantes reciclagens para atender melhor nossos
                                                                                 clientes.
                                                                             </p>
@@ -935,7 +935,7 @@ const EstimatePrint: NextPage = () => {
                                                                     </Col>
                                                                 </Row>
 
-                                                                <Col style={{ pageBreakBefore: 'always' }} className="border-top mt-1 mb-3"></Col>
+                                                                <Col className="border-top mt-1 mb-3"></Col>
 
                                                                 <Row className="mb-2">
                                                                     <Col>
@@ -990,10 +990,6 @@ const EstimatePrint: NextPage = () => {
                                                                     <Col>
                                                                         <span className="text-secondary text-wrap">{format(new Date(), 'PPPPp', { locale: br })}</span>
                                                                     </Col>
-                                                                </Row>
-
-                                                                <Row className="justify-content-center">
-                                                                    <Col sm={8} className="border-top mt-5 mb-1"></Col>
                                                                 </Row>
 
                                                                 <Row className="justify-content-center">
