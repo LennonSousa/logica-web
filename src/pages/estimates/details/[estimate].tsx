@@ -59,7 +59,7 @@ const tranlatedsCustomerFrom: tranlatedCustomerFrom[] = [
     },
     {
         name: 'street',
-        translate: 'Propaganda nas ruas'
+        translate: 'TV / Propaganda nas ruas'
     },
 ]
 

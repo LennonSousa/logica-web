@@ -588,7 +588,7 @@ const EditEstimate: NextPage = () => {
                                                                                 <option value="social">Redes sociais</option>
                                                                                 <option value="customer">Outros clientes</option>
                                                                                 <option value="internet">Buscas na internet</option>
-                                                                                <option value="street">Propaganda nas ruas</option>
+                                                                                <option value="street">TV / Propaganda nas ruas</option>
                                                                             </Form.Control>
                                                                             <Form.Control.Feedback type="invalid">{touched.customer_from && errors.customer_from}</Form.Control.Feedback>
                                                                         </Form.Group>
