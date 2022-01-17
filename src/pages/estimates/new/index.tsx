@@ -340,7 +340,7 @@ const NewEstimate: NextPage = () => {
                                                     show_values: false,
                                                     show_discount: false,
                                                     notes: '',
-                                                    store: user.store_only ? (user.store ? user.store.id : '') : '',
+                                                    store: user.store_only ? user.store.id : '',
                                                     user: user.id,
                                                     status: '',
                                                 }}
