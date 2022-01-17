@@ -328,7 +328,7 @@ const EstimatePrint: NextPage = () => {
 
                                                                 <Row className="mb-1">
                                                                     <Col sm={6}>
-                                                                        <h3 className="form-control-plaintext text-success">{data.customer}</h3>
+                                                                        <h3 className="form-control-plaintext text-success text-wrap">{data.customer}</h3>
                                                                     </Col>
 
                                                                     <Col sm={4} >
@@ -810,64 +810,6 @@ const EstimatePrint: NextPage = () => {
 
                                                                 <Row className="mb-2">
                                                                     <Col>
-                                                                        <h5 className="text-dark"><FaCashRegister /> VALORES</h5>
-                                                                    </Col>
-                                                                </Row>
-
-                                                                <Row className="mb-3">
-                                                                    <Col sm={3}>
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <span className="text-success">Subtotal</span>
-                                                                            </Col>
-                                                                        </Row>
-
-                                                                        <Row>
-                                                                            <Col>
-                                                                                <h6 className="text-secondary">{`R$ ${prettifyCurrency(calcResults ? calcResults.systemInitialPrice.toFixed(2) : '0.00')}`} </h6>
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Col>
-
-                                                                    {
-                                                                        data.show_discount && <>
-                                                                            <Col sm={3} >
-                                                                                <Row>
-                                                                                    <Col>
-                                                                                        <span className="text-success">Desconto</span>
-                                                                                    </Col>
-                                                                                </Row>
-
-                                                                                <Row>
-                                                                                    <Col>
-                                                                                        <h6 className="text-secondary">{
-                                                                                            `${data.discount_percent ? '' : 'R$ '}${prettifyCurrency(String(data.discount))} ${data.discount_percent ? '%' : ''}`
-                                                                                        }</h6>
-                                                                                    </Col>
-                                                                                </Row>
-                                                                            </Col>
-
-                                                                            <Col sm={3} >
-                                                                                <Row>
-                                                                                    <Col>
-                                                                                        <span className="text-success">Acréscimo</span>
-                                                                                    </Col>
-                                                                                </Row>
-
-                                                                                <Row>
-                                                                                    <Col>
-                                                                                        <h6 className="text-secondary">{
-                                                                                            `${data.increase_percent ? '' : 'R$ '}${prettifyCurrency(String(data.increase))} ${data.increase_percent ? '%' : ''}`
-                                                                                        }</h6>
-                                                                                    </Col>
-                                                                                </Row>
-                                                                            </Col>
-                                                                        </>
-                                                                    }
-                                                                </Row>
-
-                                                                <Row className="mb-2">
-                                                                    <Col>
                                                                         <h5 className="text-dark"><FaClipboardList /> ITENS</h5>
                                                                     </Col>
                                                                 </Row>
@@ -909,19 +851,85 @@ const EstimatePrint: NextPage = () => {
 
                                                                 <Col className="border-top mt-1 mb-3"></Col>
 
-                                                                <Row className="mb-2">
+                                                                <Row>
                                                                     <Col>
-                                                                        <h5 className="text-dark"><FaSun /> VALOR FINAL DO SISTEMA</h5>
+                                                                        <Row className="mb-2">
+                                                                            <Col>
+                                                                                <h5 className="text-dark"><FaCashRegister /> VALORES</h5>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row className="mb-3">
+                                                                            <Col sm={3}>
+                                                                                <Row>
+                                                                                    <Col>
+                                                                                        <span className="text-success">Subtotal</span>
+                                                                                    </Col>
+                                                                                </Row>
+
+                                                                                <Row>
+                                                                                    <Col>
+                                                                                        <h6 className="text-secondary">{`R$ ${prettifyCurrency(calcResults ? calcResults.systemInitialPrice.toFixed(2) : '0.00')}`} </h6>
+                                                                                    </Col>
+                                                                                </Row>
+                                                                            </Col>
+
+                                                                            {
+                                                                                data.show_discount && <>
+                                                                                    <Col sm={3} >
+                                                                                        <Row>
+                                                                                            <Col>
+                                                                                                <span className="text-success">Desconto</span>
+                                                                                            </Col>
+                                                                                        </Row>
+
+                                                                                        <Row>
+                                                                                            <Col>
+                                                                                                <h6 className="text-secondary">{
+                                                                                                    `${data.discount_percent ? '' : 'R$ '}${prettifyCurrency(String(data.discount))} ${data.discount_percent ? '%' : ''}`
+                                                                                                }</h6>
+                                                                                            </Col>
+                                                                                        </Row>
+                                                                                    </Col>
+
+                                                                                    <Col sm={3} >
+                                                                                        <Row>
+                                                                                            <Col>
+                                                                                                <span className="text-success">Acréscimo</span>
+                                                                                            </Col>
+                                                                                        </Row>
+
+                                                                                        <Row>
+                                                                                            <Col>
+                                                                                                <h6 className="text-secondary">{
+                                                                                                    `${data.increase_percent ? '' : 'R$ '}${prettifyCurrency(String(data.increase))} ${data.increase_percent ? '%' : ''}`
+                                                                                                }</h6>
+                                                                                            </Col>
+                                                                                        </Row>
+                                                                                    </Col>
+                                                                                </>
+                                                                            }
+                                                                        </Row>
+                                                                    </Col>
+
+                                                                    <Col>
+                                                                        <Row className="mb-2">
+                                                                            <Col>
+                                                                                <h5 className="text-dark"><FaSun /> VALOR FINAL DO SISTEMA</h5>
+                                                                            </Col>
+                                                                        </Row>
+
+                                                                        <Row className="mb-3">
+                                                                            <Col>
+                                                                                <h5 className="text-success">
+                                                                                    <strong>{`R$ ${prettifyCurrency(finalTotal.toFixed(2))}`}</strong>
+                                                                                </h5>
+                                                                            </Col>
+                                                                        </Row>
                                                                     </Col>
                                                                 </Row>
 
-                                                                <Row className="mb-3">
-                                                                    <Col>
-                                                                        <h5 className="text-success">{`R$ ${prettifyCurrency(finalTotal.toFixed(2))}`} </h5>
-                                                                    </Col>
-                                                                </Row>
-
-                                                                <Col className="border-top mt-1 mb-3"></Col>
+                                                                <Col style={{ pageBreakBefore: 'always' }} className="border-top mt-1 mb-3"></Col>
 
                                                                 <Row className="mb-2">
                                                                     <Col>
