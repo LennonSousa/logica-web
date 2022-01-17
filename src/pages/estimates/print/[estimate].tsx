@@ -814,8 +814,6 @@ const EstimatePrint: NextPage = () => {
                                                                     </Col>
                                                                 </Row>
 
-                                                                <Col className="border-top mt-1 mb-3"></Col>
-
                                                                 <Table striped hover size="sm" responsive>
                                                                     <thead>
                                                                         <tr>
@@ -848,8 +846,6 @@ const EstimatePrint: NextPage = () => {
                                                                         }
                                                                     </tbody>
                                                                 </Table>
-
-                                                                <Col className="border-top mt-1 mb-3"></Col>
 
                                                                 <Row>
                                                                     <Col>

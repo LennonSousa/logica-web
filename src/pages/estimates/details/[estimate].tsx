@@ -260,7 +260,7 @@ const EstimateDetails: NextPage = () => {
 
                                                                 <Row className="mb-3">
                                                                     <Col sm={6}>
-                                                                        <h3 className="form-control-plaintext text-success">{data.customer}</h3>
+                                                                        <h3 className="form-control-plaintext text-success text-wrap">{data.customer}</h3>
                                                                     </Col>
 
                                                                     <Col sm={3}>
