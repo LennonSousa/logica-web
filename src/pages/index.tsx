@@ -35,11 +35,11 @@ const Login: NextPage = () => {
   return (
     <>
       <NextSeo
-        title="Bem-vindo(a)"
+        title="Plataforma Lógica Renováveis"
         description="Bem-vindo(a) a plataforma de gerenciamento da Lógica Renováveis."
         openGraph={{
           url: 'https://app.logicarenovaveis.com',
-          title: 'Bem-vindo(a)',
+          title: 'Plataforma Lógica Renováveis',
           description: 'Bem-vindo(a) a plataforma de gerenciamento da Lógica Renováveis.',
           images: [
             {
@@ -56,7 +56,7 @@ const Login: NextPage = () => {
           <Row className="justify-content-center align-items-center">
             <Col sm={12} className={`${styles.formContainer} col-11`}>
               <Row className="justify-content-center align-items-center">
-                <Col md={6} className="mt-1 mb-4">
+                <Col md={6} className="col-8 mt-1 mb-1">
                   <Row className="justify-content-center align-items-center">
                     <Col sm={8}>
                       <Image fluid src="/assets/images/logo-logica.svg" alt="Lógica Renováveis." />

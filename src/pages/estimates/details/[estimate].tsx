@@ -6,6 +6,7 @@ import { NextSeo } from 'next-seo';
 import { Col, Container, Button, ButtonGroup, Table, Row } from 'react-bootstrap';
 import { format } from 'date-fns';
 import {
+    FaCopy,
     FaFileExport,
     FaPencilAlt,
     FaPlug,
@@ -214,13 +215,25 @@ const EstimateDetails: NextPage = () => {
 
                                                                     <Col className="col-row">
                                                                         <ButtonGroup className="col-12">
-                                                                            <Button
-                                                                                title="Editar orçamento."
-                                                                                variant="success"
-                                                                                onClick={() => handleRoute(`/estimates/edit/${data.id}`)}
-                                                                            >
-                                                                                <FaPencilAlt />
-                                                                            </Button>
+                                                                            {
+                                                                                can(user, "estimates", "update:any") && <Button
+                                                                                    title="Editar orçamento."
+                                                                                    variant="success"
+                                                                                    onClick={() => handleRoute(`/estimates/edit/${data.id}`)}
+                                                                                >
+                                                                                    <FaPencilAlt />
+                                                                                </Button>
+                                                                            }
+
+                                                                            {
+                                                                                can(user, "estimates", "create") && <Button
+                                                                                    title="Clonar orçamento."
+                                                                                    variant="success"
+                                                                                    onClick={() => handleRoute(`/estimates/new?from=${data.id}`)}
+                                                                                >
+                                                                                    <FaCopy />
+                                                                                </Button>
+                                                                            }
 
                                                                             {
                                                                                 can(user, "projects", "create") && <Button
