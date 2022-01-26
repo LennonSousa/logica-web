@@ -13,6 +13,7 @@ import api from '../../../api/api';
 import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
+import { StoresContext } from '../../../contexts/StoresContext'
 import { can } from '../../../components/Users';
 import { Estimate } from '../../../components/Estimates';
 import ConsumptionModal from '../../../components/Estimates/Consumption';
@@ -77,11 +78,11 @@ const EditEstimate: NextPage = () => {
 
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
+    const { stores } = useContext(StoresContext);
 
     const [data, setData] = useState<Estimate>();
 
     const [panels, setPanels] = useState<Panel[]>([]);
-    const [stores, setStores] = useState<Store[]>([]);
     const [roofOrientations, setRoofOrientations] = useState<RoofOrientation[]>([]);
     const [roofTypes, setRoofTypes] = useState<RoofType[]>([]);
     const [estimateStatusList, setEstimateStatusList] = useState<EstimateStatus[]>([]);
@@ -142,16 +143,6 @@ const EditEstimate: NextPage = () => {
                             setCities(stateCities.cidades);
                     }
                     catch { }
-
-                    api.get('stores').then(res => {
-                        setStores(res.data);
-                    }).catch(err => {
-                        console.log('Error to get stores, ', err);
-
-                        setTypeLoadingMessage("error");
-                        setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
-                        setHasErrors(true);
-                    });
 
                     api.get('panels').then(res => {
                         setPanels(res.data);

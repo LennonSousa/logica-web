@@ -16,6 +16,7 @@ import { StoresContext } from '../../../contexts/StoresContext';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { can } from '../../../components/Users';
 import ConsumptionModal from '../../../components/Estimates/Consumption';
+import { Estimate } from '../../../components/Estimates';
 import { Panel } from '../../../components/Panels';
 import { RoofOrientation } from '../../../components/RoofOrientations';
 import { RoofType } from '../../../components/RoofTypes';
@@ -72,11 +73,13 @@ const validationSchema = Yup.object().shape({
 
 const NewEstimate: NextPage = () => {
     const router = useRouter();
+    const { from } = router.query;
 
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
     const { stores } = useContext(StoresContext);
 
+    const [estimateFrom, setEstimateFrom] = useState<Estimate>();
     const [panels, setPanels] = useState<Panel[]>([]);
     const [roofOrientations, setRoofOrientations] = useState<RoofOrientation[]>([]);
     const [roofTypes, setRoofTypes] = useState<RoofType[]>([]);
@@ -151,7 +154,7 @@ const NewEstimate: NextPage = () => {
                 api.get('estimates/status').then(res => {
                     setEstimateStatusList(res.data);
 
-                    setLoadingData(false);
+                    if (!from) setLoadingData(false);
                 }).catch(err => {
                     console.log('Error to get estimates status, ', err);
 
@@ -160,46 +163,110 @@ const NewEstimate: NextPage = () => {
                     setHasErrors(true);
                 });
 
-                setEstimateItemsList(
-                    [
-                        {
-                            id: '0',
-                            name: 'Inversor',
-                            amount: 1,
-                            price: 0,
-                            percent: 20,
-                            order: 0,
-                        },
-                        {
-                            id: '1',
-                            name: 'Painel',
-                            amount: 1,
-                            price: 0,
-                            percent: 65,
-                            order: 1,
-                        },
-                        {
-                            id: '2',
-                            name: 'ESTRUTURA METÁLICA PARA PAINEL SOLAR',
-                            amount: 1,
-                            price: 0,
-                            percent: 10,
-                            order: 2,
-                        },
-                        {
-                            id: '3',
-                            name: 'ENGENHARIA E INSTALAÇÃO',
-                            amount: 1,
-                            price: 0,
-                            percent: 5,
-                            order: 3,
+                if (from) {
+                    api.get(`estimates/${from}`).then(res => {
+                        let estimateRes: Estimate = res.data;
+
+                        if (estimateRes.document.length > 14)
+                            setDocumentType("CNPJ");
+
+                        try {
+                            const stateCities = statesCities.estados.find(item => { return item.sigla === res.data.state })
+
+                            if (stateCities)
+                                setCities(stateCities.cidades);
                         }
-                    ]
-                );
+                        catch { }
+
+                        setEstimateFrom(estimateRes);
+
+                        setLoadingData(false);
+                    });
+                }
+                else {
+                    setEstimateItemsList(
+                        [
+                            {
+                                id: '0',
+                                name: 'Inversor',
+                                amount: 1,
+                                price: 0,
+                                percent: 20,
+                                order: 0,
+                            },
+                            {
+                                id: '1',
+                                name: 'Painel',
+                                amount: 1,
+                                price: 0,
+                                percent: 65,
+                                order: 1,
+                            },
+                            {
+                                id: '2',
+                                name: 'ESTRUTURA METÁLICA PARA PAINEL SOLAR',
+                                amount: 1,
+                                price: 0,
+                                percent: 10,
+                                order: 2,
+                            },
+                            {
+                                id: '3',
+                                name: 'ENGENHARIA E INSTALAÇÃO',
+                                amount: 1,
+                                price: 0,
+                                percent: 5,
+                                order: 3,
+                            }
+                        ]
+                    );
+                }
             }
         }
 
     }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (estimateFrom) {
+            const values: ConsumptionCalcProps = {
+                kwh: Number(estimateFrom.kwh),
+                irradiation: Number(estimateFrom.irradiation),
+                panel: estimateFrom.panel,
+                month_01: Number(estimateFrom.month_01),
+                month_02: Number(estimateFrom.month_02),
+                month_03: Number(estimateFrom.month_03),
+                month_04: Number(estimateFrom.month_04),
+                month_05: Number(estimateFrom.month_05),
+                month_06: Number(estimateFrom.month_06),
+                month_07: Number(estimateFrom.month_07),
+                month_08: Number(estimateFrom.month_08),
+                month_09: Number(estimateFrom.month_09),
+                month_10: Number(estimateFrom.month_10),
+                month_11: Number(estimateFrom.month_11),
+                month_12: Number(estimateFrom.month_12),
+                month_13: Number(estimateFrom.month_13),
+                averageIncrease: Number(estimateFrom.average_increase),
+                roofOrientation: estimateFrom.roof_orientation,
+            }
+
+            setConsumptionValuesToCalc(values);
+
+            setDiscountPercent(estimateFrom.discount_percent);
+            setDiscount(estimateFrom.discount);
+            setIncreasePercent(estimateFrom.increase_percent);
+            setIncrease(estimateFrom.increase);
+
+            const newCalcProps = {
+                discount_percent: estimateFrom.discount_percent,
+                discount: estimateFrom.discount,
+                increase_percent: estimateFrom.increase_percent,
+                increase: estimateFrom.increase,
+                estimateItems: estimateFrom.items,
+            }
+
+            handleCalcEstimate(values, newCalcProps, false);
+        }
+    }, [estimateFrom]); // eslint-disable-line react-hooks/exhaustive-deps
 
     function handleCalcEstimate(values: ConsumptionCalcProps, newCalcProps: CalcProps, updateInversor: boolean) {
         const newCalcResults = calculate(values, newCalcProps.estimateItems, updateInversor);
@@ -316,33 +383,33 @@ const NewEstimate: NextPage = () => {
 
                                             <Formik
                                                 initialValues={{
-                                                    customer: '',
-                                                    customer_from: '',
-                                                    document: '',
-                                                    phone: '',
-                                                    cellphone: '',
-                                                    contacts: '',
-                                                    email: '',
-                                                    zip_code: '',
-                                                    street: '',
-                                                    number: '',
-                                                    neighborhood: '',
-                                                    complement: '',
-                                                    city: '',
-                                                    state: '',
-                                                    energy_company: '',
-                                                    unity: '',
-                                                    roof_type: '',
-                                                    discount_percent: true,
-                                                    discount: '0,00',
-                                                    increase_percent: true,
-                                                    increase: '0,00',
-                                                    show_values: false,
-                                                    show_discount: false,
-                                                    notes: '',
+                                                    customer: estimateFrom ? estimateFrom.customer : '',
+                                                    customer_from: estimateFrom ? estimateFrom.customer_from : '',
+                                                    document: estimateFrom ? estimateFrom.document : '',
+                                                    phone: estimateFrom ? estimateFrom.phone : '',
+                                                    cellphone: estimateFrom ? estimateFrom.cellphone : '',
+                                                    contacts: estimateFrom ? estimateFrom.contacts : '',
+                                                    email: estimateFrom ? estimateFrom.email : '',
+                                                    zip_code: estimateFrom ? estimateFrom.zip_code : '',
+                                                    street: estimateFrom ? estimateFrom.street : '',
+                                                    number: estimateFrom ? estimateFrom.number : '',
+                                                    neighborhood: estimateFrom ? estimateFrom.neighborhood : '',
+                                                    complement: estimateFrom ? estimateFrom.complement : '',
+                                                    city: estimateFrom ? estimateFrom.city : '',
+                                                    state: estimateFrom ? estimateFrom.state : '',
+                                                    energy_company: estimateFrom ? estimateFrom.energy_company : '',
+                                                    unity: estimateFrom ? estimateFrom.unity : '',
+                                                    roof_type: estimateFrom ? estimateFrom.roof_type.id : '',
+                                                    discount_percent: estimateFrom ? estimateFrom.discount_percent : true,
+                                                    discount: estimateFrom ? prettifyCurrency(String(estimateFrom.discount)) : '0,00',
+                                                    increase_percent: estimateFrom ? estimateFrom.increase_percent : true,
+                                                    increase: estimateFrom ? prettifyCurrency(String(estimateFrom.increase)) : '0,00',
+                                                    show_values: estimateFrom ? estimateFrom.show_values : false,
+                                                    show_discount: estimateFrom ? estimateFrom.show_discount : false,
+                                                    notes: estimateFrom ? estimateFrom.notes : '',
                                                     store: user.store_only ? user.store.id : '',
                                                     user: user.id,
-                                                    status: '',
+                                                    status: estimateFrom ? estimateFrom.status.id : '',
                                                 }}
                                                 onSubmit={async values => {
                                                     try {
