@@ -72,7 +72,7 @@ const ServiceOrdersPages: NextPage = () => {
         setActivePage(page);
 
         try {
-            let requestUrl = `services/orders?limit=${limit}&page=${activePage}`;
+            let requestUrl = `services/orders?limit=${limit}&page=${page}`;
 
             const res = await api.get(requestUrl)
 

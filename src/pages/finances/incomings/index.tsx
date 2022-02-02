@@ -91,10 +91,10 @@ const IncomingsPage: NextPage = () => {
         setActivePage(page);
 
         try {
-            let query = `?limit=${limit}&page=${activePage}`;
+            let query = `?limit=${limit}&page=${page}`;
 
             if (searchParams.range !== "unlimited")
-                query += `?start=${format(searchParams.start, 'yyyy-MM-dd')}&end=${format(searchParams.end, 'yyyy-MM-dd')}`;
+                query += `&start=${format(searchParams.start, 'yyyy-MM-dd')}&end=${format(searchParams.end, 'yyyy-MM-dd')}`;
 
 
             if (searchParams.store !== "all")
