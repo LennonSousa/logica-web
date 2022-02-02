@@ -238,15 +238,19 @@ export function calculate(consumptionProps: ConsumptionCalcProps, estimateItems:
 }
 
 export function calcFinalTotal(subTotal: number, isDiscountPercent: boolean, discountValue: number, isIncreasePercent: boolean, increaseValue: number) {
-    // Discount and increase.
-    let finalPrice = subTotal;
+    // Discount and increase.    
+    const parsedSubTotal = Number(subTotal);
+    const parsedDiscountValue = Number(discountValue);
+    const parsedIncreaseValue = Number(increaseValue);
 
-    if (isDiscountPercent) finalPrice = subTotal - (subTotal * discountValue / 100);
-    else finalPrice = subTotal - discountValue;
+    let finalPrice = parsedSubTotal;
+
+    if (isDiscountPercent) finalPrice -= (finalPrice * parsedDiscountValue / 100);
+    else finalPrice -= parsedDiscountValue;
 
     if (increaseValue > 0) {
-        if (isIncreasePercent) finalPrice = finalPrice + (finalPrice * increaseValue / 100);
-        else finalPrice = finalPrice + increaseValue;
+        if (isIncreasePercent) finalPrice += (finalPrice * parsedIncreaseValue / 100);
+        else finalPrice += parsedIncreaseValue;
     }
 
     return finalPrice;
