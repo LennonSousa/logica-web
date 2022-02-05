@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import type { NextPage } from 'next';
 import { NextSeo } from 'next-seo';
@@ -11,21 +11,16 @@ import { StoresContext } from '../../contexts/StoresContext';
 import { can } from '../../components/Users';
 import { Stores } from '../../components/Stores';
 import { PageWaiting } from '../../components/PageWaiting';
-import { AlertMessage, statusModal } from '../../components/Interfaces/AlertMessage';
 
 const StoresPage: NextPage = () => {
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
     const { stores } = useContext(StoresContext);
 
-    const [loadingData, setLoadingData] = useState(true);
-
     useEffect(() => {
         handleItemSideBar('stores');
         handleSelectedMenu('stores-index');
-
-        setLoadingData(false);
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <>
