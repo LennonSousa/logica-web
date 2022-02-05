@@ -186,13 +186,15 @@ const ProjectDetails: NextPage = () => {
 
                                                                     <Col className="col-row">
                                                                         <ButtonGroup className="col-12">
-                                                                            <Button
-                                                                                title="Editar projeto."
-                                                                                variant="success"
-                                                                                onClick={() => handleRoute(`/projects/edit/${data.id}`)}
-                                                                            >
-                                                                                <FaPencilAlt />
-                                                                            </Button>
+                                                                            {
+                                                                                can(user, "projects", "update:any") && <Button
+                                                                                    title="Editar projeto."
+                                                                                    variant="success"
+                                                                                    onClick={() => handleRoute(`/projects/edit/${data.id}`)}
+                                                                                >
+                                                                                    <FaPencilAlt />
+                                                                                </Button>
+                                                                            }
 
                                                                             {
                                                                                 can(user, "services", "create") && <Button

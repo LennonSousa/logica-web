@@ -132,7 +132,7 @@ const NewUser: NextPage = () => {
                 }
 
                 if (grant === 'view') {
-                    if (role.view) {
+                    if (role.view && !role.view_self) {
                         const updatedRole = handleRole(role, ['create', 'update', 'remove'], false);
 
                         return { ...updatedRole, view: !updatedRole.view };
@@ -140,7 +140,15 @@ const NewUser: NextPage = () => {
 
                     return { ...role, view: !role.view, view_self: false };
                 }
-                if (grant === 'view_self') return { ...role, view_self: !role.view_self, view: false };
+                if (grant === 'view_self') {
+                    if (role.view_self && !role.view) {
+                        const updatedRole = handleRole(role, ['create', 'update', 'remove'], false);
+
+                        return { ...updatedRole, view_self: !updatedRole.view_self };
+                    }
+
+                    return { ...role, view_self: !role.view_self, view: false };
+                }
                 if (grant === 'create') return { ...role, create: !role.create };
                 if (grant === 'update') {
                     if (role.update) {
@@ -214,9 +222,7 @@ const NewUser: NextPage = () => {
                                                     document: '',
                                                     email: '',
                                                     store_only: user.store_only,
-                                                    discountLimit: process.env.NEXT_PUBLIC_DEFAULT_DISCOUNT_LIMIT ? prettifyCurrency(
-                                                        Number(process.env.NEXT_PUBLIC_DEFAULT_DISCOUNT_LIMIT).toFixed(2)
-                                                    ) : '0,00',
+                                                    discountLimit: '0,00',
                                                     store: user.store_only ? (user.store ? user.store.id : '') : '',
                                                 }}
                                                 onSubmit={async values => {

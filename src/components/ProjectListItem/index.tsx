@@ -1,9 +1,12 @@
+import { useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Button, ButtonGroup, Row, Col } from 'react-bootstrap';
 import { FaPencilAlt } from 'react-icons/fa';
 import { format } from 'date-fns';
 
+import { AuthContext } from '../../contexts/AuthContext';
+import { can } from '../../components/Users';
 import { Project } from '../Projects';
 
 import styles from './styles.module.css';
@@ -14,6 +17,8 @@ interface ProjectListItemProps {
 
 const ProjectListItem: React.FC<ProjectListItemProps> = ({ project }) => {
     const router = useRouter();
+
+    const { user } = useContext(AuthContext);
 
     function goToEdit() {
         router.push(`/projects/edit/${project.id}`);
@@ -48,17 +53,19 @@ const ProjectListItem: React.FC<ProjectListItemProps> = ({ project }) => {
                     </Col>
                 </Row>
 
-                <Row>
-                    <ButtonGroup size="sm" className="col-12">
-                        <Button
-                            variant="success"
-                            title="Editar projeto."
-                            onClick={goToEdit}
-                        >
-                            <FaPencilAlt /> Editar
-                        </Button>
-                    </ButtonGroup>
-                </Row>
+                {
+                    user && can(user, "projects", "update:any") && <Row>
+                        <ButtonGroup size="sm" className="col-12">
+                            <Button
+                                variant="success"
+                                title="Editar projeto."
+                                onClick={goToEdit}
+                            >
+                                <FaPencilAlt /> Editar
+                            </Button>
+                        </ButtonGroup>
+                    </Row>
+                }
             </div>
         </Col >
     )

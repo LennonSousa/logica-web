@@ -13,7 +13,7 @@ import api from '../../../api/api';
 import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
-import { StoresContext } from '../../../contexts/StoresContext'
+import { StoresContext } from '../../../contexts/StoresContext';
 import { can } from '../../../components/Users';
 import { Estimate } from '../../../components/Estimates';
 import ConsumptionModal from '../../../components/Estimates/Consumption';

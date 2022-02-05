@@ -14,15 +14,8 @@ import api from '../../../api/api';
 import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
+import { StoresContext } from '../../../contexts/StoresContext';
 import { can } from '../../../components/Users';
-import { Store } from '../../../components/Stores';
-
-const TextEditor = dynamic(
-    () => {
-        return import("../../../components/Stores/TextEditor");
-    },
-    { ssr: false }
-);
 
 import { cpf, cnpj } from '../../../components/InputMask/masks';
 import { statesCities } from '../../../components/StatesCities';
@@ -53,6 +46,7 @@ const EditStore: NextPage = () => {
 
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
+    const { handleStores } = useContext(StoresContext);
 
     const [imagePreview, setImagePreview] = useState('/assets/images/logo-logica.jpg');
     const [imageSelected, setImageSelected] = useState<File>();
@@ -154,6 +148,10 @@ const EditStore: NextPage = () => {
                                             dataToSave.append('document', values.document);
 
                                             await api.post('stores', dataToSave);
+
+                                            const storesRes = await api.get('stores');
+
+                                            handleStores(storesRes.data);
 
                                             setTypeMessage("success");
 

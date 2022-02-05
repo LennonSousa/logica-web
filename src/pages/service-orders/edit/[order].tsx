@@ -14,6 +14,7 @@ import api from '../../../api/api';
 import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
+import { StoresContext } from '../../../contexts/StoresContext';
 import { can } from '../../../components/Users';
 import { ServiceOrder } from '../../../components/ServiceOrders';
 import { Store } from '../../../components/Stores';
@@ -66,9 +67,9 @@ const ServiceOrderEdit: NextPage = () => {
     const { order } = router.query;
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
+    const { stores } = useContext(StoresContext);
 
     const [data, setData] = useState<ServiceOrder>();
-    const [stores, setStores] = useState<Store[]>([]);
 
     const [spinnerCep, setSpinnerCep] = useState(false);
     const [documentType, setDocumentType] = useState("CPF");
@@ -110,20 +111,9 @@ const ServiceOrderEdit: NextPage = () => {
                         catch { }
 
                         setData(serviceOrderRes);
-                    }).catch(err => {
-                        console.log('Error to get project, ', err);
-
-                        setTypeLoadingMessage("error");
-                        setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
-                        setHasErrors(true);
-                    });
-
-                    api.get('stores').then(res => {
-                        setStores(res.data);
-
                         setLoadingData(false);
                     }).catch(err => {
-                        console.log('Error to get stores, ', err);
+                        console.log('Error to get project, ', err);
 
                         setTypeLoadingMessage("error");
                         setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
