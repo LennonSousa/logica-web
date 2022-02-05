@@ -13,9 +13,9 @@ import { cellphone } from '../../../components/InputMask/masks';
 import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
+import { StoresContext } from '../../../contexts/StoresContext';
 import { User, UserRole, can, translatedRoles } from '../../../components/Users';
 import { cpf, cnpj, prettifyCurrency } from '../../../components/InputMask/masks';
-import { Store } from '../../../components/Stores';
 import PageBack from '../../../components/PageBack';
 import { AlertMessage, statusModal } from '../../../components/Interfaces/AlertMessage';
 import { PageWaiting, PageType } from '../../../components/PageWaiting';
@@ -37,12 +37,11 @@ const UserEdit: NextPage = () => {
     const userId = router.query['user'];
 
     const { loading, user } = useContext(AuthContext);
-
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
+    const { stores } = useContext(StoresContext);
 
     const [userData, setUserData] = useState<User>();
     const [usersRoles, setUsersRoles] = useState<UserRole[]>([]);
-    const [stores, setStores] = useState<Store[]>([]);
 
     const [loadingData, setLoadingData] = useState(true);
     const [hasErrors, setHasErrors] = useState(false);
@@ -73,20 +72,9 @@ const UserEdit: NextPage = () => {
                     setUsersRoles(userRes.roles);
 
                     setUserData(userRes);
-                }).catch(err => {
-                    console.log('Error get user to edit, ', err);
-
-                    setTypeLoadingMessage("error");
-                    setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
-                    setHasErrors(true);
-                });
-
-                api.get('stores').then(res => {
-                    setStores(res.data);
-
                     setLoadingData(false);
                 }).catch(err => {
-                    console.log('Error to get stores, ', err);
+                    console.log('Error get user to edit, ', err);
 
                     setTypeLoadingMessage("error");
                     setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
@@ -115,15 +103,23 @@ const UserEdit: NextPage = () => {
                 }
 
                 if (grant === 'view') {
-                    if (role.view) {
+                    if (role.view && !role.view_self) {
                         const updatedRole = handleRole(role, ['create', 'update', 'remove'], false);
 
-                        return { ...updatedRole, view: !updatedRole.view, view_self: false };
+                        return { ...updatedRole, view: !updatedRole.view };
                     }
 
-                    return { ...role, view: !role.view };
+                    return { ...role, view: !role.view, view_self: false };
                 }
-                if (grant === 'view_self') return { ...role, view_self: !role.view_self, view: false };
+                if (grant === 'view_self') {
+                    if (role.view_self && !role.view) {
+                        const updatedRole = handleRole(role, ['create', 'update', 'remove'], false);
+
+                        return { ...updatedRole, view_self: !updatedRole.view_self };
+                    }
+
+                    return { ...role, view_self: !role.view_self, view: false };
+                }
                 if (grant === 'create') return { ...role, create: !role.create };
                 if (grant === 'update') {
                     if (role.update) {
@@ -485,6 +481,19 @@ const UserEdit: NextPage = () => {
                                                                                                                     name="type"
                                                                                                                     id={`formUserRoles${role.id}Create`}
                                                                                                                     value={`${role.id}@create`}
+                                                                                                                    onChange={handleChecks}
+                                                                                                                    disabled={!role.view && !role.view_self}
+                                                                                                                />
+                                                                                                            </Col>
+
+                                                                                                            <Col>
+                                                                                                                <Form.Check
+                                                                                                                    checked={role.update}
+                                                                                                                    type="checkbox"
+                                                                                                                    label="Editar"
+                                                                                                                    name="type"
+                                                                                                                    id={`formUserRoles${role.id}Update`}
+                                                                                                                    value={`${role.id}@update`}
                                                                                                                     onChange={handleChecks}
                                                                                                                     disabled={!role.view && !role.view_self}
                                                                                                                 />

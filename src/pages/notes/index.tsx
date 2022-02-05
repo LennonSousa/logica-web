@@ -10,7 +10,6 @@ import api from '../../api/api';
 import { TokenVerify } from '../../utils/tokenVerify';
 import { AuthContext } from '../../contexts/AuthContext';
 import { SideBarContext } from '../../contexts/SideBarContext';
-import { can } from '../../components/Users';
 import { Note } from '../../components/Notes';
 import NoteItem from '../../components/NoteListItem';
 import { NoteItemShimmer } from '../../components/Interfaces/NoteItemShimmer';

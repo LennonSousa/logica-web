@@ -77,7 +77,7 @@ export function Header() {
                     </Col>
 
                     {
-                        user && can(user, "projects", "read:any") && <Col>
+                        user && can(user, "settings", "read:any") && <Col>
                             <Button
                                 variant="outline-light"
                                 onClick={() => handleRoute('/settings')}

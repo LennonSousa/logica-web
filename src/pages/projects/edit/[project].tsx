@@ -16,10 +16,10 @@ import api from '../../../api/api';
 import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
+import { StoresContext } from '../../../contexts/StoresContext';
 import { can } from '../../../components/Users';
 import { Project } from '../../../components/Projects';
 import { ProjectStatus } from '../../../components/ProjectStatus';
-import { Store } from '../../../components/Stores';
 import { EventProject } from '../../../components/EventsProject';
 import { AttachmentRequired } from '../../../components/AttachmentsRequiredProject';
 import Incomings, { Income } from '../../../components/Incomings';
@@ -97,10 +97,10 @@ const ProjectEdit: NextPage = () => {
     const { project } = router.query;
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
+    const { stores } = useContext(StoresContext);
 
     const [projectData, setProjectData] = useState<Project>();
     const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
-    const [stores, setStores] = useState<Store[]>([]);
     const [projectEvents, setProjectEvents] = useState<ProjectEvent[]>([]);
     const [projectAttachments, setProjectAttachments] = useState<ProjectAttachment[]>([]);
     const [projectAttachmentsRequired, setProjectAttachmentsRequired] = useState<ProjectAttachmentRequired[]>([]);
@@ -117,6 +117,7 @@ const ProjectEdit: NextPage = () => {
     const [typeLoadingMessage, setTypeLoadingMessage] = useState<PageType>("waiting");
     const [textLoadingMessage, setTextLoadingMessage] = useState('Aguarde, carregando...');
 
+    const [isAuthorized, setIsAuthorized] = useState(true);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadingPercentage, setUploadingPercentage] = useState(0);
     const [messageShow, setMessageShow] = useState(false);
@@ -151,10 +152,19 @@ const ProjectEdit: NextPage = () => {
         handleItemSideBar('projects');
         handleSelectedMenu('projects-index');
 
-        if (user) {
-            if (can(user, "projects", "update:any")) {
-                if (project) {
-                    api.get(`projects/${project}`).then(res => {
+        if (!user || !can(user, "projects", "update:any")) {
+            setIsAuthorized(false);
+            return;
+        }
+
+        if (project) {
+            api.get(`projects/${project}`, {
+                validateStatus: function (status) {
+                    return status < 500; // Resolve only if the status code is less than 500
+                }
+            }).then(res => {
+                switch (res.status) {
+                    case 200:
                         let projectRes: Project = res.data;
 
                         if (projectRes.document.length > 14)
@@ -180,16 +190,6 @@ const ProjectEdit: NextPage = () => {
                             setProjectStatus(res.data);
                         }).catch(err => {
                             console.log('Error to get project status, ', err);
-
-                            setTypeLoadingMessage("error");
-                            setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
-                            setHasErrors(true);
-                        });
-
-                        api.get('stores').then(res => {
-                            setStores(res.data);
-                        }).catch(err => {
-                            console.log('Error to get stores, ', err);
 
                             setTypeLoadingMessage("error");
                             setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
@@ -224,15 +224,22 @@ const ProjectEdit: NextPage = () => {
                             setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
                             setHasErrors(true);
                         });
-                    }).catch(err => {
-                        console.log('Error to get project, ', err);
-
+                        break;
+                    case 403:
+                        setIsAuthorized(false);
+                        break;
+                    default:
                         setTypeLoadingMessage("error");
                         setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
                         setHasErrors(true);
-                    });
                 }
-            }
+            }).catch(err => {
+                console.log('Error to get project, ', err);
+
+                setTypeLoadingMessage("error");
+                setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
+                setHasErrors(true);
+            });
         }
     }, [user, project]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -438,7 +445,7 @@ const ProjectEdit: NextPage = () => {
                 !user || loading ? <PageWaiting status="waiting" /> :
                     <>
                         {
-                            can(user, "projects", "update:any") ? <>
+                            isAuthorized ? <>
                                 {
                                     loadingData || hasErrors ? <PageWaiting
                                         status={typeLoadingMessage}

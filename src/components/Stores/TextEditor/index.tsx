@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { FaFileWord } from 'react-icons/fa';
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 
+import { StoresContext } from '../../../contexts/StoresContext';
 import api from '../../../api/api';
 import { Store } from '..';
 import { AlertMessage, statusModal } from '../../Interfaces/AlertMessage';
@@ -17,6 +18,8 @@ interface WaitingModalProps {
 }
 
 export default function TextEditor({ type, data }: WaitingModalProps) {
+    const { handleStores } = useContext(StoresContext);
+
     const [title, setTitle] = useState("");
 
     const [editorState, setEditorState] = useState(() =>
@@ -76,6 +79,10 @@ export default function TextEditor({ type, data }: WaitingModalProps) {
                     document: data.document,
                     [type]: JSON.stringify(dataToSave),
                 });
+
+                const storesRes = await api.get('stores');
+
+                handleStores(storesRes.data);
 
                 setTypeMessage("success");
 

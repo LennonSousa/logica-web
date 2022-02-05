@@ -1,9 +1,12 @@
+import { useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Button, ButtonGroup, Row, Col } from 'react-bootstrap';
 import { FaPencilAlt, FaPrint } from 'react-icons/fa';
 import { format } from 'date-fns';
 
+import { AuthContext } from '../../contexts/AuthContext';
+import { can } from '../../components/Users';
 import { ServiceOrder } from '../ServiceOrders';
 
 import styles from './styles.module.css';
@@ -14,6 +17,8 @@ interface ServiceOrderItemProps {
 
 const ServiceOrderItem: React.FC<ServiceOrderItemProps> = ({ serviceOrder }) => {
     const router = useRouter();
+
+    const { user } = useContext(AuthContext);
 
     function goToEdit() {
         router.push(`/service-orders/edit/${serviceOrder.id}`);
@@ -58,13 +63,15 @@ const ServiceOrderItem: React.FC<ServiceOrderItemProps> = ({ serviceOrder }) => 
 
                 <Row>
                     <ButtonGroup size="sm" className="col-12">
-                        <Button
-                            variant="success"
-                            title="Editar ordem de serviço."
-                            onClick={goToEdit}
-                        >
-                            <FaPencilAlt />
-                        </Button>
+                        {
+                            user && can(user, "estimates", "update:any") && <Button
+                                variant="success"
+                                title="Editar ordem de serviço."
+                                onClick={goToEdit}
+                            >
+                                <FaPencilAlt />
+                            </Button>
+                        }
 
                         <Button
                             variant="success"

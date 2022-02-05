@@ -14,6 +14,7 @@ import api from '../../../api/api';
 import { TokenVerify } from '../../../utils/tokenVerify';
 import { SideBarContext } from '../../../contexts/SideBarContext';
 import { AuthContext } from '../../../contexts/AuthContext';
+import { StoresContext } from '../../../contexts/StoresContext';
 import { can } from '../../../components/Users';
 import { Store } from '../../../components/Stores';
 
@@ -55,6 +56,7 @@ const EditStore: NextPage = () => {
 
     const { handleItemSideBar, handleSelectedMenu } = useContext(SideBarContext);
     const { loading, user } = useContext(AuthContext);
+    const { stores, handleStores } = useContext(StoresContext);
 
     const [data, setData] = useState<Store>();
     const [imagePreview, setImagePreview] = useState('');
@@ -76,38 +78,35 @@ const EditStore: NextPage = () => {
         handleItemSideBar('stores');
         handleSelectedMenu('stores-index');
 
-        if (user) {
-            if (can(user, "store", "update:any")) {
-                api.get(`stores/${store}`).then(res => {
-                    const storeRes: Store = res.data;
+        try {
+            stores.forEach(storeItem => {
+                if (store === storeItem.id) {
+                    setImagePreview(storeItem.avatar);
 
-                    setImagePreview(storeRes.avatar);
-
-                    if (storeRes.document.length > 14)
+                    if (storeItem.document.length > 14)
                         setDocumentType("CNPJ");
 
                     try {
-                        const stateCities = statesCities.estados.find(item => { return item.sigla === res.data.state })
+                        const stateCities = statesCities.estados.find(item => { return item.sigla === storeItem.state })
 
                         if (stateCities)
                             setCities(stateCities.cidades);
                     }
                     catch { }
 
-                    setData(storeRes);
+                    setData(storeItem);
                     setLoadingData(false);
-                }).catch(err => {
-                    console.log('Error to get store to edit, ', err);
-
-                    setTypeLoadingMessage("error");
-                    setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
-                    setHasErrors(true);
-                });
-            }
+                }
+            });
         }
+        catch (err) {
+            console.log('Error to get store to edit, ', err);
 
-
-    }, [user, store]); // eslint-disable-line react-hooks/exhaustive-deps
+            setTypeLoadingMessage("error");
+            setTextLoadingMessage("Não foi possível carregar os dados, verifique a sua internet e tente novamente em alguns minutos.");
+            setHasErrors(true);
+        }
+    }, [store, stores]); // eslint-disable-line react-hooks/exhaustive-deps
 
     function handleSelectImage(event: ChangeEvent<HTMLInputElement>) {
         try {
@@ -204,6 +203,10 @@ const EditStore: NextPage = () => {
                                                                     dataToSave.append('document', values.document);
 
                                                                     await api.put(`stores/${data.id}`, dataToSave);
+
+                                                                    const storesRes = await api.get('stores');
+
+                                                                    handleStores(storesRes.data);
 
                                                                     setTypeMessage("success");
 
