@@ -4,13 +4,12 @@ import type { NextPage } from 'next';
 import { NextSeo } from 'next-seo';
 import { Col, Container, Image, ListGroup, Row } from 'react-bootstrap';
 
-import api from '../../api/api';
 import { TokenVerify } from '../../utils/tokenVerify';
 import { SideBarContext } from '../../contexts/SideBarContext';
 import { AuthContext } from '../../contexts/AuthContext';
-import { StoresContext } from '../../../contexts/StoresContext';
+import { StoresContext } from '../../contexts/StoresContext';
 import { can } from '../../components/Users';
-import { Store, Stores } from '../../components/Stores';
+import { Stores } from '../../components/Stores';
 import { PageWaiting } from '../../components/PageWaiting';
 import { AlertMessage, statusModal } from '../../components/Interfaces/AlertMessage';
 
@@ -20,12 +19,12 @@ const StoresPage: NextPage = () => {
     const { stores } = useContext(StoresContext);
 
     const [loadingData, setLoadingData] = useState(true);
-    const [typeLoadingMessage, setTypeLoadingMessage] = useState<statusModal>("waiting");
-    const [textLoadingMessage, setTextLoadingMessage] = useState('Carregando...');
 
     useEffect(() => {
         handleItemSideBar('stores');
         handleSelectedMenu('stores-index');
+
+        setLoadingData(false);
     }, []);
 
     return (
@@ -53,53 +52,36 @@ const StoresPage: NextPage = () => {
                         {
                             can(user, "store", "read:any") ? <Container className="content-page">
                                 <article className="mt-3">
-                                    {
-                                        loadingData ? <Col>
-                                            <Row>
+                                    <Row>
+                                        {
+                                            !!stores.length ? <Col>
+                                                <ListGroup>
+                                                    {
+                                                        stores && stores.map(store => {
+                                                            return <Stores
+                                                                key={store.id}
+                                                                store={store}
+                                                                canEdit={can(user, "store", "update:any")}
+                                                            />
+                                                        })
+                                                    }
+                                                </ListGroup>
+                                            </Col> :
                                                 <Col>
-                                                    <AlertMessage status={typeLoadingMessage} message={textLoadingMessage} />
-                                                </Col>
-                                            </Row>
-
-                                            {
-                                                typeLoadingMessage === "error" && <Row className="justify-content-center mt-3 mb-3">
-                                                    <Col sm={3}>
-                                                        <Image src="/assets/images/undraw_server_down_s4lk.svg" alt="Erro de conexão." fluid />
-                                                    </Col>
-                                                </Row>
-                                            }
-                                        </Col> :
-                                            <Row>
-                                                {
-                                                    !!stores.length ? <Col>
-                                                        <ListGroup>
-                                                            {
-                                                                stores && stores.map(store => {
-                                                                    return <Stores
-                                                                        key={store.id}
-                                                                        store={store}
-                                                                        canEdit={can(user, "store", "update:any")}
-                                                                    />
-                                                                })
-                                                            }
-                                                        </ListGroup>
-                                                    </Col> :
-                                                        <Col>
-                                                            <Row>
-                                                                <Col className="text-center">
-                                                                    <p style={{ color: 'var(--gray)' }}>Nenhuma loja registrada.</p>
-                                                                </Col>
-                                                            </Row>
-
-                                                            <Row className="justify-content-center mt-3 mb-3">
-                                                                <Col sm={3}>
-                                                                    <Image src="/assets/images/undraw_not_found.svg" alt="Sem dados para mostrar." fluid />
-                                                                </Col>
-                                                            </Row>
+                                                    <Row>
+                                                        <Col className="text-center">
+                                                            <p style={{ color: 'var(--gray)' }}>Nenhuma loja registrada.</p>
                                                         </Col>
-                                                }
-                                            </Row>
-                                    }
+                                                    </Row>
+
+                                                    <Row className="justify-content-center mt-3 mb-3">
+                                                        <Col sm={3}>
+                                                            <Image src="/assets/images/undraw_not_found.svg" alt="Sem dados para mostrar." fluid />
+                                                        </Col>
+                                                    </Row>
+                                                </Col>
+                                        }
+                                    </Row>
                                 </article>
                             </Container> :
                                 <PageWaiting status="warning" message="Acesso negado!" />
