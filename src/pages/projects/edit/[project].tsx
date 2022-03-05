@@ -155,9 +155,9 @@ const ProjectEdit: NextPage = () => {
         if (!user || !can(user, "projects", "update:any")) {
             setIsAuthorized(false);
             return;
-        }
+        } else if (project) {
+            setIsAuthorized(true);
 
-        if (project) {
             api.get(`projects/${project}`, {
                 validateStatus: function (status) {
                     return status < 500; // Resolve only if the status code is less than 500

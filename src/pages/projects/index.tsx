@@ -155,8 +155,6 @@ const ProjectsPages: NextPage = () => {
             let newQueryFilters: String[] = [];
             let query = `?limit=${limit}&page=1`;
 
-            console.log(newSearchParams.range)
-
             if (newSearchParams.range === "custom") {
                 query += `&start=${format(newSearchParams.start, 'yyyy-MM-dd')}&end=${format(newSearchParams.end, 'yyyy-MM-dd')}`;
 
