@@ -17,7 +17,6 @@ import { StoresContext } from '../../../contexts/StoresContext';
 import { can } from '../../../components/Users';
 import { Estimate } from '../../../components/Estimates';
 import ConsumptionModal from '../../../components/Estimates/Consumption';
-import { Store } from '../../../components/Stores';
 import { Panel } from '../../../components/Panels';
 import { RoofOrientation } from '../../../components/RoofOrientations';
 import { RoofType } from '../../../components/RoofTypes';
