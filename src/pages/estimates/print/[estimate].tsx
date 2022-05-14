@@ -917,7 +917,7 @@ const EstimatePrint: NextPage = () => {
                                 <Col>
                                   <h6 className="text-secondary">{`${prettifyCurrency(
                                     calcResults
-                                      ? calcResults.panelsAmount.toFixed(0)
+                                      ? calcResults.panelsAmount.toFixed(2)
                                       : "0.00"
                                   )} Un`}</h6>
                                 </Col>
