@@ -1004,9 +1004,13 @@ const EstimatePrint: NextPage = () => {
                               <Row>
                                 <Col>
                                   <h6 className="text-secondary">{`${
-                                    paybackResults ? paybackResults.months : 0
+                                    paybackResults
+                                      ? paybackResults.months.toFixed(0)
+                                      : 0
                                   } meses / ${
-                                    paybackResults ? paybackResults.years : 0
+                                    paybackResults
+                                      ? paybackResults.years.toFixed(1)
+                                      : 0
                                   } anos`}</h6>
                                 </Col>
                               </Row>
