@@ -48,6 +48,11 @@ export interface CalcResultProps {
     estimateItems: EstimateItem[];
 }
 
+export interface PayBackProps {
+    months: number;
+    years: number;
+}
+
 export function handleFormConsumptionValues(values: any, panels: Panel[], roofOrientations: RoofOrientation[]) {
     try {
         const panel = panels.find(panel => { return panel.id === values['panel'] });
@@ -261,3 +266,43 @@ export function calcDiscountPercent(initialValue: number, finalValue: number) {
 
     return Math.fround((totalDiscount / initialValue) * 100);
 }
+
+export function payBack(yearlyPaid: number, finalPrice: number): PayBackProps
+        {
+            let months = 1;
+            let foundMonths = 0;
+            let calculatedValue = 0;
+            let currentValue = yearlyPaid;
+            let increase = 0;
+            let monthsIncrease = 0;
+            let monthsAmount = 0;
+            let amount = yearlyPaid;
+            let wasFound = false;
+
+            while (!wasFound)
+            {
+                monthsIncrease = currentValue / 12;
+                for (let x = 1; x <= 12; x++)
+                {
+                    monthsAmount += monthsIncrease;
+                    if (monthsAmount >= finalPrice)
+                    {
+                        wasFound = true;
+                        foundMonths = months;
+                        x = 12;
+                    }
+                    months++;
+                }
+
+
+                increase = currentValue * 0.1;
+                calculatedValue = currentValue + increase;
+                amount += calculatedValue;
+                currentValue = calculatedValue;
+            }
+
+            return {
+                months: foundMonths,
+                years: foundMonths / 12,
+            };
+        }
