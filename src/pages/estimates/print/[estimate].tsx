@@ -513,7 +513,7 @@ const EstimatePrint: NextPage = () => {
 
                               <Row>
                                 <Col>
-                                  <h6 className="text-secondary">
+                                  <h6 className="text-secondary text-wrap">
                                     {data.contacts}
                                   </h6>
                                 </Col>
@@ -547,7 +547,7 @@ const EstimatePrint: NextPage = () => {
 
                               <Row>
                                 <Col>
-                                  <h6 className="text-secondary">
+                                  <h6 className="text-secondary text-wrap">
                                     {data.street}
                                   </h6>
                                 </Col>
@@ -583,7 +583,7 @@ const EstimatePrint: NextPage = () => {
 
                               <Row>
                                 <Col>
-                                  <h6 className="text-secondary">
+                                  <h6 className="text-secondary text-wrap">
                                     {data.complement}
                                   </h6>
                                 </Col>
@@ -601,7 +601,7 @@ const EstimatePrint: NextPage = () => {
 
                               <Row>
                                 <Col>
-                                  <h6 className="text-secondary">
+                                  <h6 className="text-secondary text-wrap">
                                     {data.neighborhood}
                                   </h6>
                                 </Col>
@@ -617,7 +617,7 @@ const EstimatePrint: NextPage = () => {
 
                               <Row>
                                 <Col>
-                                  <h6 className="text-secondary">
+                                  <h6 className="text-secondary text-wrap">
                                     {data.city}
                                   </h6>
                                 </Col>
