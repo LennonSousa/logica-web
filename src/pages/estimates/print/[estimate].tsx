@@ -708,7 +708,7 @@ const EstimatePrint: NextPage = () => {
                           </Row>
 
                           <Row className="mb-1">
-                            <Col sm={3}>
+                            <Col sm={4}>
                               <Row>
                                 <Col>
                                   <span className="text-success">
@@ -746,7 +746,7 @@ const EstimatePrint: NextPage = () => {
                               </Row>
                             </Col> */}
 
-                            <Col sm={3}>
+                            <Col sm={4}>
                               <Row>
                                 <Col>
                                   <span className="text-success">Painel</span>
@@ -764,7 +764,7 @@ const EstimatePrint: NextPage = () => {
                               </Row>
                             </Col>
 
-                            <Col sm={3}>
+                            <Col sm={4}>
                               <Row>
                                 <Col>
                                   <span className="text-success">
@@ -784,7 +784,7 @@ const EstimatePrint: NextPage = () => {
                           </Row>
 
                           <Row className="mb-1">
-                            <Col sm={3}>
+                            <Col sm={4}>
                               <Row>
                                 <Col>
                                   <span className="text-success">
@@ -808,7 +808,7 @@ const EstimatePrint: NextPage = () => {
                               </Row>
                             </Col>
 
-                            <Col sm={3}>
+                            <Col sm={4}>
                               <Row>
                                 <Col>
                                   <span className="text-success">
@@ -828,7 +828,7 @@ const EstimatePrint: NextPage = () => {
                               </Row>
                             </Col>
 
-                            <Col sm={3}>
+                            <Col sm={4}>
                               <Row>
                                 <Col>
                                   <span className="text-success">
@@ -917,7 +917,7 @@ const EstimatePrint: NextPage = () => {
                                 <Col>
                                   <h6 className="text-secondary">{`${prettifyCurrency(
                                     calcResults
-                                      ? calcResults.panelsAmount.toFixed(2)
+                                      ? calcResults.panelsAmount.toFixed(0)
                                       : "0.00"
                                   )} Un`}</h6>
                                 </Col>
