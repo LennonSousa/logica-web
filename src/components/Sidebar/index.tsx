@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Accordion, AccordionButton, Card, Dropdown, Nav, NavDropdown, Row, Col } from 'react-bootstrap';
 import {
-    FaColumns,
     FaDonate,
     FaMoneyCheckAlt,
     FaUserTie,
@@ -11,18 +10,15 @@ import {
     FaList,
     FaHistory,
     FaPlus,
-    FaIdCard,
     FaBriefcase,
-    FaPencilAlt,
     FaProjectDiagram,
     FaWarehouse,
     FaClipboardList,
-    FaLayerGroup,
     FaSolarPanel,
     FaStore,
     FaUniversity,
     FaUsers,
-    FaUsersCog
+    FaCompass
 } from 'react-icons/fa';
 
 import { SideBarContext } from '../../contexts/SideBarContext';
@@ -151,7 +147,7 @@ const Sidebar: React.FC = () => {
                                             </a>
                                         </Link>
 
-                                        {/* <Link href="/estimates/roofs/orientations">
+                                        <Link href="/estimates/roofs/orientations">
                                             <a title="Listar orientaçõs de telhado." data-title="Listar orientaçõs de telhado.">
                                                 <Row
                                                     className={
@@ -167,7 +163,7 @@ const Sidebar: React.FC = () => {
                                                     </Col>
                                                 </Row>
                                             </a>
-                                        </Link> */}
+                                        </Link>
 
                                         <Link href="/estimates/roofs/types">
                                             <a title="Listar tipos de telhados." data-title="Listar tipos de telhados.">
