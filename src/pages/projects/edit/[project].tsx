@@ -1719,7 +1719,7 @@ const ProjectEdit: NextPage = () => {
                                                                                 data.append('received_at', `${values.received_at} 12:00:00`);
                                                                                 data.append('project', values.project);
 
-                                                                                await api.post(`projects/${values.project}/attachments`, data, {
+                                                                                await api.post('projects/attachments', data, {
                                                                                     onUploadProgress: e => {
                                                                                         const progress = Math.round((e.loaded * 100) / e.total);
 
